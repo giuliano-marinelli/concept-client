@@ -1,0 +1,13 @@
+//import base bootstrap functions, variables, utilities, mixins and custom variables
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/mixins";
+@import "/src/assets/scss/bootstrap-custom-variables";
+
+//import bootstrap dark functions, variables, utilities, mixins and custom variables
+@import "~bootstrap-dark-5/scss/dark/functions";
+@import "~bootstrap-dark-5/scss/variables-alt";
+@import "~bootstrap-dark-5/scss/dark/utilities";
+@import "~bootstrap-dark-5/scss/dark/mixins";
+@import "/src/assets/scss/bootstrap-nightshade-custom-variables";

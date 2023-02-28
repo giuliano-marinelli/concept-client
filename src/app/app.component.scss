@@ -1,0 +1,92 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import "/src/assets/scss/variables.scss";
+
+::ng-deep main > * > .container {
+  padding: 60px 15px 0;
+}
+
+.navbar-concept {
+  background-color: $navbar-bg;
+}
+
+.logo {
+  padding-top: 11px;
+  border-radius: 0px 40px 40px 0px;
+  flex-basis: 60px;
+  overflow: hidden;
+  transition: flex-basis 0.2s ease-in-out;
+}
+
+.logo:hover {
+  flex-basis: 180px;
+}
+
+.logo-icon {
+  opacity: 0.75;
+}
+
+.logo-icon:hover {
+  opacity: 1;
+}
+
+.profile-img {
+  width: 25px;
+  height: 25px;
+  padding: 1px !important;
+}
+
+/* navbar collapse button */
+.navbar-toggler span {
+  display: block;
+  background-color: #4f4f4f;
+  height: 3px;
+  width: 25px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  position: relative;
+  left: 0;
+  opacity: 1;
+  transition: all 0.35s ease-out;
+  transform-origin: center left;
+}
+
+.navbar-toggler span:nth-child(1) {
+  transform: translate(0%, 0%) rotate(0deg);
+}
+
+.navbar-toggler span:nth-child(2) {
+  opacity: 1;
+}
+
+.navbar-toggler span:nth-child(3) {
+  transform: translate(0%, 0%) rotate(0deg);
+}
+
+.navbar-toggler span:nth-child(1) {
+  margin-top: 0.3em;
+}
+
+.navbar-toggler:not(.collapsed) span:nth-child(1) {
+  transform: translate(15%, -33%) rotate(45deg);
+}
+
+.navbar-toggler:not(.collapsed) span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggler:not(.collapsed) span:nth-child(3) {
+  transform: translate(15%, 33%) rotate(-45deg);
+}
+
+.close-navbar-toggler {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.close-navbar-toggler.collapsed {
+  background-color: unset;
+  z-index: -1;
+}

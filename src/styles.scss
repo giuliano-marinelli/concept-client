@@ -1,0 +1,338 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Enable responsive utilities for borders */
+// @import "bootstrap/scss/functions";
+// @import "bootstrap/scss/variables";
+// @import "bootstrap/scss/utilities";
+
+/*$utilities: map-merge(
+  $utilities,
+  (
+    "border":
+      map-merge(
+        map-get($utilities, "border"),
+        (
+          responsive: true,
+        )
+      ),
+    "border-top":
+      map-merge(
+        map-get($utilities, "border-top"),
+        (
+          responsive: true,
+        )
+      ),
+    "border-end":
+      map-merge(
+        map-get($utilities, "border-end"),
+        (
+          responsive: true,
+        )
+      ),
+    "border-bottom":
+      map-merge(
+        map-get($utilities, "border-bottom"),
+        (
+          responsive: true,
+        )
+      ),
+    "border-start":
+      map-merge(
+        map-get($utilities, "border-start"),
+        (
+          responsive: true,
+        )
+      ),
+  )
+);*/
+
+/* Custom css variables */
+:root {
+  // default image cropper outline color
+  --cropper-outline-color: rgba(0, 0, 0, 0.9);
+  // default image cropper overlay color
+  --cropper-overlay-color: rgba(255, 255, 255, 1);
+}
+
+/* Custom container size */
+$container-max-widths: (
+  sm: 720px,
+  md: 960px,
+  lg: 1140px,
+  xl: 1140px,
+  xxl: 1320px,
+);
+
+/* Importing Bootstrap files */
+@import "assets/scss/bootstrap-custom-variables"; //custom base bootstrap variables
+@import "~bootstrap/scss/bootstrap"; //base bootstrap
+@import "assets/scss/bootstrap-nightshade"; //for darkmode
+// (this is a modified file for use scss instead of css, because the compiled css not allow to use variables)
+
+/* Importing HeliPopper files (for tooltips and popovers) */
+@import "~tippy.js/dist/tippy.css";
+@import "~tippy.js/themes/translucent.css";
+@import "~tippy.js/animations/scale.css";
+
+/* For no outline when click button */
+.no-outline {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* For show cursor pointer when hover */
+.pe-pointer {
+  cursor: pointer;
+}
+
+/* For preserve proportions of non-square images
+(anyway all images are going to be square because these were cropped before uploading) */
+.profile-img {
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: top;
+  object-position: top;
+  overflow: hidden;
+}
+
+/* For remove links underline */
+a {
+  text-decoration: none;
+}
+
+/* For put character counter on textarea and min-height for correct view */
+.textarea-min-height {
+  min-height: 5rem !important;
+}
+
+.textarea-count {
+  margin-top: -25px;
+  margin-right: 10px;
+}
+
+/* Used for overlay components, allows block that component and add some loading icon */
+.overlay {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.overlay + * {
+  filter: blur(0.1rem); //this blur the content behind the overlay
+}
+
+/* For disable content that is going to be updated */
+.loading {
+  pointer-events: none;
+  filter: blur(0.1rem);
+}
+
+/* For remove dropdown arrow on dropdown toggle button */
+.no-dropdown-arrow.dropdown-toggle::after {
+  content: none;
+}
+
+/* Similar to input-group but the second button (or link) is inside the first*/
+.input-button {
+  position: relative;
+}
+.input-button > input {
+  padding-right: 3rem;
+}
+
+.input-button.input-button-sm > input {
+  padding-right: 2rem;
+}
+
+.input-button > button,
+.input-button > a {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* For apply form-control default size to non-input elements */
+.form-control-md {
+  min-height: calc(1.5em + 0.75rem + 2px);
+}
+
+/* Form controls of extra small size */
+.form-control-xs {
+  min-height: calc(1.12em + 0.375rem + 1px);
+  padding: 0.1875rem 0.375rem;
+  font-size: 0.65625rem;
+  border-radius: 0.15rem;
+}
+
+.form-select-xs {
+  padding-top: 0.1875rem;
+  padding-bottom: 0.1875rem;
+  padding-left: 0.375rem;
+  font-size: 0.65625rem;
+  border-radius: 0.15rem;
+}
+
+/* Button groups of extra small size */
+.btn-group-xs > .btn {
+  padding: 0.1875rem 0.375rem;
+  font-size: 0.65625rem;
+  // border-radius: 0.15rem;
+}
+
+/* For allow showing break lines (\n) */
+.text-pre-wrap {
+  white-space: pre-wrap;
+}
+
+/* Break text that overflows by characters instead of words */
+.text-break-all {
+  word-break: break-all;
+}
+
+/* For colorize text white or black depending on darkmode */
+.text-alt,
+.text-alt:hover,
+html.dark .text-inverse-alt,
+html.dark .text-inverse-alt:hover {
+  color: $body-color;
+}
+.text-inverse-alt,
+.text-inverse-alt:hover,
+html.dark .text-alt,
+html.dark .text-alt:hover {
+  color: $body-color-alt;
+}
+
+/* Image Thumbnail mixin: for include as content of other classes */
+@mixin img-thumbnail {
+  padding: $thumbnail-padding;
+  background-color: $thumbnail-bg;
+  border: $thumbnail-border-width solid $thumbnail-border-color;
+  @include border-radius($thumbnail-border-radius);
+  @include box-shadow($thumbnail-box-shadow);
+
+  // Keep them at most 100% wide
+  @include img-fluid();
+}
+
+/* Image Thumbnail Dark mixin */
+@mixin img-thumbnail-dark {
+  @include img-thumbnail;
+  background-color: $thumbnail-bg-alt;
+  border: $thumbnail-border-width solid $thumbnail-border-color-alt;
+}
+
+/* Image Thumbnail (always) dark for both light and dark mode */
+.img-thumbnail-dark {
+  @include img-thumbnail-dark();
+}
+
+@include media-breakpoint-up(sm) {
+  .text-sm-alt,
+  .text-sm-alt:hover,
+  html.dark .text-inverse-sm-alt,
+  html.dark .text-inverse-sm-alt:hover {
+    color: $body-color !important;
+  }
+  .text-inverse-sm-alt,
+  .text-inverse-sm-alt:hover,
+  html.dark .text-sm-alt,
+  html.dark .text-sm-alt:hover {
+    color: $body-color-alt !important;
+  }
+
+  .text-sm-pre-wrap {
+    white-space: pre-wrap;
+  }
+
+  .text-sm-break-all {
+    word-break: break-all;
+  }
+
+  .img-thumbnail-sm {
+    @include img-thumbnail();
+  }
+
+  html.dark .img-thumbnail-sm {
+    @include img-thumbnail-dark();
+  }
+
+  .img-thumbnail-dark-sm {
+    @include img-thumbnail-dark();
+  }
+}
+
+/* Allows remove borders when screen is md or above */
+@include media-breakpoint-up(md) {
+  .border-md-0,
+  html.dark .border-md-0 {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  .text-md-pre-wrap {
+    white-space: pre-wrap;
+  }
+
+  .text-md-break-all {
+    word-break: break-all;
+  }
+
+  .img-thumbnail-md {
+    @include img-thumbnail();
+  }
+
+  html.dark .img-thumbnail-md {
+    @include img-thumbnail-dark();
+  }
+
+  .img-thumbnail-dark-md {
+    @include img-thumbnail-dark();
+  }
+}
+
+/* Dropdown (always) dark for both light and dark mode */
+.dropdown-menu-dark-alt {
+  color: $dropdown-dark-color;
+  background-color: #161b22 !important;
+  border-color: $dropdown-dark-border-color;
+  @include box-shadow($dropdown-dark-box-shadow);
+
+  .dropdown-item {
+    color: $dropdown-dark-link-color;
+
+    &:hover,
+    &:focus {
+      color: $dropdown-dark-link-hover-color;
+      @include gradient-bg($dropdown-dark-link-hover-bg);
+    }
+
+    &.active,
+    &:active {
+      color: $dropdown-dark-link-active-color;
+      @include gradient-bg($dropdown-dark-link-active-bg);
+    }
+
+    &.disabled,
+    &:disabled {
+      color: $dropdown-dark-link-disabled-color;
+    }
+  }
+
+  .dropdown-divider {
+    border-color: $dropdown-dark-divider-bg;
+  }
+
+  .dropdown-item-text {
+    color: $dropdown-dark-link-color;
+  }
+
+  .dropdown-header {
+    color: $dropdown-dark-header-color;
+  }
+}

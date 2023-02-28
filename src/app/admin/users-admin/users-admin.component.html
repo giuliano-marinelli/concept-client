@@ -1,0 +1,213 @@
+<div class="container">
+  <div class="mt-3 mt-sm-0 border-bottom">
+    <h2>Users <a class="btn p-0 text-muted" (click)="search_input.onSearch(false)" [class.disabled]="usersLoading">
+        <fa-icon [icon]="'rotate-right'" size="lg" [spin]="usersLoading" [pulse]="usersLoading"></fa-icon>
+      </a>
+    </h2>
+  </div>
+  <search #search_input searchClass="mt-3" defaultTagColor="dark" [attributes]="[
+    { name: 'username', title: 'Username', type: 'string' },
+    { name: 'email', title: 'Email', type: 'string'},
+    { name: 'role', title: 'Role', type: ['user', 'admin']},
+    { name: 'verified', title: 'Verified', type: 'boolean'},
+    { name: 'createdAt', title: 'Created at', type: 'Date'},
+    { name: 'profile.name', category: 'Profile', title: 'Name', type: 'string', color: 'secondary'},
+    { name: 'profile.bio', category: 'Profile', title: 'Bio', type: 'string', color: 'secondary'},
+    { name: 'profile.location', category: 'Profile', title: 'Location', type: 'string', color: 'secondary'},
+  ]" [(search)]="usersSearch" (searchChange)="getUsers()"></search>
+  <div #message_container></div>
+  <div class="text-center mt-3" *ngIf="!usersLoading && users.length <= 0">
+    <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
+    <p class="mt-2">No users found</p>
+  </div>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-0" [class.loading]="usersLoading"
+    *ngIf="users.length > 0">
+    <div class="col" *ngFor="let user of users">
+      <ng-container [ngTemplateOutlet]="userCard" [ngTemplateOutletContext]="{ user: user }"></ng-container>
+    </div>
+  </div>
+  <ngb-pagination *ngIf="usersCount > 0" class="d-flex justify-content-center mt-3" [(page)]="usersPage"
+    [pageSize]="usersPageSize" [collectionSize]="usersCount" (pageChange)="getUsers()" size="sm" [maxSize]="3"
+    [rotate]="true" [ellipses]="true" [boundaryLinks]="true">
+  </ngb-pagination>
+</div>
+
+<ng-template #userCard let-user="user">
+  <div class="card">
+    <div *ngIf="submitLoading.includes(user._id)"
+      class="overlay d-flex align-items-center text-center text-white rounded">
+      <fa-icon class="flex-fill" [icon]="'spinner'" [spin]="true" [pulse]="true" size="2x"></fa-icon>
+    </div>
+    <div class="card-body">
+      <div class="card-text">
+        <div class="d-flex flex-row">
+          <div class="flex-shrink-0">
+            <img class="me-3 img-thumbnail rounded-circle profile-img" [src]="user.avatar"
+              onerror="this.src='assets/images/default-user.png'" />
+          </div>
+          <div class="flex-fill d-flex flex-column text-break">
+            <span class="small" *ngIf="user.profile?.name">{{ user.profile?.name }}</span>
+            <span [ngClass]="user.profile?.name ? 'text-muted small' : ''">{{ user.username }}</span>
+          </div>
+          <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
+            <a class="btn p-0">
+              <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
+            </a>
+            <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
+              <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteUser(user)"
+                [confirmTemplate]="delete_message" confirmActionButton="Delete">
+                <fa-icon [icon]="'user-slash'"></fa-icon> Delete user
+              </a>
+              <ng-template #delete_message>
+                <p class="mb-0">
+                  Are you sure you want to delete the user:
+                </p>
+                <ng-container [ngTemplateOutlet]="userMini" [ngTemplateOutletContext]="{ user: user }"></ng-container>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="mt-1 small">
+          <div class="text-muted">{{ user.email }}</div>
+        </div>
+        <div class="mt-1 small" [ngClass]="user.verified ? 'text-success' : 'text-danger'">
+          <fa-icon [icon]="user.verified ? 'user-check' : 'user-xmark'">
+          </fa-icon> {{ user.verified ? 'Verified' : 'Not verified' }}
+        </div>
+        <div class="mt-1 small" *ngVar="{ bioCollapsed: true } as profileSettings">
+          <a [ngClass]="user.profile?.bio ? 'pe-pointer dropdown-toggle text-alt' : ''"
+            (click)="user.profile?.bio ? bioCollapse.toggle() : null"
+            [attr.aria-expanded]="!profileSettings.bioCollapsed">
+            <b>Bio</b>
+            <span *ngIf="!user.profile?.bio" class="text-muted">&nbsp;empty</span>
+          </a>
+          <div #bioCollapse="ngbCollapse" [(ngbCollapse)]="profileSettings.bioCollapsed">
+            <div class="card">
+              <div class="card-body p-2">
+                {{ user.profile?.bio }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-1 small d-flex flex-row">
+          <fa-icon class="me-1" [icon]="'location-dot'"></fa-icon>
+          <div class="text-break">
+            {{ user.profile?.location }}
+            <span *ngIf="!user.profile?.location" class="text-muted">empty</span>
+          </div>
+        </div>
+        <div class="mt-1 small d-flex flex-row">
+          <fa-icon class="me-1" [icon]="'link'"></fa-icon>
+          <div class="text-break">
+            <a href="{{ user.profile?.url }}" target="_blank">{{ user.profile?.url }}</a>
+            <span *ngIf="!user.profile?.url" class="text-muted">empty</span>
+          </div>
+        </div>
+        <div class="mt-1 small d-flex flex-row-reverse">
+          <span class="text-success ms-2" *ngIf="user._id == auth.loggedUser?._id">
+            <fa-icon [icon]="'circle-check'"></fa-icon> You
+          </span>
+          <span class="text-info ms-2" *ngIf="user.role == 'admin'">
+            <fa-icon [icon]="'user-tie'"></fa-icon> Admin
+          </span>
+        </div>
+        <div class="mt-1 pt-1 small border-top">
+          <b>Created at:</b> {{ user.createdAt | amLocal | amDateFormat:'LLL' }}
+        </div>
+        <div class="mt-1 small" *ngVar="{ devicesCollapsed: true } as devicesSettings">
+          <a class="pe-pointer dropdown-toggle text-alt" (click)="devicesCollapse.toggle()"
+            [attr.aria-expanded]="!devicesSettings.devicesCollapsed">
+            <b>Devices</b>
+          </a>
+          <div #devicesCollapse="ngbCollapse" [(ngbCollapse)]="devicesSettings.devicesCollapsed"
+            (shown)="getSessions(user)">
+            <div class="card" style="min-height: 35px;">
+              <div *ngIf="sessionsLoading.includes(user._id)"
+                class="overlay d-flex align-items-center text-center text-white rounded">
+                <fa-icon class="flex-fill" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              </div>
+              <div class="card-body p-2" style="max-height: 200px; overflow-y: auto;">
+                <div *ngFor="let session of user.sessions; first as isFirst">
+                  <ng-container [ngTemplateOutlet]="sessionMini"
+                    [ngTemplateOutletContext]="{ session: session, user: user, isFirst: isFirst }">
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sessionMini let-session="session" let-user="user" let-isFirst="isFirst">
+  <div class="d-flex flex-row" [ngClass]="!isFirst ? 'mt-1 pt-1 border-top' : ''">
+    <fa-icon class="me-2" [icon]="session.device?.type == 'desktop' ? 'desktop' : 'mobile'">
+    </fa-icon>
+    <div class="flex-fill">
+      {{ session.device?.brand ? session.device?.brand + ' ' +
+      (session.device?.model ? session.device?.model : '') : session.device?.os }}
+    </div>
+    <div *ngIf="session.token != auth.getToken() && !session.blocked && !session.closed" ngbDropdown display="dynamic"
+      placement="bottom-end" autoClose="true">
+      <a class="btn p-0">
+        <fa-icon class="no-dropdown-arrow small" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
+      </a>
+      <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
+        <a ngbDropdownItem class="small pe-pointer" (click)="closeSession(session, user)">
+          <fa-icon [icon]="'sign-out'"></fa-icon> Close session
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="mt-1 small text-danger" *ngIf="session.blocked">
+    <fa-icon [icon]="'lock'"></fa-icon> Blocked
+  </div>
+  <div class="mt-1 small text-secondary" *ngIf="session.closed && !session.blocked">
+    <fa-icon [icon]="'circle-xmark'"></fa-icon> Closed
+  </div>
+  <div class="mt-1 small text-success" *ngIf="session.token == auth.getToken()">
+    <fa-icon [icon]="'circle-check'"></fa-icon> Current device
+  </div>
+  <div class="small d-flex flex-row text-muted" *ngIf="session.device?.ip">
+    <fa-icon class="me-1" [icon]="'globe'"></fa-icon>
+    <div>{{ session.device?.ip }}</div>
+  </div>
+  <div class="small d-flex flex-row text-muted" *ngIf="session.device?.client">
+    <fa-icon class="me-1" [icon]="['fab', browserIcon(session.device?.client)]"></fa-icon>
+    <div>{{ session.device?.client }}</div>
+  </div>
+  <div class="small d-flex flex-row text-muted">
+    <fa-icon class="me-1" [icon]="'calendar-check'"></fa-icon>
+    <div>
+      first login: {{ session.createdAt | amLocal | amDateFormat:'LLL' }}
+    </div>
+  </div>
+  <div class="small d-flex flex-row text-muted">
+    <fa-icon class="me-1" [icon]="'clock'"></fa-icon>
+    <div>
+      recent activity: {{ session.updatedAt | amLocal | amTimeAgo }}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #userMini let-user="user">
+  <div class="card m-auto mt-2" style="max-width: 220px;">
+    <div class="card-body p-2">
+      <div class="d-flex flex-row">
+        <div class="flex-shrink-0">
+          <img class="me-3 img-thumbnail rounded-circle profile-img" [src]="user.avatar"
+            onerror="this.src='assets/images/default-user.png'" />
+        </div>
+        <div class="flex-fill d-flex flex-column text-break">
+          <span class="small" *ngIf="user.profile?.name">{{ user.profile?.name }}</span>
+          <span [ngClass]="user.profile?.name ? 'text-muted small' : ''">{{ user.username }}</span>
+        </div>
+      </div>
+      <div class="mt-1 small">
+        <div class="text-muted text-end">{{ user.email }}</div>
+      </div>
+    </div>
+  </div>
+</ng-template>

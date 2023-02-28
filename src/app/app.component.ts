@@ -1,0 +1,49 @@
+import { Component } from '@angular/core';
+import { DarkmodeService } from './services/darkmode.service';
+import { AuthService } from './services/auth.service';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  title = 'concept-client';
+
+  constructor(
+    public auth: AuthService,
+    public router: Router,
+    public titleService: Title,
+    public darkmodeService: DarkmodeService
+  ) { }
+
+  ngOnInit() {
+    //initialize darkmode
+    this.darkmodeService.initDarkMode();
+
+    //for change page title
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => {
+        let route: ActivatedRoute = this.router.routerState.root;
+        let routeTitle = '';
+        while (route!.firstChild) {
+          route = route.firstChild;
+        }
+        if (route.snapshot.data['title'] != undefined) {
+          routeTitle = route!.snapshot.data['title'];
+        }
+        return routeTitle;
+      })
+    ).subscribe((title: string) => {
+      if (title) {
+        this.titleService.setTitle(`${title} · Concept`);
+      } else {
+        this.titleService.setTitle(`Concept`);
+      }
+    });
+  }
+}
