@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { MessageService } from '../services/message.service';
@@ -12,8 +12,8 @@ import { MessageService } from '../services/message.service';
 })
 export class PasswordResetComponent implements OnInit {
 
-  passwordResetForm!: FormGroup;
-  email = new FormControl('', [
+  passwordResetForm!: UntypedFormGroup;
+  email = new UntypedFormControl('', [
     Validators.required,
     Validators.maxLength(100),
     Validators.email
@@ -22,7 +22,7 @@ export class PasswordResetComponent implements OnInit {
   constructor(
     public auth: AuthService,
     public router: Router,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public userService: UserService,
     public message: MessageService
   ) { }
@@ -39,7 +39,7 @@ export class PasswordResetComponent implements OnInit {
     });
   }
 
-  setValid(control: FormControl): object {
+  setValid(control: UntypedFormControl): object {
     return {
       'is-invalid': control.touched && !control.valid,
       'is-valid': control.touched && control.valid

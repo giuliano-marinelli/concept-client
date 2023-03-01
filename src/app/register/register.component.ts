@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { MessageService } from '../services/message.service';
 import { AuthService } from '../services/auth.service';
@@ -20,8 +20,8 @@ export class RegisterComponent implements OnInit {
   emailCheckingLoading: boolean = false;
   usernameCheckingLoading: boolean = false;
 
-  registerForm!: FormGroup;
-  username = new FormControl('', [
+  registerForm!: UntypedFormGroup;
+  username = new UntypedFormControl('', [
     Validators.required,
     Validators.minLength(4),
     Validators.maxLength(30),
@@ -29,32 +29,32 @@ export class RegisterComponent implements OnInit {
   ], [
     ExtraValidators.usernameExists(this.userService)
   ]);
-  email = new FormControl('', [
+  email = new UntypedFormControl('', [
     Validators.required,
     Validators.maxLength(100),
     Validators.email
   ], [
     ExtraValidators.emailExists(this.userService)
   ]);
-  password = new FormControl('', [
+  password = new UntypedFormControl('', [
     Validators.required,
     Validators.minLength(6),
     Validators.maxLength(30)
   ]);
-  confirmPassword = new FormControl('', [
+  confirmPassword = new UntypedFormControl('', [
     Validators.required,
     Validators.minLength(6),
     Validators.maxLength(30),
     CustomValidators.equalTo(this.password)
   ]);
-  role = new FormControl('', [
+  role = new UntypedFormControl('', [
     Validators.required
   ]);
 
   constructor(
     public auth: AuthService,
     public router: Router,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public userService: UserService,
     public message: MessageService
   ) { }
@@ -84,7 +84,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  setValid(control: FormControl): object {
+  setValid(control: UntypedFormControl): object {
     return {
       'is-invalid': control.dirty && !control.valid,
       'is-valid': control.dirty && control.valid

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public titleService: Title,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public userService: UserService,
     public changeDetector: ChangeDetectorRef
   ) {

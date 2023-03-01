@@ -1,5 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from 'src/app/services/user.service';
 
@@ -26,8 +26,8 @@ export class ConfirmComponent {
 
   modal?: NgbModalRef;
 
-  passwordForm!: FormGroup;
-  password = new FormControl('', [
+  passwordForm!: UntypedFormGroup;
+  password = new UntypedFormControl('', [
     Validators.required,
     Validators.minLength(6),
     Validators.maxLength(30)
@@ -35,11 +35,11 @@ export class ConfirmComponent {
 
   constructor(
     private modalService: NgbModal,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public userService: UserService
   ) { }
 
-  setValid(control: FormControl): object {
+  setValid(control: UntypedFormControl): object {
     return {
       'is-invalid': control.dirty && !control.valid,
       'is-valid': control.dirty && control.valid

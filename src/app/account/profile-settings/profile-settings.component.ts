@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -25,38 +25,38 @@ export class ProfileSettingsComponent implements OnInit {
 
   user?: User;
 
-  profileForm!: FormGroup;
+  profileForm!: UntypedFormGroup;
   _id: any;
-  name = new FormControl('', [
+  name = new UntypedFormControl('', [
     Validators.minLength(0),
     Validators.maxLength(30),
     Validators.pattern('[a-zA-Z0-9\\s]*')
   ]);
-  bio = new FormControl('', [
+  bio = new UntypedFormControl('', [
     Validators.minLength(0),
     Validators.maxLength(200),
     // Validators.pattern('[a-zA-Z0-9,;\.\/_-\\s]*')
   ]);
-  url = new FormControl('', [
+  url = new UntypedFormControl('', [
     Validators.minLength(0),
     Validators.maxLength(200),
     CustomValidators.url
     // Validators.pattern('[a-zA-Z0-9,;\.\/_-\\s]*')
   ]);
   urlMask = createMask({ alias: 'url' });
-  location = new FormControl('', [
+  location = new UntypedFormControl('', [
     Validators.minLength(0),
     Validators.maxLength(30),
     Validators.pattern('[a-zA-Z0-9,\\s]*')
   ]);
-  avatar = new FormControl('', []);
-  avatarFile = new FormControl('', []);
+  avatar = new UntypedFormControl('', []);
+  avatarFile = new UntypedFormControl('', []);
   avatarChangedEvent!: Event;
 
   constructor(
     public auth: AuthService,
     public router: Router,
-    public formBuilder: FormBuilder,
+    public formBuilder: UntypedFormBuilder,
     public userService: UserService,
     public message: MessageService,
     private modalService: NgbModal
@@ -87,7 +87,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.getUser();
   }
 
-  setValid(control: FormControl): object {
+  setValid(control: UntypedFormControl): object {
     return {
       'is-invalid': control.dirty && !control.valid,
       'is-valid': control.dirty && control.valid
