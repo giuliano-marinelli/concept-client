@@ -18,6 +18,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
+import { LanguagesComponent } from './languages/languages.component';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: '' } },
@@ -39,6 +40,7 @@ const routes: Routes = [
       { path: '**', redirectTo: 'users' }
     ]
   },
+  { path: 'languages', component: LanguagesComponent, data: { title: 'Languages' } },
   { path: 'notfound', component: NotFoundComponent, data: { title: 'Page not found' } },
   { path: '**', redirectTo: '/notfound' }
 ];

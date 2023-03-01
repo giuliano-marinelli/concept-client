@@ -53,6 +53,7 @@ import { DevicesSettingsComponent } from './account/devices-settings/devices-set
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
+import { LanguagesComponent } from './languages/languages.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { AccountSettingsComponent } from './account/account-settings/account-set
     DevicesSettingsComponent,
     AdminComponent,
     UsersAdminComponent,
-    AccountSettingsComponent
+    AccountSettingsComponent,
+    LanguagesComponent
   ],
   imports: [
     //angular modules

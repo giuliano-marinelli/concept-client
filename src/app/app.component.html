@@ -42,6 +42,11 @@
               <fa-icon [icon]="'screwdriver-wrench'"></fa-icon> Admin
             </a>
           </li>
+          <li class="nav-item border-top border-md-0" *ngIf="!auth.loggedUserLoading">
+            <a class="nav-link" routerLink="/languages" routerLinkActive="active" (click)="navbarSettings.collapsed = true">
+              <fa-icon [icon]="'landmark'"></fa-icon> Languages
+            </a>
+          </li>
         </ul>
         <ul class="navbar-nav ms-md-auto">
           <li class="nav-item border-top border-md-0 d-block d-md-none"
