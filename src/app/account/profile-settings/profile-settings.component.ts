@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { UserService } from 'src/app/services/user.service';
-import { CustomValidators } from 'ngx-custom-validators';
+// import { CustomValidators } from 'ngx-custom-validators';
 import { createMask } from '@ngneat/input-mask';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { base64ToFile } from 'ngx-image-cropper';
@@ -27,36 +27,36 @@ export class ProfileSettingsComponent implements OnInit {
 
   profileForm!: UntypedFormGroup;
   _id: any;
-  name = new UntypedFormControl('', [
+  name = new FormControl('', [
     Validators.minLength(0),
     Validators.maxLength(30),
     Validators.pattern('[a-zA-Z0-9\\s]*')
   ]);
-  bio = new UntypedFormControl('', [
+  bio = new FormControl('', [
     Validators.minLength(0),
     Validators.maxLength(200),
     // Validators.pattern('[a-zA-Z0-9,;\.\/_-\\s]*')
   ]);
-  url = new UntypedFormControl('', [
+  url = new FormControl('', [
     Validators.minLength(0),
     Validators.maxLength(200),
-    CustomValidators.url
+    // CustomValidators.url
     // Validators.pattern('[a-zA-Z0-9,;\.\/_-\\s]*')
   ]);
   urlMask = createMask({ alias: 'url' });
-  location = new UntypedFormControl('', [
+  location = new FormControl('', [
     Validators.minLength(0),
     Validators.maxLength(30),
     Validators.pattern('[a-zA-Z0-9,\\s]*')
   ]);
-  avatar = new UntypedFormControl('', []);
-  avatarFile = new UntypedFormControl('', []);
+  avatar = new FormControl('', []);
+  avatarFile = new FormControl('', []);
   avatarChangedEvent!: Event;
 
   constructor(
     public auth: AuthService,
     public router: Router,
-    public formBuilder: UntypedFormBuilder,
+    public formBuilder: FormBuilder,
     public userService: UserService,
     public message: MessageService,
     private modalService: NgbModal
@@ -143,7 +143,8 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   onCroppedAvatar(event: any): void {
-    this.avatarFile.setValue(base64ToFile(event.base64));
+    // this.avatarFile.setValue(base64ToFile(event.base64));
+    this.avatarFile.setValue(event.base64);
     this.avatarFile.markAsDirty();
     this.avatarImage.nativeElement.src = event.base64;
   }

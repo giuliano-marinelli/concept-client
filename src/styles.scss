@@ -59,20 +59,17 @@ $container-max-widths: (
   sm: 720px,
   md: 960px,
   lg: 1140px,
-  xl: 1140px,
+  xl: 1145px,
   xxl: 1320px,
 );
 
 /* Importing Bootstrap files */
-@import "assets/scss/bootstrap-custom-variables"; //custom base bootstrap variables
-@import "~bootstrap/scss/bootstrap"; //base bootstrap
-@import "assets/scss/bootstrap-nightshade"; //for darkmode
-// (this is a modified file for use scss instead of css, because the compiled css not allow to use variables)
+@import "/node_modules/bootstrap/scss/bootstrap"; //base bootstrap
 
 /* Importing HeliPopper files (for tooltips and popovers) */
-@import "~tippy.js/dist/tippy.css";
-@import "~tippy.js/themes/translucent.css";
-@import "~tippy.js/animations/scale.css";
+@import "/node_modules/tippy.js/dist/tippy.css";
+@import "/node_modules/tippy.js/themes/material.css";
+@import "/node_modules/tippy.js/animations/scale.css";
 
 /* For no outline when click button */
 .no-outline {
@@ -191,20 +188,6 @@ a {
   word-break: break-all;
 }
 
-/* For colorize text white or black depending on darkmode */
-.text-alt,
-.text-alt:hover,
-html.dark .text-inverse-alt,
-html.dark .text-inverse-alt:hover {
-  color: $body-color;
-}
-.text-inverse-alt,
-.text-inverse-alt:hover,
-html.dark .text-alt,
-html.dark .text-alt:hover {
-  color: $body-color-alt;
-}
-
 /* Image Thumbnail mixin: for include as content of other classes */
 @mixin img-thumbnail {
   padding: $thumbnail-padding;
@@ -217,57 +200,9 @@ html.dark .text-alt:hover {
   @include img-fluid();
 }
 
-/* Image Thumbnail Dark mixin */
-@mixin img-thumbnail-dark {
-  @include img-thumbnail;
-  background-color: $thumbnail-bg-alt;
-  border: $thumbnail-border-width solid $thumbnail-border-color-alt;
-}
-
-/* Image Thumbnail (always) dark for both light and dark mode */
-.img-thumbnail-dark {
-  @include img-thumbnail-dark();
-}
-
-@include media-breakpoint-up(sm) {
-  .text-sm-alt,
-  .text-sm-alt:hover,
-  html.dark .text-inverse-sm-alt,
-  html.dark .text-inverse-sm-alt:hover {
-    color: $body-color !important;
-  }
-  .text-inverse-sm-alt,
-  .text-inverse-sm-alt:hover,
-  html.dark .text-sm-alt,
-  html.dark .text-sm-alt:hover {
-    color: $body-color-alt !important;
-  }
-
-  .text-sm-pre-wrap {
-    white-space: pre-wrap;
-  }
-
-  .text-sm-break-all {
-    word-break: break-all;
-  }
-
-  .img-thumbnail-sm {
-    @include img-thumbnail();
-  }
-
-  html.dark .img-thumbnail-sm {
-    @include img-thumbnail-dark();
-  }
-
-  .img-thumbnail-dark-sm {
-    @include img-thumbnail-dark();
-  }
-}
-
 /* Allows remove borders when screen is md or above */
 @include media-breakpoint-up(md) {
-  .border-md-0,
-  html.dark .border-md-0 {
+  .border-md-0 {
     border: none !important;
     border-top: none !important;
     border-bottom: none !important;
@@ -286,53 +221,35 @@ html.dark .text-alt:hover {
   .img-thumbnail-md {
     @include img-thumbnail();
   }
-
-  html.dark .img-thumbnail-md {
-    @include img-thumbnail-dark();
-  }
-
-  .img-thumbnail-dark-md {
-    @include img-thumbnail-dark();
-  }
 }
 
-/* Dropdown (always) dark for both light and dark mode */
-.dropdown-menu-dark-alt {
-  color: $dropdown-dark-color;
-  background-color: #161b22 !important;
-  border-color: $dropdown-dark-border-color;
-  @include box-shadow($dropdown-dark-box-shadow);
+/* Add a top arrow to a dropdown-menu for looks like a popover */
+.dropdown-menu-arrow:before {
+  right: 15px;
+  top: -16px;
+  border: 8px solid #0000;
+  border-bottom: 8px solid $border-color-translucent;
+}
 
-  .dropdown-item {
-    color: $dropdown-dark-link-color;
+html[data-bs-theme="dark"] .dropdown-menu-arrow:before {
+  border-bottom: 8px solid $border-color-translucent-dark;
+}
 
-    &:hover,
-    &:focus {
-      color: $dropdown-dark-link-hover-color;
-      @include gradient-bg($dropdown-dark-link-hover-bg);
-    }
+.dropdown-menu-arrow:after {
+  right: 16px;
+  top: -14px;
+  border: 7px solid #0000;
+  border-bottom: 7px solid $body-bg;
+}
 
-    &.active,
-    &:active {
-      color: $dropdown-dark-link-active-color;
-      @include gradient-bg($dropdown-dark-link-active-bg);
-    }
+html[data-bs-theme="dark"] .dropdown-menu-arrow:after {
+  border-bottom: 7px solid $body-bg-dark;
+}
 
-    &.disabled,
-    &:disabled {
-      color: $dropdown-dark-link-disabled-color;
-    }
-  }
-
-  .dropdown-divider {
-    border-color: $dropdown-dark-divider-bg;
-  }
-
-  .dropdown-item-text {
-    color: $dropdown-dark-link-color;
-  }
-
-  .dropdown-header {
-    color: $dropdown-dark-header-color;
-  }
+.dropdown-menu-arrow:before,
+.dropdown-menu-arrow:after {
+  content: "";
+  left: auto;
+  display: inline-block;
+  position: absolute;
 }

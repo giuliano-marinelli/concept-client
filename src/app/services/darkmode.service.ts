@@ -7,16 +7,21 @@ export class DarkmodeService {
 
   constructor() { }
 
-  initDarkMode() {
+  initTheme() {
     let systemPreference = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? 'dark' : 'light';
     let userPreference = localStorage.getItem('prefers-color-scheme');
     if (!userPreference) localStorage.setItem('prefers-color-scheme', systemPreference);
-    if (this.isDarkMode()) document.documentElement.classList.add('dark');
+    document.documentElement.setAttribute('data-bs-theme', this.isDarkMode() ? 'dark' : 'light');
   }
 
-  toggleDarkMode() {
+  toggleTheme() {
     localStorage.setItem('prefers-color-scheme', this.isDarkMode() ? 'light' : 'dark');
-    document.documentElement.classList.toggle('dark');
+    document.documentElement.setAttribute('data-bs-theme', this.isDarkMode() ? 'dark' : 'light');
+  }
+
+  setTheme(theme: string) {
+    localStorage.setItem('prefers-color-scheme', theme);
+    document.documentElement.setAttribute('data-bs-theme', theme);
   }
 
   isDarkMode() {

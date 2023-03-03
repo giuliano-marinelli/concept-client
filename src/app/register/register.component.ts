@@ -1,12 +1,12 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { MessageService } from '../services/message.service';
 import { AuthService } from '../services/auth.service';
 import { User } from '../shared/models/user.model';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { CustomValidators } from 'ngx-custom-validators';
+// import { CustomValidators } from 'ngx-custom-validators';
 import { ExtraValidators } from '../shared/validators/validators';
 
 @Component({
@@ -20,8 +20,8 @@ export class RegisterComponent implements OnInit {
   emailCheckingLoading: boolean = false;
   usernameCheckingLoading: boolean = false;
 
-  registerForm!: UntypedFormGroup;
-  username = new UntypedFormControl('', [
+  registerForm!: FormGroup;
+  username = new FormControl('', [
     Validators.required,
     Validators.minLength(4),
     Validators.maxLength(30),
@@ -29,32 +29,32 @@ export class RegisterComponent implements OnInit {
   ], [
     ExtraValidators.usernameExists(this.userService)
   ]);
-  email = new UntypedFormControl('', [
+  email = new FormControl('', [
     Validators.required,
     Validators.maxLength(100),
     Validators.email
   ], [
     ExtraValidators.emailExists(this.userService)
   ]);
-  password = new UntypedFormControl('', [
+  password = new FormControl('', [
     Validators.required,
     Validators.minLength(6),
     Validators.maxLength(30)
   ]);
-  confirmPassword = new UntypedFormControl('', [
+  confirmPassword = new FormControl('', [
     Validators.required,
     Validators.minLength(6),
     Validators.maxLength(30),
-    CustomValidators.equalTo(this.password)
+    // CustomValidators.equalTo(this.password)
   ]);
-  role = new UntypedFormControl('', [
+  role = new FormControl('', [
     Validators.required
   ]);
 
   constructor(
     public auth: AuthService,
     public router: Router,
-    public formBuilder: UntypedFormBuilder,
+    public formBuilder: FormBuilder,
     public userService: UserService,
     public message: MessageService
   ) { }
@@ -84,7 +84,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  setValid(control: UntypedFormControl): object {
+  setValid(control: FormControl): object {
     return {
       'is-invalid': control.dirty && !control.valid,
       'is-valid': control.dirty && control.valid

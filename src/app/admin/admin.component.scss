@@ -26,31 +26,3 @@
   background: $primary;
   border-radius: 6px;
 }
-
-::ng-deep html.dark .nav-item a.active::after  {
-  background: $primary-alt !important;
-}
-
-.container-navbar {
-  padding-right: 12px;
-  background-color: $navbar-bg;
-}
-
-::ng-deep html.dark .container-navbar {
-  background-color: $navbar-bg;
-}
-
-.content {
-  background-color: $body-bg;
-}
-
-::ng-deep html.dark .content {
-  background-color: $body-bg-alt;
-}
-
-@include media-breakpoint-up(sm) {
-  .container-navbar,
-  ::ng-deep html.dark .container-navbar {
-    background-color: unset;
-  }
-}

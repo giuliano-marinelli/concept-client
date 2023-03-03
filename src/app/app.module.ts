@@ -9,10 +9,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TippyModule } from '@ngneat/helipopper';
+import { provideTippyConfig, TippyDirective } from '@ngneat/helipopper';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { FontAwesomeModule, FaIconLibrary, FaConfig } from '@fortawesome/angular-fontawesome';
-import { CustomFormsModule } from 'ngx-custom-validators';
+// import { CustomFormsModule } from 'ngx-custom-validators';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { MomentModule } from 'ngx-moment';
 //icons
@@ -95,17 +95,35 @@ import { LanguagesComponent } from './languages/languages.component';
     //modules
     AppRoutingModule,
     NgbModule,
+    FontAwesomeModule,
+    ImageCropperModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: (): string | null => localStorage.getItem('token'),
         // whitelistedDomains: ['localhost:3000', 'localhost:4200']
       }
     }),
-    TippyModule.forRoot({
+    InputMaskModule.forRoot({
+      inputSelector: 'input',
+      isAsync: true
+    }),
+    MomentModule.forRoot({
+      relativeTimeThresholdOptions: {
+        'm': 59
+      }
+    }),
+    //directives
+    TippyDirective
+  ],
+  providers: [
+    //interceptors
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    //configurations
+    provideTippyConfig({
       defaultVariation: 'tooltip',
       variations: {
         tooltip: {
-          theme: 'translucent',
+          theme: 'material',
           arrow: true,
           maxWidth: 200,
           animation: 'scale',
@@ -113,7 +131,7 @@ import { LanguagesComponent } from './languages/languages.component';
           offset: [0, 5]
         },
         popper: {
-          theme: 'translucent',
+          theme: 'material',
           arrow: true,
           maxWidth: 200,
           animation: 'scale',
@@ -122,22 +140,6 @@ import { LanguagesComponent } from './languages/languages.component';
         },
       }
     }),
-    InputMaskModule.forRoot({
-      inputSelector: 'input',
-      isAsync: true
-    }),
-    FontAwesomeModule,
-    CustomFormsModule,
-    ImageCropperModule,
-    MomentModule.forRoot({
-      relativeTimeThresholdOptions: {
-        'm': 59
-      }
-    })
-  ],
-  providers: [
-    //interceptors
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     //services
     UserService,
     SessionService,

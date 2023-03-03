@@ -2,7 +2,7 @@
   (window:resize)="navbarSettings.collapsed = true" (window:mousewheel)="navbarSettings.collapsed = true">
   <a class="close-navbar-toggler collapsed" [class.collapsed]="navbarSettings.collapsed"
     (click)="navbarSettings.collapsed = true"></a>
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top p-0 align-items-stretch navbar-concept">
+  <nav class="navbar navbar-expand-md fixed-top p-0 align-items-stretch navbar-concept">
     <div class="container-fluid container-xl p-0 align-items-stretch">
       <button class="navbar-toggler no-outline border-0 py-2" [class.collapsed]="navbarSettings.collapsed" type="button"
         (click)="navbarSettings.collapsed = !navbarSettings.collapsed">
@@ -24,8 +24,8 @@
       <div class="order-md-1 flex-md-grow-0 py-2">
         <ul class="navbar-nav flex-row-reverse">
           <li class="nav-item me-4 me-md-2">
-            <a class="nav-link pe-pointer" placement="bottom" (click)="darkmodeService.toggleDarkMode()">
-              <fa-icon [icon]="darkmodeService.isDarkMode() ? 'sun' : 'moon' "></fa-icon>
+            <a class="nav-link pe-pointer" placement="bottom" (click)="darkmodeService.toggleTheme()">
+              <fa-icon [icon]="darkmodeService.isDarkMode() ? 'moon' : 'sun' "></fa-icon>
             </a>
           </li>
         </ul>
@@ -56,26 +56,26 @@
               <fa-icon [icon]="'gears'"></fa-icon> Settings
             </a>
           </li>
-          <li class="nav-item border-top border-md-0 text-white" *ngIf="auth.loggedUserLoading">
+          <li class="nav-item border-top border-md-0 text-body" *ngIf="auth.loggedUserLoading">
             <fa-icon [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
           </li>
           <li class="nav-item border-top border-md-0" *ngIf="!auth.loggedUserLoading && auth.loggedUser">
-            <a class="nav-link d-block d-md-none" routerLink="/user/{{auth.loggedUser?.username}}"
+            <a class="nav-link d-block d-md-none" routerLink="/user/{{auth.loggedUser.username}}"
               routerLinkActive="active" (click)="navbarSettings.collapsed = true">
-              <img class="img-thumbnail-dark rounded-circle profile-img" [src]="auth.loggedUser?.avatar"
-                onerror="this.src='assets/images/default-user.png'" />&nbsp;<b>{{auth.loggedUser?.username}}</b>
+              <img class="img-thumbnail bg-secondary rounded-circle profile-img" [src]="auth.loggedUser.avatar"
+                onerror="this.src='assets/images/default-user.png'" />&nbsp;<b>{{auth.loggedUser.username}}</b>
             </a>
             <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
               <a class="nav-link d-none d-md-block pe-pointer p-0" ngbDropdownToggle>
-                <img class="img-thumbnail-dark rounded-circle profile-img" [src]="auth.loggedUser?.avatar"
+                <img class="img-thumbnail bg-secondary rounded-circle profile-img" [src]="auth.loggedUser.avatar"
                   onerror="this.src='assets/images/default-user.png'" />
               </a>
-              <div class="dropdown-menu-dark-alt shadow-lg" ngbDropdownMenu>
-                <a class="d-block p-3 pt-0 pb-0 text-light small" routerLink="/user/{{auth.loggedUser?.username}}">
-                  Signed in as <b>{{auth.loggedUser?.username}}</b>
+              <div class="dropdown-menu dropdown-menu-arrow shadow-sm" ngbDropdownMenu>
+                <a class="d-block p-3 pt-0 pb-0 small text-body" routerLink="/user/{{auth.loggedUser.username}}">
+                  Signed in as <b>{{auth.loggedUser.username}}</b>
                 </a>
                 <div class="dropdown-divider m-1"></div>
-                <a ngbDropdownItem class="small" routerLink="/user/{{auth.loggedUser?.username}}">
+                <a ngbDropdownItem class="small" routerLink="/user/{{auth.loggedUser.username}}">
                   <fa-icon [icon]="'user'"></fa-icon> Your profile
                 </a>
                 <div class="dropdown-divider m-1"></div>
@@ -116,8 +116,8 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer class="footer mt-auto py-3 bg-dark">
-  <div class="container">
+<footer class="footer mt-auto py-3">
+  <div class="container text-end pe-4">
     <span class="text-muted">
       <fa-icon [icon]="'dice-d6'"></fa-icon> © 2023 Concept.
     </span>

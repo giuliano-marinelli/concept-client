@@ -6,6 +6,16 @@
   padding: 0.125rem;
 }
 
+.tag-edit,
+.tag-attribute {
+  opacity: 0.8;
+}
+
+.tag-edit:hover,
+.tag-attribute:hover {
+  opacity: 1;
+}
+
 @include media-breakpoint-up(sm) {
   .tag-edit input,
   .tag-edit select {
@@ -17,12 +27,4 @@
   .tag-edit {
     min-width: 100%;
   }
-}
-
-.input-tags-placeholder {
-  color: $input-placeholder-color;
-}
-
-html.dark .input-tags-placeholder {
-  color: $input-placeholder-color-alt;
 }

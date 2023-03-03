@@ -4,7 +4,14 @@ import { TippyDirective } from '@ngneat/helipopper';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from "moment";
 
-export type Color = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
+export type Color =
+  'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' |
+  'primary-subtle' | 'secondary-subtle' | 'success-subtle' | 'danger-subtle' | 'warning-subtle' | 'info-subtle' | 'light-subtle' | 'dark-subtle' |
+  'body' | 'body-secondary' | 'body-tertiary' | 'black' | 'white' | 'transparent';
+export type TextColor =
+  'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' |
+  'primary-emphasis' | 'secondary-emphasis' | 'success-emphasis' | 'danger-emphasis' | 'warning-emphasis' | 'info-emphasis' | 'light-emphasis' | 'dark-emphasis' |
+  'body' | 'body-emphasis' | 'body-secondary' | 'body-tertiary' | 'black' | 'white' | 'muted';
 export type Sort = 'asc' | 'desc' | null;
 export type Criteria = '$gt' | '$gte' | '$lt' | '$lte' | '$eq' | '$ne' | '$like';
 
@@ -14,6 +21,8 @@ export interface Attribute {
   title?: string;
   category?: string;
   color?: Color;
+  titleColor?: TextColor;
+  categoryColor?: TextColor;
 }
 
 export interface SearchAttribute {
@@ -43,7 +52,9 @@ export class SearchComponent implements OnInit {
   @Input() searchTagsClass: string = '';
   @Input() searchTagClass: string = '';
   @Input() searchTagEditClass: string = '';
-  @Input() defaultTagColor: Color = 'secondary';
+  @Input() defaultTagColor: Color = 'body-secondary';
+  @Input() defaultTagTitleColor: TextColor = 'body';
+  @Input() defaultTagCategoryColor: TextColor = 'body-emphasis';
 
   @Input() search: any;
   @Output() searchChange = new EventEmitter<any>();

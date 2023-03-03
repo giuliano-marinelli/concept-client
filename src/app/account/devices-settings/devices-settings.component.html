@@ -1,6 +1,6 @@
 <div class="container mb-3">
   <div class="mt-3 mt-sm-0 border-bottom">
-    <h2>Devices <a class="btn p-0 text-muted" (click)="getSessions()" [class.disabled]="sessionsLoading">
+    <h2>Devices <a class="btn p-0 text-muted border-0" (click)="getSessions()" [class.disabled]="sessionsLoading">
         <fa-icon [icon]="'rotate-right'" size="lg" [spin]="sessionsLoading" [pulse]="sessionsLoading"></fa-icon>
       </a>
     </h2>
@@ -29,9 +29,9 @@
 </div>
 
 <ng-template #sessionCard let-session="session">
-  <div class="card">
+  <div class="card bg-dark-subtle">
     <div *ngIf="submitLoading.includes(session._id)"
-      class="overlay d-flex align-items-center text-center text-white rounded">
+      class="overlay d-flex align-items-center text-center text-body rounded">
       <fa-icon class="flex-fill" [icon]="'spinner'" [spin]="true" [pulse]="true" size="2x"></fa-icon>
     </div>
     <div class="card-body">

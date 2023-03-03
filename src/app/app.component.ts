@@ -22,7 +22,7 @@ export class AppComponent {
 
   ngOnInit() {
     //initialize darkmode
-    this.darkmodeService.initDarkMode();
+    this.darkmodeService.initTheme();
 
     //for change page title
     this.router.events.pipe(

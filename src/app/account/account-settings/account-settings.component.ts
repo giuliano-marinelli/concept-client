@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
@@ -23,9 +23,9 @@ export class AccountSettingsComponent implements OnInit {
 
   user?: User;
 
-  userForm!: UntypedFormGroup;
+  userForm!: FormGroup;
   _id: any;
-  username = new UntypedFormControl('', [
+  username = new FormControl('', [
     Validators.required,
     Validators.minLength(4),
     Validators.maxLength(30),
@@ -36,7 +36,7 @@ export class AccountSettingsComponent implements OnInit {
   constructor(
     public auth: AuthService,
     public router: Router,
-    public formBuilder: UntypedFormBuilder,
+    public formBuilder: FormBuilder,
     public userService: UserService,
     public message: MessageService
   ) { }
@@ -58,7 +58,7 @@ export class AccountSettingsComponent implements OnInit {
     this.getUser();
   }
 
-  setValid(control: UntypedFormControl): object {
+  setValid(control: FormControl): object {
     return {
       'is-invalid': control.dirty && !control.valid,
       'is-valid': control.dirty && control.valid
