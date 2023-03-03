@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators, FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { UserService } from 'src/app/services/user.service';
-// import { CustomValidators } from 'ngx-custom-validators';
+import { CustomValidators } from '@narik/custom-validators';
 import { createMask } from '@ngneat/input-mask';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { base64ToFile } from 'ngx-image-cropper';
@@ -25,7 +25,7 @@ export class ProfileSettingsComponent implements OnInit {
 
   user?: User;
 
-  profileForm!: UntypedFormGroup;
+  profileForm!: FormGroup;
   _id: any;
   name = new FormControl('', [
     Validators.minLength(0),
@@ -40,7 +40,7 @@ export class ProfileSettingsComponent implements OnInit {
   url = new FormControl('', [
     Validators.minLength(0),
     Validators.maxLength(200),
-    // CustomValidators.url
+    CustomValidators.url
     // Validators.pattern('[a-zA-Z0-9,;\.\/_-\\s]*')
   ]);
   urlMask = createMask({ alias: 'url' });
@@ -87,7 +87,7 @@ export class ProfileSettingsComponent implements OnInit {
     this.getUser();
   }
 
-  setValid(control: UntypedFormControl): object {
+  setValid(control: FormControl): object {
     return {
       'is-invalid': control.dirty && !control.valid,
       'is-valid': control.dirty && control.valid

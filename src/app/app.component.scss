@@ -7,6 +7,7 @@
 
 .navbar-concept {
   background-color: $body-secondary-bg;
+  // box-shadow: $box-shadow;
 }
 
 ::ng-deep html[data-bs-theme="dark"] .navbar-concept {
@@ -16,6 +17,7 @@
 @include media-breakpoint-down(sm) {
   .navbar-concept {
     background-color: $body-bg;
+    // box-shadow: unset;
   }
 
   ::ng-deep html[data-bs-theme="dark"] .navbar-concept {

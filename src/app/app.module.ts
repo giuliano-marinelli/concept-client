@@ -12,9 +12,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { provideTippyConfig, TippyDirective } from '@ngneat/helipopper';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { FontAwesomeModule, FaIconLibrary, FaConfig } from '@fortawesome/angular-fontawesome';
-// import { CustomFormsModule } from 'ngx-custom-validators';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { MomentModule } from 'ngx-moment';
+import { NarikCustomValidatorsModule  } from '@narik/custom-validators';
 //icons
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -97,6 +97,7 @@ import { LanguagesComponent } from './languages/languages.component';
     NgbModule,
     FontAwesomeModule,
     ImageCropperModule,
+    NarikCustomValidatorsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: (): string | null => localStorage.getItem('token'),

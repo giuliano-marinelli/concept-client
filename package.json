@@ -35,6 +35,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.3.0",
     "@fortawesome/free-regular-svg-icons": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@narik/custom-validators": "^9.0.0",
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "@ngneat/helipopper": "^6.6.0",
     "@ngneat/input-mask": "^6.1.0",

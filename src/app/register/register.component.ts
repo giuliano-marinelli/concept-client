@@ -1,12 +1,12 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../services/user.service';
 import { MessageService } from '../services/message.service';
 import { AuthService } from '../services/auth.service';
 import { User } from '../shared/models/user.model';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-// import { CustomValidators } from 'ngx-custom-validators';
+import { CustomValidators } from '@narik/custom-validators';
 import { ExtraValidators } from '../shared/validators/validators';
 
 @Component({
@@ -45,7 +45,7 @@ export class RegisterComponent implements OnInit {
     Validators.required,
     Validators.minLength(6),
     Validators.maxLength(30),
-    // CustomValidators.equalTo(this.password)
+    CustomValidators.equalTo(this.password)
   ]);
   role = new FormControl('', [
     Validators.required
