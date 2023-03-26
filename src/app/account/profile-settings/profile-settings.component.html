@@ -99,7 +99,7 @@
               <a ngbDropdownItem class="small pe-pointer" (click)="avatarInputFile.click()">
                 <fa-icon [icon]="'camera'"></fa-icon> Upload photo...
               </a>
-              <a ngbDropdownItem class="small pe-pointer" (click)="avatar.setValue(''); avatarFile.setValue('')">
+              <a ngbDropdownItem class="small pe-pointer" (click)="avatar.setValue(''); avatarFile.setValue(null)">
                 <fa-icon [icon]="'trash-can'"></fa-icon> Remove photo
               </a>
             </div>

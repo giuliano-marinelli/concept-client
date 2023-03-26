@@ -20,7 +20,6 @@ export class ProfileComponent implements OnInit {
   //router params
   username!: string;
 
-
   constructor(
     public auth: AuthService,
     public route: ActivatedRoute,
@@ -47,7 +46,7 @@ export class ProfileComponent implements OnInit {
         if (data[0]) {
           this.user = data[0];
           console.log(data[0]);
-          if (this.user?.username) this.titleService.setTitle(this.user.username);
+          if (this.user?.username) this.titleService.setTitle(this.user.username + ' (' + this.user.profile?.name + ")");
         } else {
           this.router.navigate(['not-found']);
         }

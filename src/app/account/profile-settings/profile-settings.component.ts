@@ -50,7 +50,7 @@ export class ProfileSettingsComponent implements OnInit {
     Validators.pattern('[a-zA-Z0-9,\\s]*')
   ]);
   avatar = new FormControl('', []);
-  avatarFile = new FormControl('', []);
+  avatarFile = new FormControl<Blob | null>(null, []);
   avatarChangedEvent!: Event;
 
   constructor(
@@ -143,8 +143,7 @@ export class ProfileSettingsComponent implements OnInit {
   }
 
   onCroppedAvatar(event: any): void {
-    // this.avatarFile.setValue(base64ToFile(event.base64));
-    this.avatarFile.setValue(event.base64);
+    this.avatarFile.setValue(base64ToFile(event.base64));
     this.avatarFile.markAsDirty();
     this.avatarImage.nativeElement.src = event.base64;
   }
