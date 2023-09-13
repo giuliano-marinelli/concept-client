@@ -1,3 +1,5 @@
+import { Lenght, LenghtPercentage, Percentage } from "../models/graph.model";
+
 export class Global {
 
   static createFormData(object: any): FormData {
@@ -70,4 +72,19 @@ export class Global {
     });
   }
 
+  static percentageValue(percentage?: LenghtPercentage): number {
+    return percentage ? Number(String(percentage).replace(/\D/g, '')) : 0;
+  }
+
+  static percentageOf(percentage?: LenghtPercentage, value?: number): number {
+    return percentage && value
+      ? (typeof percentage !== "number" && /^\d+(\.\d+)?%$/.test(percentage)
+        ? this.percentageValue(percentage) * value / 100
+        : Number(percentage))
+      : 0;
+  }
+
+  static toPixelNumber(value?: LenghtPercentage): number {
+    return value ? Number(String(value).replace(/\D/g, '')) : 0;
+  }
 }

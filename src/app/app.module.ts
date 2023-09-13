@@ -14,7 +14,7 @@ import { InputMaskModule } from '@ngneat/input-mask';
 import { FontAwesomeModule, FaIconLibrary, FaConfig } from '@fortawesome/angular-fontawesome';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { MomentModule } from 'ngx-moment';
-import { NarikCustomValidatorsModule  } from '@narik/custom-validators';
+import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 //icons
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -54,6 +54,9 @@ import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
 import { LanguagesComponent } from './languages/languages.component';
+import { GraphComponent } from './shared/graph/graph.component';
+import { CellComponent } from './shared/graph/cell/cell.component';
+import { RenderComponent } from './shared/graph/cell/render/render.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +84,10 @@ import { LanguagesComponent } from './languages/languages.component';
     AdminComponent,
     UsersAdminComponent,
     AccountSettingsComponent,
-    LanguagesComponent
+    LanguagesComponent,
+    GraphComponent,
+    CellComponent,
+    RenderComponent
   ],
   imports: [
     //angular modules

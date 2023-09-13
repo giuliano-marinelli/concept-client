@@ -43,7 +43,8 @@
             </a>
           </li>
           <li class="nav-item border-top border-md-0" *ngIf="!auth.loggedUserLoading">
-            <a class="nav-link" routerLink="/languages" routerLinkActive="active" (click)="navbarSettings.collapsed = true">
+            <a class="nav-link" routerLink="/languages" routerLinkActive="active"
+              (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'landmark'"></fa-icon> Languages
             </a>
           </li>
@@ -119,7 +120,7 @@
 <footer class="footer mt-auto py-3">
   <div class="container text-end pe-4">
     <span class="text-muted">
-      <fa-icon [icon]="'dice-d6'"></fa-icon> Concept © 2023
+      <fa-icon [icon]="'dice-d6'"></fa-icon> Concept © {{ currentYear }}
     </span>
   </div>
 </footer>

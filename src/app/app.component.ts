@@ -12,6 +12,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class AppComponent {
   title = 'concept-client';
+  currentYear = new Date().getUTCFullYear();
 
   constructor(
     public auth: AuthService,

@@ -1,0 +1,23 @@
+<svg:svg [attr.x]="transform.outsideX" [attr.y]="transform.outsideY" [attr.width]="transform.outsideWidth"
+  [attr.height]="transform.outsideHeight">
+
+  <svg:rect *ngIf="markup.type == 'rect'" [attr.x]="transform.x" [attr.y]="transform.y" [attr.width]="transform.width"
+    [attr.height]="transform.height" [ngStyle]="markup.style" />
+  <svg:text *ngIf="markup.type == 'text'" [attr.x]="markup.rx" [attr.y]="markup.ry" [ngStyle]="markup.style">
+    TEXTO
+  </svg:text>
+
+  <svg:svg [attr.x]="transform.insideX" [attr.y]="transform.insideY" [attr.width]="transform.insideWidth"
+    [attr.height]="transform.insideHeight" *ngIf="markup.children?.length">
+
+    <ng-container *ngFor="let child of markup.children; let i = index; let last = last;">
+      <svg:g class="render" *ngIf="!last" [markup]="child" [parent]="this" [attr.selector]="child.selector">
+      </svg:g>
+
+      <svg:g class="render" *ngIf="last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
+        (changeTransform)="changeLastChildTransform($event)">
+      </svg:g>
+    </ng-container>
+
+  </svg:svg>
+</svg:svg>

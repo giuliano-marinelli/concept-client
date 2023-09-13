@@ -1,0 +1,34 @@
+<svg:svg width="100%" height="700" style="background: gray">
+  <svg:g class="cell" *ngFor="let inst of instance" [markup]="model[inst.model].markup"
+    [tokens]="model[inst.model].tokens" [values]="inst.values" [transform]="inst.transform"></svg:g>
+  <!-- <svg:g cell></svg:g> -->
+  <!-- <svg:svg *ngFor="let element of instance" [(attr.x)]="element.attributes.root.x"
+    [(attr.y)]="element.attributes.root.y" [(attr.width)]="element.attributes.root.width"
+    [(attr.height)]="element.attributes.root.height">
+    (click)="onSelectNode()">
+    <ng-container *ngFor="let svg of model[element.model].render" [ngTemplateOutlet]="render"
+      [ngTemplateOutletContext]="{ svg: svg, values: element.values, uuid: element.attributes.root.id }">
+    </ng-container>
+  </svg:svg> -->
+</svg:svg>
+
+<!-- <ng-template #render let-svg="svg" let-values="values" let-uuid="uuid" let-context="context">
+  <ng-container *ngVar="{ relative: getRelativePosition(uuid, context?.previous?.selector, context?.container?.selector, svg) } as position">
+    <ng-container [ngSwitch]="svg.type">
+      <ng-container *ngSwitchCase="'rect'">
+        <svg:rect #svgs [(id)]="uuid + svg.selector" [(attr.x)]="position.relative.x" [(attr.y)]="position.relative.y"
+          [(attr.width)]="svg.width" [(attr.height)]="svg.height" [attr.fill]="svg.fill" [attr.stroke]="svg.stroke"
+          [attr.stroke-width]="svg['stroke-width']" />
+      </ng-container>
+    </ng-container>
+    <svg:svg [(attr.x)]="position.relative.x" [(attr.y)]="position.relative.y" [(attr.width)]="svg.width"
+      [(attr.height)]="svg.height">
+      <ng-container *ngIf="svg.children?.length">
+        <ng-container *ngFor="let child of svg.children; let i = index" [ngTemplateOutlet]="render"
+          [ngTemplateOutletContext]="{ svg: child, values: values, uuid: uuid,
+          context: { container: svg, previous: svg.children[i - 1] } }">
+        </ng-container>
+      </ng-container>
+    </svg:svg>
+  </ng-container>
+</ng-template> -->

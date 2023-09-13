@@ -30,7 +30,17 @@
       </nav>
     </div>
     <div class="content col-sm-8 col-md-9 ps-4 ps-sm-0">
+      <graph [model]="model" [instance]="instance"></graph>
       <router-outlet></router-outlet>
+      <!-- <div style="width: 100px; height: 100px; background-color: red;">
+        <div style="width: 100%; height: 50px; margin: 10px; background-color: blue;"></div>
+      </div> -->
+      <button type="button" class="btn btn-danger" (click)="changeTest()">
+        change model
+      </button>
+      <button type="button" class="btn btn-success" (click)="updateTest()">
+        update
+      </button>
     </div>
   </div>
 </div>
