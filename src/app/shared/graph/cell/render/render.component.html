@@ -15,7 +15,7 @@
       </svg:g>
 
       <svg:g class="render" *ngIf="last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="changeLastChildTransform($event)">
+        (changeTransform)="onChangeLastChild($event)">
       </svg:g>
     </ng-container>
 

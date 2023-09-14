@@ -72,19 +72,40 @@ export class Global {
     });
   }
 
-  static percentageValue(percentage?: LenghtPercentage): number {
+  //convert a percentage value into a number
+  static percentageToNumber(percentage?: Percentage): number {
     return percentage ? Number(String(percentage).replace(/\D/g, '')) : 0;
   }
 
-  static percentageOf(percentage?: LenghtPercentage, value?: number): number {
-    return percentage && value
-      ? (typeof percentage !== "number" && /^\d+(\.\d+)?%$/.test(percentage)
-        ? this.percentageValue(percentage) * value / 100
-        : Number(percentage))
-      : 0;
+  //convert lenght in cm, mm, Q, in, pc, pt and px into a number that represent the lenght in pixels
+  static lenghtToNumber(lenght?: Lenght): number {
+    //get floating number from lenght string with unit
+    let number: number = Number(String(lenght).replace(/[^\d.-]/g, ''));
+    //get unit from lenght string with unit
+    let unit: string = String(lenght).replace(/[^a-zA-Z]/g, '');
+    if (!number) return 0;
+    switch (unit) {
+      case "cm": return number * 37.795275590551;
+      case "mm": return number * 3.7795275590551;
+      case "Q": return number * 0.94488188976378;
+      case "in": return number * 96;
+      case "pc": return number * 16;
+      case "pt": return number * 1.3333333333333;
+      case "px": return number;
+      default: return number;
+    }
   }
 
-  static toPixelNumber(value?: LenghtPercentage): number {
-    return value ? Number(String(value).replace(/\D/g, '')) : 0;
+  //given a percentage and a lenght, return the percentage of the lenght in pixels
+  static percentageOfLenght(percentage?: Percentage, lenght?: Lenght): number {
+    return this.lenghtToNumber(lenght) * this.percentageToNumber(percentage) / 100;
   }
+
+  //given a lenght/percentage and a lenght, return the percentage of the lenght or the original lenght in pixels
+  static lenghtPercentageToNumber(lenghtPercentage?: LenghtPercentage, lenght?: Lenght): number {
+    return String(lenghtPercentage).includes("%") && lenght
+      ? this.percentageOfLenght(lenghtPercentage as Percentage, lenght)
+      : this.lenghtToNumber(lenghtPercentage as Lenght);
+  }
+
 }

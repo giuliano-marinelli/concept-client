@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { Markup, Token, Transform, Value, Position, defaultMarkup, defaultTransform, CellTransform } from 'src/app/shared/models/graph.model';
+import { Markup, Token, Transform, Value, Position, defaultMarkup, defaultTransform, CellTransform, Lenght, LenghtPercentage } from 'src/app/shared/models/graph.model';
 import { Global } from 'src/app/shared/global/global';
 import _ from 'lodash';
 
@@ -17,7 +17,6 @@ export class RenderComponent implements OnInit {
   @Input() relative?: RenderComponent;
 
   @Output() changeTransform = new EventEmitter<{ ref: RenderComponent, prev: Transform, new: Transform }>();
-  @Output() lastChangeTransform = new EventEmitter<{ ref: RenderComponent, prev: Transform, new: Transform }>();
 
   @ViewChildren(RenderComponent) children?: QueryList<RenderComponent>;
 
@@ -68,13 +67,6 @@ export class RenderComponent implements OnInit {
     }), 0);
   }
 
-  // resetTransforms() {
-  //   this.transform = defaultTransform;
-  //   setTimeout(() => this.children?.forEach((child) => {
-  //     child.resetTransforms();
-  //   }), 0);
-  // }
-
   calculateTransform(caller?: { ref: RenderComponent, prev: Transform, new: Transform }) {
     if (!caller || !_.isEqual(caller.prev, caller.new)) {
       let prevTransform = this.transform;
@@ -93,72 +85,70 @@ export class RenderComponent implements OnInit {
       //calculate padding and margin
       let padding = { left: 0, right: 0, top: 0, bottom: 0 };
       if (this.markup.padding) {
-        if (typeof this.markup.padding === "number")
-          padding = { left: this.markup.padding, right: this.markup.padding, top: this.markup.padding, bottom: this.markup.padding };
+        if (typeof this.markup.padding !== "object")
+          padding = {
+            left: Global.lenghtPercentageToNumber(this.markup.padding, parentTransform.insideWidth),
+            right: Global.lenghtPercentageToNumber(this.markup.padding, parentTransform.insideWidth),
+            top: Global.lenghtPercentageToNumber(this.markup.padding, parentTransform.insideHeight),
+            bottom: Global.lenghtPercentageToNumber(this.markup.padding, parentTransform.insideHeight)
+          };
         else {
-          padding.left = Global.toPixelNumber((this.markup.padding as Position).left);
-          padding.right = Global.toPixelNumber((this.markup.padding as Position).right);
-          padding.top = Global.toPixelNumber((this.markup.padding as Position).top);
-          padding.bottom = Global.toPixelNumber((this.markup.padding as Position).bottom);
+          padding.left = Global.lenghtPercentageToNumber((this.markup.padding as Position).left, parentTransform.insideWidth);
+          padding.right = Global.lenghtPercentageToNumber((this.markup.padding as Position).right, parentTransform.insideWidth);
+          padding.top = Global.lenghtPercentageToNumber((this.markup.padding as Position).top, parentTransform.insideHeight);
+          padding.bottom = Global.lenghtPercentageToNumber((this.markup.padding as Position).bottom, parentTransform.insideHeight);
         }
       }
       let margin = { left: 0, right: 0, top: 0, bottom: 0 };
       if (this.markup.margin) {
-        if (typeof this.markup.margin === "number")
-          margin = { left: this.markup.margin, right: this.markup.margin, top: this.markup.margin, bottom: this.markup.margin };
+        if (typeof this.markup.margin !== "object")
+          margin = {
+            left: Global.lenghtPercentageToNumber(this.markup.margin, parentTransform.insideWidth),
+            right: Global.lenghtPercentageToNumber(this.markup.margin, parentTransform.insideWidth),
+            top: Global.lenghtPercentageToNumber(this.markup.margin, parentTransform.insideHeight),
+            bottom: Global.lenghtPercentageToNumber(this.markup.margin, parentTransform.insideHeight)
+          };
         else {
-          margin.left = Global.toPixelNumber((this.markup.margin as Position).left);
-          margin.right = Global.toPixelNumber((this.markup.margin as Position).right);
-          margin.top = Global.toPixelNumber((this.markup.margin as Position).top);
-          margin.bottom = Global.toPixelNumber((this.markup.margin as Position).bottom);
+          margin.left = Global.lenghtPercentageToNumber((this.markup.margin as Position).left, parentTransform.insideWidth);
+          margin.right = Global.lenghtPercentageToNumber((this.markup.margin as Position).right, parentTransform.insideWidth);
+          margin.top = Global.lenghtPercentageToNumber((this.markup.margin as Position).top, parentTransform.insideHeight);
+          margin.bottom = Global.lenghtPercentageToNumber((this.markup.margin as Position).bottom, parentTransform.insideHeight);
         }
       }
 
-      //calculate size
-      let cwidth = typeof this.markup.width === "number" ? this.markup.width :
-        (this.markup.width != "auto"
-          ? Global.percentageOf(this.markup.width, parentTransform.insideWidth)
-          : (this.markup.minWidth ? Global.percentageOf(this.markup.minWidth, parentTransform.insideWidth) : 0))
-      // : (this.parentTransform.insideWidth >= Global.percentageOf(this.markup.minWidth, this.parentTransform.insideWidth)
-      //   ? this.parentTransform.insideWidth
-      //   : Global.percentageOf(this.markup.minWidth, this.parentTransform.insideWidth)));
+      // console.log("parent", parentTransform, "prev", prevTransform, "padding", padding, "margin", margin);
 
-      let cheight = typeof this.markup.height === "number" ? this.markup.height :
-        (this.markup.height != "auto"
-          ? Global.percentageOf(this.markup.height, parentTransform.insideHeight)
-          : (this.markup.minHeight ? Global.percentageOf(this.markup.minHeight, parentTransform.insideHeight) : 0))
-      // : (this.parentTransform.insideHeight >= Global.percentageOf(this.markup.minHeight, this.parentTransform.insideHeight)
-      //   ? this.parentTransform.insideHeight
-      //   : Global.percentageOf(this.markup.minHeight, this.parentTransform.insideHeight)));
+      //calculate size
+      let cwidth = this.markup.width != "auto"
+        ? Global.lenghtPercentageToNumber(this.markup.width, parentTransform.insideWidth)
+        : (this.markup.minWidth ? Global.lenghtPercentageToNumber(this.markup.minWidth, parentTransform.insideWidth) : 0);
+
+      let cheight = this.markup.height != "auto"
+        ? Global.lenghtPercentageToNumber(this.markup.height, parentTransform.insideHeight)
+        : (this.markup.minHeight ? Global.lenghtPercentageToNumber(this.markup.minHeight, parentTransform.insideHeight) : 0);
 
       //calculate auto size
       if (caller && this.children?.length) {
         if (this.markup.width == "auto") {
-          cwidth = 0;
-          // this.children?.forEach((child) => {
-          //   cwidth += child.transform.outsideWidth;
-          // });
           cwidth = this.children?.first?.transform.outsideX + this.children?.last?.transform.outsideX + this.children?.last?.transform.outsideWidth;
-          if (padding.left && padding.right)
-            cwidth += padding.left + padding.right;
-          if (cwidth < Global.percentageOf(this.markup.minWidth, parentTransform.insideWidth))
-            cwidth = Global.percentageOf(this.markup.minWidth, parentTransform.insideWidth);
+          cwidth += padding.left + padding.right;
+          let mincwidth = Global.lenghtPercentageToNumber(this.markup.minWidth, parentTransform.insideWidth);
+          if (cwidth < mincwidth)
+            cwidth = mincwidth;
         }
 
         if (this.markup.height == "auto") {
-          // this.children?.forEach((child) => {
-          //   cheight += child.transform.outsideHeight;
-          // });
           cheight = this.children?.first?.transform.outsideY + this.children?.last?.transform.outsideY + this.children?.last?.transform.outsideHeight;
           cheight += padding.top + padding.bottom;
-          if (cheight < Global.percentageOf(this.markup.minHeight, parentTransform.insideHeight))
-            cheight = Global.percentageOf(this.markup.minHeight, parentTransform.insideHeight);
+          let mincheight = Global.lenghtPercentageToNumber(this.markup.minHeight, parentTransform.insideHeight);
+          if (cheight < mincheight)
+            cheight = mincheight;
         }
       }
 
-      //calculate position
-      let cx = Global.percentageOf(this.markup.x, parentTransform.insideWidth);
-      let cy = Global.percentageOf(this.markup.y, parentTransform.insideHeight);
+      //calculate position (absolute/relative) + margin
+      let cx = Global.lenghtPercentageToNumber(this.markup.x, parentTransform.insideWidth);
+      let cy = Global.lenghtPercentageToNumber(this.markup.y, parentTransform.insideHeight);
       if (this.markup.position == "relative" && this.relative) {
         if (parentTransform.insideWidth - this.relative.transform.outsideX - this.relative.transform.outsideWidth
           >= cwidth + margin.left + margin.right + cx)
@@ -170,9 +160,10 @@ export class RenderComponent implements OnInit {
       //adjust size and postion by stroke-width
       let cstroke = 0;
       if (this.markup.style && this.markup.style['stroke-width']) {
-        cstroke = Global.toPixelNumber(this.markup.style['stroke-width'])
+        cstroke = Global.lenghtPercentageToNumber(this.markup.style['stroke-width'], parentTransform.insideWidth);
       }
 
+      //generate transform
       this.transform = {
         outsideWidth: cwidth + margin.left + margin.right,
         outsideHeight: cheight + margin.top + margin.bottom,
@@ -191,6 +182,8 @@ export class RenderComponent implements OnInit {
       // console.log(caller?.ref.markup.selector ? caller?.ref.markup.selector : "", "=>", this.markup.selector,
       //   "\n", caller, "\n", "new", this.transform, "\n", "prev", prevTransform);
       console.log(caller?.ref.markup.selector ? caller?.ref.markup.selector : "", "=>", this.markup.selector);
+
+      //emit output change transform event
       this.changeTransform.emit({ ref: this, prev: prevTransform, new: this.transform });
     }
   }
@@ -232,18 +225,7 @@ export class RenderComponent implements OnInit {
     }
   }
 
-  //changeChildTransform(child: { ref: RenderComponent, prev: Transform, new: Transform }, relativeMarkup: any) {
-  // if (this.children && relativeMarkup) {
-  //   let relativeChild = this.children.find(child => child.markup.selector == relativeMarkup.selector);
-  //   if (relativeChild) {
-  //     relativeChild.relativeTransform = child.new;
-  //     relativeChild.calculateTransform(child);
-  //   }
-  // }
-  // child.ref.children?.forEach((renderChild) => renderChild.updateTransforms());
-  //}
-
-  changeLastChildTransform(child: { ref: RenderComponent, prev: Transform, new: Transform }) {
+  onChangeLastChild(child: { ref: RenderComponent, prev: Transform, new: Transform }) {
     this.calculateTransform(child);
   }
 }

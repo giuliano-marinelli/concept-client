@@ -1,9 +1,9 @@
 export type AbsoluteLenght = "cm" | "mm" | "Q" | "in" | "pt" | "pc" | "px";
-export type FontRelativeLenght = "em" | "rem" | "ex" | "rex" | "cap" | "rcap" | "ch" | "rch" | "ic" | "ric" | "lh" | "rlh";
-export type ViewportPercentageLenght = "*vw" | "*vh" | "*vi" | "*vb" | "*vmin" | "*vmax";
-export type Lenght = `${number}${AbsoluteLenght | FontRelativeLenght | ViewportPercentageLenght}`;
+// export type FontRelativeLenght = "em" | "rem" | "ex" | "rex" | "cap" | "rcap" | "ch" | "rch" | "ic" | "ric" | "lh" | "rlh";
+// export type ViewportPercentageLenght = "*vw" | "*vh" | "*vi" | "*vb" | "*vmin" | "*vmax";
+export type Lenght = `${number}${AbsoluteLenght}` | number | `${number}`;
 export type Percentage = `${number}%`;
-export type LenghtPercentage = Lenght | Percentage | number | `${number}`;
+export type LenghtPercentage = Lenght | Percentage;
 export type Position = { top?: LenghtPercentage, right?: LenghtPercentage, bottom?: LenghtPercentage, left?: LenghtPercentage };
 export type Color = string;
 export type Bind = string;

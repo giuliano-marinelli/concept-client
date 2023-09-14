@@ -7,7 +7,7 @@ import { RenderComponent } from './render/render.component';
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.scss']
 })
-export class CellComponent implements OnInit, AfterViewInit {
+export class CellComponent implements AfterViewInit {
 
   @Input() markup: Markup = defaultMarkup;
   @Input() tokens: Token = {};
@@ -16,17 +16,9 @@ export class CellComponent implements OnInit, AfterViewInit {
 
   @ViewChild(RenderComponent) render?: RenderComponent;
 
-  ngOnInit(): void {
-    // this.render = defaultRender;
-  }
-
   ngAfterViewInit() {
     this.updateRenderTransforms();
   }
-
-  // resetRenderTransforms() {
-  //   setTimeout(() => this.renderComponent?.resetTransforms(), 0);
-  // }
 
   updateRenderTransforms() {
     setTimeout(() => this.render?.updateTransforms(), 0);

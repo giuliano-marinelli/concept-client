@@ -21,7 +21,15 @@ export class LanguagesComponent implements OnInit {
         children: [
           {
             selector: "titleContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 30,
-            padding: 0, style: { fill: "white", stroke: "black", "stroke-width": "2px" },
+            padding: 0,
+            style: { fill: "white", stroke: "black", "stroke-width": "2px" },
+            children: [
+              {
+                selector: "titleText", type: "text", x: "0", y: "0", width: "100%", height: "auto", minHeight: 30, bind: "name",
+                text: { align: "center" },
+                style: { "font-size": "15px", "text-anchor": "middle", "dominant-baseline": "middle" }
+              }
+            ]
             // children: [
             //   {
             //     selector: "titleChild1", type: "rect", position: "relative", width: "25%", height: 25,
@@ -40,17 +48,11 @@ export class LanguagesComponent implements OnInit {
             //     margin: { right: 5, bottom: 5 }, style: { fill: "orange", stroke: "black", "stroke-width": "2px" }
             //   },
             // ]
-            children: [
-              {
-                selector: "titleText", type: "text", x: "0", y: "0", width: "100%", height: "auto", minHeight: 30, bind: "name",
-                text: { align: "right" },
-                style: { "font-size": "15px", "text-anchor": "middle", "dominant-baseline": "middle" }
-              }
-            ]
           },
           {
-            selector: "attributesContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 20, margin: { top: -1.5 },
-            padding: 10, style: { fill: "gray", stroke: "black", "stroke-width": "2px" },
+            selector: "attributesContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 20,
+            margin: { top: -1.5 }, padding: 10,
+            style: { fill: "gray", stroke: "black", "stroke-width": "2px" },
             // children: [
             //   {
             //     selector: "attributesList", type: "list", direction: "vertical", bind: "attributes",
@@ -91,8 +93,8 @@ export class LanguagesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let row = 1;
-    let col = 1;
+    let row = 4;
+    let col = 4;
     for (let i = 0; i < row; i++) {
       for (let j = 0; j < col; j++) {
         this.instance.push({
@@ -108,8 +110,8 @@ export class LanguagesComponent implements OnInit {
             ]
           },
           transform: {
-            x: 125 * j,
-            y: 150 * i,
+            x: 125 * j + 20,
+            y: 150 * i + 20,
             width: 100,
             height: 300
           }
@@ -119,10 +121,11 @@ export class LanguagesComponent implements OnInit {
   }
 
   changeTest() {
-    this.model.class.render[0].children.push(
+    this.model.class.markup.children.push(
       {
-        selector: "methodsContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 30, margin: { top: -1.5 },
-        padding: 10, fill: "brown", stroke: "black", "stroke-width": "2px"
+        selector: "methodsContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 30,
+        margin: { top: -1.5 }, padding: 10,
+        style: { fill: "brown", stroke: "black", "stroke-width": "2px" }
       }
     );
     this.graph?.updateModel();
