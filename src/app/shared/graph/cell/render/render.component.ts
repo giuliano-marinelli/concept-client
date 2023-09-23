@@ -31,10 +31,6 @@ export class RenderComponent implements OnInit {
   text: Text = {};
 
   ngOnInit(): void {
-    this.automaticMarkup();
-  }
-
-  automaticMarkup() {
     if (!this.markup.position) this.markup.position = "relative";
     if (!this.markup.x) this.markup.x = 0;
     if (!this.markup.y) this.markup.y = 0;
@@ -160,10 +156,16 @@ export class RenderComponent implements OnInit {
 
     //calculate auto size
     if (this.relativeChildren?.length) {
-      // let firstRelativeChild = this.children?.find(child => child.markup.position == "relative");
-      // let lastRelativeChild = this.children?.toArray().reverse().find(child => child.markup.position == "relative");
       if (this.markup.width == "auto") {
-        cwidth = this.relativeChildren.first.transform.outsideX + this.relativeChildren.last.transform.outsideX + this.relativeChildren.last.transform.outsideWidth;
+        // find child with max outsideX + outsideWidth
+        let maxWidth = 0;
+        this.relativeChildren.forEach((child) => {
+          if (child.transform.outsideX + child.transform.outsideWidth > maxWidth) {
+            maxWidth = child.transform.outsideX + child.transform.outsideWidth;
+          }
+        });
+        cwidth = maxWidth;
+        // cwidth = this.relativeChildren.first.transform.outsideX + this.relativeChildren.last.transform.outsideX + this.relativeChildren.last.transform.outsideWidth;
         cwidth += padding.left + padding.right;
         let mincwidth = Global.lenghtPercentageToNumber(this.markup.minWidth, parentTransform.insideWidth);
         if (cwidth < mincwidth)
@@ -171,7 +173,15 @@ export class RenderComponent implements OnInit {
       }
 
       if (this.markup.height == "auto") {
-        cheight = this.relativeChildren.first.transform.outsideY + this.relativeChildren.last.transform.outsideY + this.relativeChildren.last.transform.outsideHeight;
+        // find child with max outsideY + outsideHeight
+        let maxHeight = 0;
+        this.relativeChildren.forEach((child) => {
+          if (child.transform.outsideY + child.transform.outsideHeight > maxHeight) {
+            maxHeight = child.transform.outsideY + child.transform.outsideHeight;
+          }
+        });
+        cheight = maxHeight;
+        // cheight = this.relativeChildren.first.transform.outsideY + this.relativeChildren.last.transform.outsideY + this.relativeChildren.last.transform.outsideHeight;
         cheight += padding.top + padding.bottom;
         let mincheight = Global.lenghtPercentageToNumber(this.markup.minHeight, parentTransform.insideHeight);
         if (cheight < mincheight)
@@ -185,12 +195,14 @@ export class RenderComponent implements OnInit {
     //  x/y is defined: we must calculate the position based on parent width and height
     //  x/y is not defined: we must calculate the position based on parent inside width and height
     // BUT: we will always calculate the position based on parent inside width and height
-    //if position is relative, postion is always based on parent inside width and height
+    //if position is relative, position is always based on parent inside width and height
     let cx = Global.lenghtPercentageToNumber(this.markup.x, parentTransform.insideWidth);
     let cy = Global.lenghtPercentageToNumber(this.markup.y, parentTransform.insideHeight);
     if (this.markup.position == "relative" && this.relativePrev) {
+      // by default we place the next relative child at the same y position as the previous one
+      cy = this.relativePrev.transform.outsideY;
       if (parentTransform.insideWidth - this.relativePrev.transform.outsideX - this.relativePrev.transform.outsideWidth
-        >= cwidth + margin.left + margin.right + cx)
+        >= cwidth + margin.left + margin.right)
         cx = this.relativePrev.transform.outsideX + this.relativePrev.transform.outsideWidth;
       else
         cy = this.relativePrev.transform.outsideY + this.relativePrev.transform.outsideHeight;
@@ -206,14 +218,14 @@ export class RenderComponent implements OnInit {
     //padding only affects inside width and height
     //generate transform
     this.transform = {
-      outsideWidth: this.markup.position == "absolute" ? cwidth + margin.left + margin.right : cwidth,
-      outsideHeight: this.markup.position == "absolute" ? cheight + margin.top + margin.bottom : cheight,
+      outsideWidth: cwidth + margin.left + margin.right,//this.markup.position == "absolute" ? cwidth + margin.left + margin.right : cwidth,
+      outsideHeight: cheight + margin.top + margin.bottom,//this.markup.position == "absolute" ? cheight + margin.top + margin.bottom : cheight,
       outsideX: cx,
       outsideY: cy,
       width: cwidth - cstroke,
       height: cheight - cstroke,
-      x: (this.markup.position == "absolute" ? margin.left : 0) + cstroke / 2,
-      y: (this.markup.position == "absolute" ? margin.top : 0) + cstroke / 2,
+      x: margin.left + cstroke / 2,//(this.markup.position == "absolute" ? margin.left : 0) + cstroke / 2,
+      y: margin.top + cstroke / 2,//(this.markup.position == "absolute" ? margin.top : 0) + cstroke / 2,
       insideWidth: cwidth - padding.left - padding.right,
       insideHeight: cheight - padding.top - padding.bottom,
       insideX: cx + padding.left,
@@ -261,6 +273,8 @@ export class RenderComponent implements OnInit {
   onChangeChild(child: RenderComponent) {
     // notify next relative child to update their transform
     child.relativeNext?.calculateTransform(child);
+    // if (this.markup.width == "auto" || this.markup.height == "auto")
+    //   this.calculateTransform(child);
   }
 
   onChangeLastChild(child: RenderComponent) {
