@@ -60,9 +60,18 @@ export class Global {
         });
       } else if (Object.keys(filter)[0] == "$or") {
         match = false;
-        Object.keys(filter.$or).forEach(key => {
-          if (filter.$or[key] == item[key]) match = true;
-        });
+        //check if $or is an array or an object and make the filter
+        if (Array.isArray(filter.$or)) {
+          filter.$or.forEach((or: any) => {
+            Object.keys(or).forEach(key => {
+              if (or[key] == item[key]) match = true;
+            });
+          });
+        } else {
+          Object.keys(filter.$or).forEach(key => {
+            if (filter.$or[key] == item[key]) match = true;
+          });
+        }
       } else {
         Object.keys(filter).forEach(key => {
           if (filter[key] != item[key]) match = false;

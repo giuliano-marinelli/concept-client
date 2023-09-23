@@ -16,18 +16,28 @@ export class LanguagesComponent implements OnInit {
   model: any = {
     class: {
       markup: {
-        selector: "base", type: "rect", width: "100%", height: "auto", minHeight: 30,
-        style: { fill: "white", stroke: "black", "stroke-width": "2px" },
+        selector: "base", type: "rect", width: "100%", height: "auto", minHeight: 20, rx: 5, ry: 5,
+        padding: 0.5,
+        style: { fill: "white", stroke: "black", "stroke-width": "1px" },
         children: [
           {
-            selector: "titleContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 30,
-            padding: 0,
-            style: { fill: "white", stroke: "black", "stroke-width": "2px" },
+            selector: "titleContainer", type: "rect", position: "relative", width: "100%", height: "100px", minHeight: 20,
+            padding: 5, rx: 4.5, ry: 4.5,
+            style: { fill: "blue", "opacity": 0.5 },
             children: [
               {
-                selector: "titleText", type: "text", x: "0", y: "0", width: "100%", height: "auto", minHeight: 30, bind: "name",
-                text: { align: "center" },
-                style: { "font-size": "15px", "text-anchor": "middle", "dominant-baseline": "middle" }
+                selector: "titleBackground", type: "rect", position: "absolute", width: "100%", height: "100%",
+                style: { fill: "blue", opacity: 0.25 }
+              },
+              {
+                selector: "titleText", type: "text", width: "100%", height: "auto", minHeight: 20, bind: "name",
+                text: { halign: "left", valign: "top" },
+                style: { "font-size": "15px" }
+              },
+              {
+                selector: "titleText2", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
+                text: { halign: "right", valign: "bottom" },
+                style: { "font-size": "15px" }
               }
             ]
             // children: [
@@ -50,9 +60,13 @@ export class LanguagesComponent implements OnInit {
             // ]
           },
           {
+            selector: "breakline", position: "relative", x: 0, y: 0, width: "100%", height: 1,
+            type: "line", x1: 0, y1: 0.5, x2: "100%", y2: 0.5, style: { stroke: "black", "stroke-width": "1px" }
+          },
+          {
             selector: "attributesContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 20,
-            margin: { top: -1.5 }, padding: 10,
-            style: { fill: "gray", stroke: "black", "stroke-width": "2px" },
+            padding: 10,
+            style: { fill: "orange", "opacity": 0.5 }, rx: 4.5, ry: 4.5,
             // children: [
             //   {
             //     selector: "attributesList", type: "list", direction: "vertical", bind: "attributes",
@@ -69,6 +83,10 @@ export class LanguagesComponent implements OnInit {
             //     }
             //   }
             // ]
+          },
+          {
+            selector: "startAtTopLeft", position: "absolute", type: "polygon", x: "100%", y: 0, width: 10, height: 10,
+            points: "0,0 0,10 10,10", margin: { left: -10 }, style: { fill: "red", "opacity": 0.5 }
           }
         ]
       },
@@ -93,8 +111,8 @@ export class LanguagesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let row = 4;
-    let col = 4;
+    let row = 1;
+    let col = 1;
     for (let i = 0; i < row; i++) {
       for (let j = 0; j < col; j++) {
         this.instance.push({
@@ -124,8 +142,8 @@ export class LanguagesComponent implements OnInit {
     this.model.class.markup.children.push(
       {
         selector: "methodsContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 30,
-        margin: { top: -1.5 }, padding: 10,
-        style: { fill: "brown", stroke: "black", "stroke-width": "2px" }
+        padding: 10, rx: 4.5, ry: 4.5,
+        style: { fill: "brown", opacity: 0.5 },
       }
     );
     this.graph?.updateModel();

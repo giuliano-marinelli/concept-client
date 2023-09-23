@@ -6,7 +6,7 @@ import { Global } from '../global/global';
   pure: false
 })
 export class FilterPipe implements PipeTransform {
-  transform(items: any[], filter: any): any {
+  transform(items: any[] | undefined, filter: any): any {
     if (!items || !filter) {
       return items;
     }

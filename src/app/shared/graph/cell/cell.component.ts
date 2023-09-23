@@ -21,6 +21,7 @@ export class CellComponent implements AfterViewInit {
   }
 
   updateRenderTransforms() {
+    console.log("%cUPDATE RENDER", 'color: #00ff00');
     setTimeout(() => this.render?.updateTransforms(), 0);
   }
 

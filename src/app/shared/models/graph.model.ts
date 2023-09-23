@@ -11,23 +11,71 @@ export type Bind = string;
 export interface Markup {
   selector: string,
   type: "rect" | "circle" | "ellipse" | "polygon" | "line" | "polyline" | "text" | "list",
+  //bounding box positioning
   position?: "relative" | "absolute"
   width: LenghtPercentage | "auto",
   height: LenghtPercentage | "auto",
-  x: LenghtPercentage,
-  y: LenghtPercentage,
+  x?: LenghtPercentage,
+  y?: LenghtPercentage,
   minWidth?: LenghtPercentage,
   minHeight?: LenghtPercentage,
   maxWidth?: LenghtPercentage,
   maxHeight?: LenghtPercentage,
   padding?: LenghtPercentage | Position,
   margin?: LenghtPercentage | Position,
-  text?: any,
-  rx?: LenghtPercentage,
-  ry?: LenghtPercentage,
+  //sub elements
   children?: Markup[],
+  //geometry attributes
+  rx?: LenghtPercentage | "auto",
+  ry?: LenghtPercentage | "auto",
+  cx?: LenghtPercentage,
+  cy?: LenghtPercentage,
+  r?: LenghtPercentage,
+  //line properties
+  x1?: LenghtPercentage,
+  y1?: LenghtPercentage,
+  x2?: LenghtPercentage,
+  y2?: LenghtPercentage,
+  //polygon/polyline properties
+  points?: string,
+  //text attributes
+  text?: {
+    valign: "top" | "center" | "bottom",
+    halign: "left" | "center" | "right"
+  },
+  //binding
   bind?: Bind,
-  style?: any
+  //style attributes
+  style?: {
+    "fill"?: Color,
+    "stroke"?: Color,
+    "stroke-width"?: LenghtPercentage,
+    "font-size"?: LenghtPercentage,
+    "text-anchor"?: "start" | "middle" | "end",
+    //"central" | "text-after-edge" | "text-before-edge"
+    "dominant-baseline"?: "auto" | "use-script" | "no-change" | "reset-size" | "alphabetic" | "hanging" | "ideographic" | "mathematical" | "central" | "middle" | "text-after-edge" | "text-before-edge",
+    "alignment-baseline"?: "auto" | "use-script" | "no-change" | "reset-size" | "alphabetic" | "hanging" | "ideographic" | "mathematical" | "central" | "middle" | "text-after-edge" | "text-before-edge",
+    "text-decoration"?: "none" | "underline" | "overline" | "line-through" | "blink",
+    "text-transform"?: "none" | "capitalize" | "uppercase" | "lowercase",
+    "text-overflow"?: "clip" | "ellipsis",
+    "white-space"?: "normal" | "pre" | "nowrap" | "pre-wrap" | "pre-line",
+    "word-wrap"?: "normal" | "break-word",
+    "word-break"?: "normal" | "break-all" | "keep-all",
+    "letter-spacing"?: LenghtPercentage,
+    "word-spacing"?: LenghtPercentage,
+    "text-indent"?: LenghtPercentage,
+    "text-align"?: "start" | "end" | "left" | "right" | "center" | "justify" | "match-parent",
+    "direction"?: "ltr" | "rtl" | "inherit",
+    "writing-mode"?: "horizontal-tb" | "vertical-rl" | "vertical-lr" | "sideways-rl" | "sideways-lr",
+    "fill-opacity"?: number,
+    "stroke-opacity"?: number,
+    "opacity"?: number,
+    "font-family"?: string,
+    "font-style"?: "normal" | "italic" | "oblique",
+    "font-weight"?: "normal" | "bold" | "bolder" | "lighter" | number,
+    "font-variant"?: "normal" | "small-caps",
+    "font-stretch"?: "normal" | "ultra-condensed" | "extra-condensed" | "condensed" | "semi-condensed" | "semi-expanded" | "expanded" | "extra-expanded" | "ultra-expanded",
+  }
 }
 
 export let defaultMarkup: Markup = {
@@ -84,8 +132,47 @@ export interface Transform {
   outsideY: number,
 }
 
-export let defaultTransform: Transform = {
-  insideWidth: 0, insideHeight: 0, insideX: 0, insideY: 0,
-  outsideWidth: 0, outsideHeight: 0, outsideX: 0, outsideY: 0,
-  width: 0, height: 0, x: 0, y: 0
+export function defaultTransform(): Transform {
+  return {
+    insideWidth: 0, insideHeight: 0, insideX: 0, insideY: 0,
+    outsideWidth: 0, outsideHeight: 0, outsideX: 0, outsideY: 0,
+    width: 0, height: 0, x: 0, y: 0
+  }
 }
+
+export interface Geometry {
+  //geometry attributes
+  rx?: number,
+  ry?: number,
+  cx?: number,
+  cy?: number,
+  r?: number,
+  //line properties
+  x1?: number,
+  y1?: number,
+  x2?: number,
+  y2?: number,
+  //polygon/polyline properties
+  // points?: string,
+}
+
+// export function defaultGeometry(): Geometry {
+//   return {
+//     rx: 0, ry: 0, cx: 0, cy: 0, r: 0,
+//     x1: 0, y1: 0, x2: 0, y2: 0,
+//     // points: "",
+//   }
+// };
+
+export interface Text {
+  //text attributes
+  x?: number,
+  y?: number,
+  text?: string,
+}
+
+// export function defaultText(): Text {
+//   return {
+//     x: 0, y: 0, text: ""
+//   }
+// }
