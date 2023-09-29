@@ -1,10 +1,10 @@
 <div class="container position-absolute">
-  <div class="row m-0 h-100">
-    <div class="col-8 h-100 p-0">
+  <div class="d-flex flex-row m-0 h-100">
+    <div class="flex-grow-1 h-100 p-0">
       <graph [model]="model" [instance]="instance" width="100%" height="100%" (cellSelected)="updateInspector($event)">
       </graph>
     </div>
-    <div class="col-4 bg-body-secondary h-100 p-0 overflow-hidden overflow-y-auto">
+    <div class="bg-body-secondary h-100 p-0 overflow-hidden overflow-y-auto w-inspector">
       <div>
         <button type="button" class="btn btn-danger m-2 me-0" (click)="changeTest()">
           change model

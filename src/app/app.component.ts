@@ -13,6 +13,7 @@ import { Title } from '@angular/platform-browser';
 export class AppComponent {
   title = 'concept-client';
   currentYear = new Date().getUTCFullYear();
+  fullNavbar = false;
 
   constructor(
     public auth: AuthService,
@@ -42,6 +43,9 @@ export class AppComponent {
     ).subscribe((title: string) => {
       if (title) {
         this.titleService.setTitle(`${title} · Concept`);
+
+        //for make navbar take full size when using Editor
+        this.fullNavbar = title == "Editor";
       } else {
         this.titleService.setTitle(`Concept`);
       }

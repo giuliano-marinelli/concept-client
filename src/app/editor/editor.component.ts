@@ -124,7 +124,7 @@ export class EditorComponent implements OnInit {
           name: "attributes", type: "list", label: "Attributes",
           default: { name: "attribute", datatype: "string", public: false },
           item: {
-            type: "object", label: "attribute",
+            type: "object",
             properties: [
               { name: "name", label: "Name", type: "text" },
               {

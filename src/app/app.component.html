@@ -3,7 +3,8 @@
   <a class="close-navbar-toggler collapsed" [class.collapsed]="navbarSettings.collapsed"
     (click)="navbarSettings.collapsed = true"></a>
   <nav class="navbar navbar-expand-md fixed-top p-0 align-items-stretch navbar-concept">
-    <div class="container-fluid container-xl p-0 align-items-stretch">
+    <div class="container-fluid container-xl p-0 align-items-stretch container-transition"
+      [class.container-full]="fullNavbar">
       <button class="navbar-toggler no-outline border-0 py-2" [class.collapsed]="navbarSettings.collapsed" type="button"
         (click)="navbarSettings.collapsed = !navbarSettings.collapsed">
         <span class="icon-bar top-bar"></span>
@@ -124,7 +125,7 @@
 </main>
 
 <footer class="footer mt-auto py-3">
-  <div class="container text-end pe-4">
+  <div class="container text-end pe-4 container-transition" [class.container-full]="fullNavbar">
     <span class="text-muted">
       <fa-icon [icon]="'dice-d6'"></fa-icon> Concept © {{ currentYear }}
     </span>

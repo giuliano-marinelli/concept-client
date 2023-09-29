@@ -115,3 +115,11 @@
   background-color: unset;
   z-index: -1;
 }
+
+.container-transition {
+  transition: 0.5s max-width;
+}
+
+.container-full {
+  max-width: 100% !important;
+}
