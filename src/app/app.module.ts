@@ -57,6 +57,8 @@ import { LanguagesComponent } from './languages/languages.component';
 import { GraphComponent } from './shared/graph/graph.component';
 import { CellComponent } from './shared/graph/cell/cell.component';
 import { RenderComponent } from './shared/graph/cell/render/render.component';
+import { InspectorComponent } from './shared/inspector/inspector.component';
+import { EditorComponent } from './editor/editor.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +89,9 @@ import { RenderComponent } from './shared/graph/cell/render/render.component';
     LanguagesComponent,
     GraphComponent,
     CellComponent,
-    RenderComponent
+    RenderComponent,
+    InspectorComponent,
+    EditorComponent
   ],
   imports: [
     //angular modules

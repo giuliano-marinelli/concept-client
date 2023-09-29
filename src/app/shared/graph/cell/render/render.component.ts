@@ -11,7 +11,6 @@ import _ from 'lodash';
 })
 export class RenderComponent implements OnInit {
   @Input() markup: Markup = defaultMarkup;
-  @Input() tokens: Token = {};
   @Input() values: Value = {};
   @Input() cell?: CellTransform;
   @Input() parent?: RenderComponent;
@@ -50,7 +49,7 @@ export class RenderComponent implements OnInit {
     }, 0);
   }
 
-  calculateTransform(caller?: RenderComponent) {
+  calculateTransform(caller?: RenderComponent, propagation: boolean = true) {
 
     // let prevTransform = _.clone(this.transform);
 
@@ -234,23 +233,23 @@ export class RenderComponent implements OnInit {
 
     // console.log(caller?.ref.markup.selector ? caller?.ref.markup.selector : "", "=>", this.markup.selector,
     //   "\n", caller, "\n", "new", this.transform, "\n", "prev", prevTransform);
-    if (caller?.markup.selector)
-      console.log(caller?.markup.selector,
-        "(", caller?.transform.insideWidth, ",", caller?.transform.insideHeight, ")",
-        "=>", this.markup.selector, "(", this.transform.width, ",", this.transform.height, ")", "\n",
-        "out(", this.transform.outsideWidth, ",", this.transform.outsideHeight, ")",
-        "in(", this.transform.insideWidth, ",", this.transform.insideHeight, ")"
-      );
-    else
-      console.log("%cparent", 'color: #bada55',
-        "(", parentTransform.insideWidth, ",", parentTransform.insideHeight, ")",
-        "=>", this.markup.selector, "(", this.transform.width, ",", this.transform.height, ")", "\n",
-        "out(", this.transform.outsideWidth, ",", this.transform.outsideHeight, ")",
-        "in(", this.transform.insideWidth, ",", this.transform.insideHeight, ")"
-      );
+    // if (caller?.markup.selector)
+    //   console.log(caller?.markup.selector,
+    //     "(", caller?.transform.insideWidth, ",", caller?.transform.insideHeight, ")",
+    //     "=>", this.markup.selector, "(", this.transform.width, ",", this.transform.height, ")", "\n",
+    //     "out(", this.transform.outsideWidth, ",", this.transform.outsideHeight, ")",
+    //     "in(", this.transform.insideWidth, ",", this.transform.insideHeight, ")"
+    //   );
+    // else
+    //   console.log("%cparent", 'color: #bada55',
+    //     "(", parentTransform.insideWidth, ",", parentTransform.insideHeight, ")",
+    //     "=>", this.markup.selector, "(", this.transform.width, ",", this.transform.height, ")", "\n",
+    //     "out(", this.transform.outsideWidth, ",", this.transform.outsideHeight, ")",
+    //     "in(", this.transform.insideWidth, ",", this.transform.insideHeight, ")"
+    //   );
 
     //emit output change transform event
-    this.changeTransform.emit(this);
+    if (propagation) this.changeTransform.emit(this);
   }
 
   calculateRelatives() {
@@ -279,7 +278,16 @@ export class RenderComponent implements OnInit {
 
   onChangeLastChild(child: RenderComponent) {
     // if parent has auto size then we must recalculate parent transform when last relative child has changed
-    if (this.markup.width == "auto" || this.markup.height == "auto")
+    if (this.markup.width == "auto" || this.markup.height == "auto") {
       this.calculateTransform(child);
+      setTimeout(() => {
+        this.relativeChildren?.forEach((child) => {
+          child.calculateTransform(this, false);
+        });
+        this.absoluteChildren?.forEach((child) => {
+          child.calculateTransform(this, false);
+        });
+      }, 0);
+    }
   }
 }

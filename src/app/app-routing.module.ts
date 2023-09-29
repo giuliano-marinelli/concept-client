@@ -19,6 +19,7 @@ import { RegisterComponent } from './register/register.component';
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { LanguagesComponent } from './languages/languages.component';
+import { EditorComponent } from './editor/editor.component';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: '' } },
@@ -41,6 +42,7 @@ const routes: Routes = [
     ]
   },
   { path: 'languages', component: LanguagesComponent, data: { title: 'Languages' } },
+  { path: 'editor', component: EditorComponent, data: { title: 'Editor' } },
   { path: 'notfound', component: NotFoundComponent, data: { title: 'Page not found' } },
   { path: '**', redirectTo: '/notfound' }
 ];

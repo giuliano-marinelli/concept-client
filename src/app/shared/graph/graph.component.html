@@ -1,5 +1,5 @@
-<svg:svg [attr.width]="width" [attr.height]="height" style="background: gray">
+<svg:svg [attr.width]="width" [attr.height]="height" style="background: white">
   <svg:g class="cell" *ngFor="let inst of instance" [markup]="model[inst.model].markup"
-    [tokens]="model[inst.model].tokens" [values]="inst.values" [transform]="inst.transform">
+    [tokens]="model[inst.model].tokens" [instance]="inst" (selected)="cellSelected.emit($event)">
   </svg:g>
 </svg:svg>

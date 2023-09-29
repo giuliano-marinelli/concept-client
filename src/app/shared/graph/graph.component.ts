@@ -1,4 +1,4 @@
-import { Component, Input, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { Instance, LenghtPercentage, Model } from '../models/graph.model';
 import { CellComponent } from './cell/cell.component';
 
@@ -14,6 +14,8 @@ export class GraphComponent {
   @Input() width: LenghtPercentage = "100%";
   @Input() height: LenghtPercentage = "100%";
 
+  @Output() cellSelected = new EventEmitter<CellComponent>();
+
   @ViewChildren(CellComponent) cells?: QueryList<CellComponent>;
 
   updateModel() {
@@ -21,4 +23,5 @@ export class GraphComponent {
       cell.updateRenderTransforms();
     });
   }
+
 }

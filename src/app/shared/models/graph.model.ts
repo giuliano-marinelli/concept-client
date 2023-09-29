@@ -82,8 +82,36 @@ export let defaultMarkup: Markup = {
   selector: "root", type: "rect", x: 0, y: 0, width: "100%", height: "100%"
 }
 
+// export interface Token {
+//   [tokenName: string]: "string" | "boolean" | "integer" | "float" | string[] | Token[] | Token
+// }
+
 export interface Token {
-  [tokenName: string]: "string" | "boolean" | "integer" | "float" | string[] | Token[] | Token
+  name: string,
+  type: "text" | "bool" | "enum" | "object" | "list",
+  label: string,
+  default: Value | string | boolean,
+  input?:
+  "text" | "textarea" | //for text
+  "checkbox" | "switch" | //for bool
+  "radio" | "select", //for enum
+  //for text
+  rows?: number,
+  placeholder?: string
+  validator?: "string" | "number" | "integer" | "float"
+  //for bool
+  map?: {
+    true: string,
+    false: string
+  }
+  //for enum
+  options: {
+    [enumName: string]: string
+  }
+  //for object
+  properties: Token[]
+  //for list
+  item: Token
 }
 
 export interface Value {
@@ -92,7 +120,7 @@ export interface Value {
 
 export interface Primitive {
   markup: Markup,
-  tokens: Token
+  tokens: Token[]
 }
 
 export interface Model {

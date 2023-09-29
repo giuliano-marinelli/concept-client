@@ -6,7 +6,7 @@
     <svg:rect *ngIf="markup.type == 'rect'" [attr.width]="transform.width" [attr.height]="transform.height"
       [attr.rx]="geometry.rx" [attr.ry]="geometry.ry" [ngStyle]="markup.style" />
     <svg:text *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style">
-      TEXTO
+      {{ markup.bind ? values[markup.bind] : text.text }}
     </svg:text>
     <svg:circle *ngIf="markup.type == 'circle'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy" [attr.r]="geometry.r"
       [ngStyle]="markup.style" />
@@ -26,14 +26,15 @@
     <ng-container
       *ngFor="let child of markup.children | filter: { $or: [{position: 'relative' }, { position: null }] }; let i = index; let last = last;">
       <svg:g #relative class="render" *ngIf="!last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="onChangeChild($event)">
+        (changeTransform)="onChangeChild($event)" [values]="values">
       </svg:g>
       <svg:g #relative class="render" *ngIf="last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="onChangeLastChild($event)">
+        (changeTransform)="onChangeLastChild($event)" [values]="values">
       </svg:g>
     </ng-container>
     <ng-container *ngFor="let child of markup.children | filter: { position: 'absolute' }">
-      <svg:g #absolute class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"></svg:g>
+      <svg:g #absolute class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
+        [values]="values"></svg:g>
     </ng-container>
 
   </svg:g>

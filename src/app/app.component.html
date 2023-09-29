@@ -48,6 +48,12 @@
               <fa-icon [icon]="'landmark'"></fa-icon> Languages
             </a>
           </li>
+          <li class="nav-item border-top border-md-0" *ngIf="!auth.loggedUserLoading">
+            <a class="nav-link" routerLink="/editor" routerLinkActive="active"
+              (click)="navbarSettings.collapsed = true">
+              <fa-icon [icon]="'diagram-project'"></fa-icon> Editor
+            </a>
+          </li>
         </ul>
         <ul class="navbar-nav ms-md-auto">
           <li class="nav-item border-top border-md-0 d-block d-md-none"

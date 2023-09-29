@@ -1,0 +1,94 @@
+<div class="container" *ngIf="instance">
+  <div class="mt-3 mt-sm-0 border-bottom">
+    <h2>{{ instance.model }}</h2>
+  </div>
+  <div class="col-12 p-2">
+    <ng-container *ngFor="let token of tokens; let last = last" [ngTemplateOutlet]="inspectorAttribute"
+      [ngTemplateOutletContext]="{ token: token, instance: instance.values, last: last }">
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #inspectorAttribute let-token="token" let-parentToken="parentToken" let-instance="instance"
+  let-index="index" let-last="last">
+  <div class="row pt-2 pb-2" [class.border-bottom]="!last" [class.ps-3]="token.type == 'objecst'">
+    <ng-container [ngSwitch]="token.type">
+      <ng-template [ngSwitchCase]="'text'">
+        <div class="col-4">
+          <label class="form-label">
+            {{ token.label }}
+          </label>
+        </div>
+        <div class="col-8">
+          <input class="form-control form-control-sm" type="text" autocomplete="off"
+            [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
+            (ngModelChange)="updateValue($event, instance, parentToken, index)" />
+          <div class="invalid-feedback"></div>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'bool'">
+        <div class="col-4">
+          <label class="form-label">
+            {{ token.label }}
+          </label>
+        </div>
+        <div class="col-8">
+          <div class="form-check-reverse" [class.form-switch]="!token.input || token.input == 'switch'">
+            <input class="form-check-input" type="checkbox" role="switch"
+              [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
+              (ngModelChange)="updateValue($event, instance, parentToken, index)">
+          </div>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'enum'">
+        <div class="col-4">
+          <label class="form-label">
+            {{ token.label }}
+          </label>
+        </div>
+        <div class="col-8">
+          <select class="form-select form-select-sm"
+            [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
+            (ngModelChange)="updateValue($event, instance, parentToken, index)">
+            <option *ngFor="let option of token.options | keyvalue" [value]="option.key" [ngValue]="option.key">
+              {{ option.value }}
+            </option>
+          </select>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'object'">
+        <div class="col-12" *ngIf="token.label">
+          <label class="form-label">
+            {{ token.label }}
+          </label>
+        </div>
+        <div class="col-12 bg-body-tertiary rounded border m-auto border-bar w-object">
+          <ng-container *ngFor="let property of token.properties; let last = last"
+            [ngTemplateOutlet]="inspectorAttribute" [ngTemplateOutletContext]="{
+              token: property,
+              instance: parentToken ? instance[parentToken.name][index] : instance[token.name],
+              last: last }">
+          </ng-container>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="'list'">
+        <div class="col-12">
+          <label class="form-label">
+            {{ token.label }}
+          </label>
+        </div>
+        <div class="col-12 bg-body bg-opacity-75 rounded border m-auto w-list">
+          <ng-container *ngFor="let item of (parentToken ? instance[parentToken.name][index] : instance[token.name]);
+            let itemIndex = index; let last = last; trackBy: trackIndex" [ngTemplateOutlet]="inspectorAttribute"
+            [ngTemplateOutletContext]="{
+              token: token.item,
+              parentToken: token,
+              instance: parentToken ? instance[parentToken.name][index] : instance,
+              index: itemIndex,
+              last: last }">
+          </ng-container>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</ng-template>

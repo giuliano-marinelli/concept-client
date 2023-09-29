@@ -1,0 +1,14 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import "/src/assets/scss/variables.scss";
+
+.border-bar {
+  border-left: 6px solid $border-color !important;
+}
+
+.w-object {
+  width: 95%;
+}
+
+.w-list {
+  width: 95%;
+}
