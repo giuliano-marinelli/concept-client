@@ -95,13 +95,24 @@ export class EditorComponent implements OnInit {
       },
       tokens: [
         { name: "name", label: "Name", type: "text", input: "text", placeholder: "ClassName" },
+        { name: "commentary", label: "Commentary", type: "text", input: "textarea", fullLabel: true, placeholder: "Add a commentary..." },
         { name: "testBool", label: "Test Bool", type: "bool", input: "checkbox" },
         {
-          name: "datatype", label: "Datatype", type: "enum", input: "select", default: "string",
+          name: "datatype", label: "Datatype", type: "enum", input: "radio", default: "string",
           options: {
             "string": "String",
             "integer": "Integer",
             "boolean": "Boolean"
+          }
+        },
+        {
+          name: "multivalu", type: "list", label: "Multicositas", default: "string", item: {
+            name: "datatype", type: "enum", input: "radio", default: "string",
+            options: {
+              "string": "String",
+              "integer": "Integer",
+              "boolean": "Boolean"
+            }
           }
         },
         {
@@ -119,9 +130,9 @@ export class EditorComponent implements OnInit {
             { name: "public", label: "Is Public?", type: "bool" }
           ]
         },
-        { name: "cosas", type: "list", label: "Cosas", default: "cosa1", item: { type: "text", label: "Cosa", input: "text" } },
+        { name: "cosas", type: "list", label: "Cosas", itemLabel: "Cosa", default: "cosa1", item: { type: "text", input: "text" } },
         {
-          name: "attributes", type: "list", label: "Attributes",
+          name: "attributes", type: "list", label: "Attributes", itemLabel: "Attribute",
           default: { name: "attribute", datatype: "string", public: false },
           item: {
             type: "object",
@@ -239,6 +250,11 @@ export class EditorComponent implements OnInit {
             name: "Clase " + i + j,
             testBool: false,
             datatype: "integer",
+            multivalu: [
+              "string",
+              "string",
+              "string"
+            ],
             attribute: {
               name: "atributo",
               datatype: "string",

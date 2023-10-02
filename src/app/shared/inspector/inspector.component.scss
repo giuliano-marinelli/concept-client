@@ -6,9 +6,32 @@
 }
 
 .w-object {
-  width: 95%;
+  width: 92%;
 }
 
 .w-list {
-  width: 95%;
+  width: 92%;
+}
+
+.row-hover > .row:not(.not-hover):hover {
+  background-color: $table-hover-bg !important;
+  color: $table-hover-color !important;
+}
+
+.btn-delete {
+  padding: 0px 2px 0px 1px;
+  margin: 0px -23px 0px 0px;
+  display: none;
+}
+
+.btn-delete:hover {
+  opacity: 1 !important;
+}
+
+.can-delete:hover .btn-delete {
+  display: block;
+}
+
+.can-delete:hover {
+  // padding-right: 0.5em;
 }

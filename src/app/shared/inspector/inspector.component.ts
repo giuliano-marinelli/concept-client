@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Instance, Token, Value } from '../models/graph.model';
+import _ from 'lodash';
 
 @Component({
   selector: 'inspector',
@@ -30,4 +31,21 @@ export class InspectorComponent {
   trackIndex(index: number): any {
     return index;
   }
+
+  addListItem(item: any, instance: any, token: Token, parentToken: Token, index: number) {
+    if (item) {
+      if (parentToken)
+        instance[parentToken.name][index].push(_.clone(item));
+      else
+        instance[token.name].push(_.clone(item));
+    }
+  }
+
+  deleteListItem(instance: any, token: Token, parentToken: Token, index: number) {
+    if (parentToken)
+      instance[parentToken.name].splice(index, 1);
+    else
+      instance[token.name].splice(index, 1);
+  }
+
 }
