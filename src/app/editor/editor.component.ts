@@ -94,9 +94,9 @@ export class EditorComponent implements OnInit {
         ]
       },
       tokens: [
-        { name: "name", label: "Name", type: "text", input: "text", placeholder: "ClassName" },
-        { name: "commentary", label: "Commentary", type: "text", input: "textarea", fullLabel: true, placeholder: "Add a commentary..." },
-        { name: "testBool", label: "Test Bool", type: "bool", input: "checkbox" },
+        { name: "name", label: "Name", icon: "pen", type: "text", input: "text", placeholder: "ClassName" },
+        { name: "commentary", label: "Commentary", icon: "comment", type: "text", input: "textarea", fullLabel: true, placeholder: "Add a commentary..." },
+        { name: "testBool", label: "Test Bool", icon: "circle-half-stroke", type: "bool", input: "checkbox" },
         {
           name: "datatype", label: "Datatype", type: "enum", input: "radio", default: "string",
           options: {
@@ -130,9 +130,9 @@ export class EditorComponent implements OnInit {
             { name: "public", label: "Is Public?", type: "bool" }
           ]
         },
-        { name: "cosas", type: "list", label: "Cosas", itemLabel: "Cosa", default: "cosa1", item: { type: "text", input: "text" } },
+        { name: "cosas", type: "list", label: "Cosas", icon: "box-archive", itemLabel: "Cosa", default: "cosa", item: { type: "text", input: "text", icon: "box-open" } },
         {
-          name: "attributes", type: "list", label: "Attributes", itemLabel: "Attribute",
+          name: "attributes", type: "list", icon: "layer-group", label: "Attributes", itemLabel: "Attribute",
           default: { name: "attribute", datatype: "string", public: false },
           item: {
             type: "object",

@@ -13,11 +13,6 @@
   width: 92%;
 }
 
-.row-hover > .row:not(.not-hover):hover {
-  background-color: $table-hover-bg !important;
-  color: $table-hover-color !important;
-}
-
 .btn-delete {
   padding: 0px 2px 0px 1px;
   margin: 0px -23px 0px 0px;

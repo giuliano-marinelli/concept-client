@@ -11,33 +11,37 @@
 
 <ng-template #inspectorAttribute let-token="token" let-parentToken="parentToken" let-instance="instance" let-path="path"
   let-index="index" let-last="last" let-canDelete="canDelete">
-  <div class="row pt-2 pb-2 position-relative" [class.border-bottom]="!last" [class.can-delete]="canDelete">
+  <div class="row pt-2 pb-2 position-relative" [class.border-bottom]="!last" [class.can-delete]="canDelete"
+    *ngVar="{ full: (token.input == 'radio' || token.type == 'object' || token.type == 'list' || !token.label || token.fullLabel) } as labelSettings">
+    <!-- Attribute Label -->
+    <div class="col-1" [class.pb-1]="labelSettings.full" *ngIf="token.icon">
+      <fa-icon class="logo-icon align-middle" [icon]="token.icon"></fa-icon>
+    </div>
+    <div class="col-{{ labelSettings.full
+      ? ( token.icon ? 11 : 12 )
+      : ( token.icon ? (token.type == 'bool' ? 8 : 3) : (token.type == 'bool' ? 9 : 4) ) }} pe-0 ps-2"
+      [class.pb-1]="labelSettings.full" [class.ps-3]="!token.icon" *ngIf="token.label">
+      <label class="form-label align-middle mb-{{ !labelSettings.full ? 0 : 1 }}">
+        {{ token.label }}
+      </label>
+    </div>
+    <!-- Attribute Input -->
     <ng-container [ngSwitch]="token.type">
       <ng-template [ngSwitchCase]="'text'">
-        <div class="col-{{ token.fullLabel ? '12': '4' }}" *ngIf="token.label">
-          <label class="form-label">
-            {{ token.label }}
-          </label>
-        </div>
-        <div class="col-{{ token.label && !token.fullLabel ? '8' : '12' }}">
+        <div class="col-{{ labelSettings.full ? ( !token.label && token.icon ? 11 : 12 ) : 8 }}">
           <input *ngIf="!token.input || token.input == 'text'" class="form-control form-control-sm" type="text"
-            autocomplete="off" [placeholder]="token.placeholder ? token.placeholder: ''"
+            autocomplete="off" placeholder="{{ token.placeholder ? token.placeholder: '' }}"
             [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
-            (ngModelChange)="updateValue($event, instance, parentToken, index)" />
+            (ngModelChange)="updateValue($event, instance, parentToken, index)">
           <textarea *ngIf="token.input == 'textarea'" class="form-control form-control-sm" autocomplete="off"
-            [placeholder]="token.placeholder ? token.placeholder: ''" [rows]="token.rows ? token.rows : '3'"
+            placeholder="{{ token.placeholder ? token.placeholder: '' }}" [rows]="token.rows ? token.rows : '3'"
             [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
             (ngModelChange)="updateValue($event, instance, parentToken, index)"></textarea>
           <div class="invalid-feedback"></div>
         </div>
       </ng-template>
       <ng-template [ngSwitchCase]="'bool'">
-        <div class="col-{{ token.fullLabel ? '12': '4' }}">
-          <label class="form-label" *ngIf="token.label">
-            {{ token.label }}
-          </label>
-        </div>
-        <div class="col-{{ token.label && !token.fullLabel ? '8' : '12' }}">
+        <div class="col-{{ labelSettings.full ? ( !token.label && token.icon ? 11 : 12 ) : 3 }}">
           <div class="form-check-reverse" [class.form-switch]="!token.input || token.input == 'switch'">
             <input class="form-check-input" [class.form-check-input-lg]="token.input == 'checkbox'" type="checkbox"
               role="switch" [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
@@ -46,13 +50,7 @@
         </div>
       </ng-template>
       <ng-template [ngSwitchCase]="'enum'">
-        <div class="col-{{ (!token.input || token.input == 'select') && !token.fullLabel ? '4': '12' }}"
-          *ngIf="token.label">
-          <label class="form-label">
-            {{ token.label }}
-          </label>
-        </div>
-        <div class="col-{{ (!token.input || token.input == 'select') && token.label && !token.fullLabel ? '8': '12' }}">
+        <div class="col-{{ labelSettings.full ? ( !token.label && token.icon ? 11 : 12 ) : 8 }}">
           <select *ngIf="!token.input || token.input == 'select'" class="form-select form-select-sm"
             [(ngModel)]="parentToken ? instance[parentToken.name][index] : instance[token.name]"
             (ngModelChange)="updateValue($event, instance, parentToken, index)">
@@ -77,11 +75,6 @@
         </div>
       </ng-template>
       <ng-template [ngSwitchCase]="'object'">
-        <div class="col-12" *ngIf="token.label">
-          <label class="form-label">
-            {{ token.label }}
-          </label>
-        </div>
         <div class="col-12 bg-body-tertiary rounded border m-auto border-bar w-object">
           <ng-container *ngFor="let property of token.properties; let last = last"
             [ngTemplateOutlet]="inspectorAttribute" [ngTemplateOutletContext]="{
@@ -93,11 +86,6 @@
         </div>
       </ng-template>
       <ng-template [ngSwitchCase]="'list'">
-        <div class="col-12">
-          <label class="form-label">
-            {{ token.label }}
-          </label>
-        </div>
         <div class="col-12 bg-body bg-opacity-75 rounded border m-auto w-list row-hover">
           <ng-container *ngFor="let item of (parentToken ? instance[parentToken.name][index] : instance[token.name]);
             let itemIndex = index; let last = last; trackBy: trackIndex" [ngTemplateOutlet]="inspectorAttribute"

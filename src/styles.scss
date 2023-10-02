@@ -113,6 +113,12 @@ a {
   height: 20px;
 }
 
+/* For do rows hover effect on non-table rows */
+.row-hover > .row:not(.not-hover):hover {
+  background-color: $table-hover-bg !important;
+  color: $table-hover-color !important;
+}
+
 /* Used for overlay components, allows block that component and add some loading icon */
 .overlay {
   position: absolute;
