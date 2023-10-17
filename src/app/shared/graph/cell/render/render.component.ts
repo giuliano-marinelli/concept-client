@@ -304,7 +304,7 @@ export class RenderComponent implements OnInit {
   }
 
   // calculate text vertical position (dy) based on text vlaign, the count of text parts and if it's the first
-  calculateTextPosition(first: boolean, count: number): string {
+  calculateTextPosition(first: boolean, count: number): string | number {
     let dy: string | number = 0;
     let lineHeightValue: number = Global.lenghtPercentageValue(this.markup.text?.lineHeight);
     let lineHeightUnit: string = Global.lenghtPercentageUnit(this.markup.text?.lineHeight);
@@ -320,7 +320,7 @@ export class RenderComponent implements OnInit {
         dy = first ? (-(count - 1) * lineHeightValue * (lineHeightValue / 2)) + lineHeightUnit : lineHeightValue + lineHeightUnit;
         break;
     }
-    return dy.toString();
+    return dy;
   }
 
   onChangeChild(child: RenderComponent) {

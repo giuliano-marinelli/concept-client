@@ -126,7 +126,8 @@ export class Global {
 
   //given a lenght/percentage, return the unit of the lenght/percentage or % if it's percentage
   static lenghtPercentageUnit(lenghtPercentage?: LenghtPercentage | FontLengthPercentage): string {
-    return String(lenghtPercentage).includes("%") ? "%" : String(lenghtPercentage).replace(/[^a-zA-Z]/g, '');
+    let unit: string = String(lenghtPercentage).includes("%") ? "%" : String(lenghtPercentage).replace(/[^a-zA-Z]/g, '');
+    return (unit && unit !== "undefined" ? unit : "px");
   }
 
   //given a text, a svg style for that text, a width in pixels, and a svg container, return a index that represent the last character that fit in the width
