@@ -1,9 +1,11 @@
 export type AbsoluteLenght = "cm" | "mm" | "Q" | "in" | "pt" | "pc" | "px";
-// export type FontRelativeLenght = "em" | "rem" | "ex" | "rex" | "cap" | "rcap" | "ch" | "rch" | "ic" | "ric" | "lh" | "rlh";
+export type FontRelativeLenght = "em" | "rem" | "ex" | "rex" | "cap" | "rcap" | "ch" | "rch" | "ic" | "ric" | "lh" | "rlh";
 // export type ViewportPercentageLenght = "*vw" | "*vh" | "*vi" | "*vb" | "*vmin" | "*vmax";
 export type Lenght = `${number}${AbsoluteLenght}` | number | `${number}`;
+export type FontLength = `${number}${AbsoluteLenght}` | `${number}${FontRelativeLenght}` | number | `${number}`
 export type Percentage = `${number}%`;
 export type LenghtPercentage = Lenght | Percentage;
+export type FontLengthPercentage = FontLength | Percentage;
 export type Position = { top?: LenghtPercentage, right?: LenghtPercentage, bottom?: LenghtPercentage, left?: LenghtPercentage };
 export type Color = string;
 export type Bind = string;
@@ -40,8 +42,9 @@ export interface Markup {
   points?: string,
   //text attributes
   text?: {
-    valign: "top" | "center" | "bottom",
-    halign: "left" | "center" | "right"
+    valign?: "top" | "center" | "bottom",
+    halign?: "left" | "center" | "right",
+    lineHeight?: FontLengthPercentage,
   },
   //binding
   bind?: Bind,

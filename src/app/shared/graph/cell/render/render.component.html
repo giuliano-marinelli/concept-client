@@ -3,15 +3,10 @@
   <svg:g attr.transform="translate({{transform.x}} {{transform.y}})">
     <svg:rect *ngIf="markup.type == 'rect'" [attr.width]="transform.width" [attr.height]="transform.height"
       [attr.rx]="geometry.rx" [attr.ry]="geometry.ry" [ngStyle]="markup.style" />
-    <svg:text xml:space="preserve" *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style">
-      <!-- {{ markup.bind ? values[markup.bind] : text.text }} -->
-      <!-- <svg:g class="render-text" [value]="markup.bind ? values[markup.bind] : text.text"></svg:g> -->
-      <!-- <svg:tspan #textTemplate>{{ markup.bind ? values[markup.bind] : text.text }}</svg:tspan> -->
-      <svg:tspan
-        *ngFor="let part of calculateText(markup.bind ? values[markup.bind] : text.text); let first = first"
-        [attr.dy]="first ? 0 : '1.2em'" [attr.x]="text.x">
-        {{ part }}
-      </svg:tspan>
+    <svg:text *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style">
+      <svg:tspan xml:space="preserve"
+        *ngFor="let part of calculateText(markup.bind ? values[markup.bind] : text.text); let first = first; let last = last; ; let count = count"
+        [attr.x]="text.x" [attr.dy]="calculateTextPosition(first, count)">{{ part }}</svg:tspan>
     </svg:text>
     <svg:circle *ngIf="markup.type == 'circle'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy" [attr.r]="geometry.r"
       [ngStyle]="markup.style" />

@@ -2,7 +2,6 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, 
 import { Markup, Transform, Value, Position, defaultMarkup, defaultTransform, CellTransform, Geometry, Text } from 'src/app/shared/models/graph.model';
 import { Global } from 'src/app/shared/global/global';
 import _ from 'lodash';
-import { hide } from '@popperjs/core';
 
 @Component({
   selector: '.render',
@@ -114,7 +113,10 @@ export class RenderComponent implements OnInit {
     //calculate text
     //for text adjustment with text object (must includes halign, valign, wrap, etc.)
     if (this.markup.type == "text") {
-      if (!this.markup.text) this.markup.text = { halign: "center", valign: "center" };
+      if (!this.markup.text) this.markup.text = {};
+      if (!this.markup.text.halign) this.markup.text.halign = "center";
+      if (!this.markup.text.valign) this.markup.text.valign = "center";
+      if (!this.markup.text.lineHeight) this.markup.text.lineHeight = "1em";
       if (!this.markup.style) this.markup.style = {};
       switch (this.markup.text.halign) {
         case "left":
@@ -127,7 +129,7 @@ export class RenderComponent implements OnInit {
           break;
         case "center": default:
           this.text.x = Global.lenghtPercentageToNumber("50%", parentTransform.insideWidth);
-          this.markup.style["text-anchor"] = "start";
+          this.markup.style["text-anchor"] = "middle";
           break;
       }
       switch (this.markup.text.valign) {
@@ -290,24 +292,35 @@ export class RenderComponent implements OnInit {
 
     let parts: string[] = [];
 
-    // let font: string = this.markup.style?.['font-size'] ? "" + this.markup.style['font-size'] : "12px";
-    // font += this.markup.style?.['font-family'] ? " " + this.markup.style['font-family'] : " sans-serif";
-
-    // check if text is too long to fit in parent
-    if (parentTransform.insideWidth >= Global.getTextWidth(value, this.markup.style, this.hidden)) {
-      parts.push(value);
-      console.log("part", parts.length, ":", parts[parts.length - 1]);
-    } else {
-      // text is too long, we must wrap it in parts that fit in parent inside width
-      let rest = value;
-      while (rest.length > 0) {
-        let partIndex = Global.getTextFitIndex(value, this.markup.style, parentTransform.insideWidth, this.hidden);
-        parts.push(rest.substring(0, partIndex));
-        rest = rest.substring(partIndex);
-        console.log("part", parts.length, ":", parts[parts.length - 1], "rest", rest, "index", partIndex);
-      }
+    // we wrap text in parts that fit in parent inside width
+    let rest = value;
+    while (rest.length > 0) {
+      let partIndex = Global.getTextFitIndex(rest, this.markup.style, parentTransform.insideWidth, this.hidden);
+      parts.push(rest.substring(0, partIndex));
+      rest = rest.substring(partIndex);
+      // console.log("part", parts.length, ":", parts[parts.length - 1], "rest", rest, "index", partIndex);
     }
     return parts;
+  }
+
+  // calculate text vertical position (dy) based on text vlaign, the count of text parts and if it's the first
+  calculateTextPosition(first: boolean, count: number): string {
+    let dy: string | number = 0;
+    let lineHeightValue: number = Global.lenghtPercentageValue(this.markup.text?.lineHeight);
+    let lineHeightUnit: string = Global.lenghtPercentageUnit(this.markup.text?.lineHeight);
+    // we position the first line and the next ones are positioned 1em below
+    switch (this.markup.text?.valign) {
+      case "top":
+        dy = first ? 0 : lineHeightValue + lineHeightUnit;
+        break;
+      case "bottom":
+        dy = first ? (-(count - 1)) * lineHeightValue + lineHeightUnit : lineHeightValue + lineHeightUnit;
+        break;
+      case "center": default:
+        dy = first ? (-(count - 1) * lineHeightValue * (lineHeightValue / 2)) + lineHeightUnit : lineHeightValue + lineHeightUnit;
+        break;
+    }
+    return dy.toString();
   }
 
   onChangeChild(child: RenderComponent) {

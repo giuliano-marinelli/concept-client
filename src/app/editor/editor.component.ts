@@ -34,14 +34,18 @@ export class EditorComponent implements OnInit {
               },
               {
                 selector: "titleText", type: "text", width: "100%", height: "auto", minHeight: 20, bind: "name",
-                text: { halign: "left", valign: "top" },
+                text: { halign: "left", valign: "top", lineHeight: "1em" },
                 style: { "font-size": "15px" }
               },
-              // {
-              //   selector: "titleText2", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
-              //   text: { halign: "right", valign: "bottom" },
-              //   style: { "font-size": "15px" }
-              // }
+              {
+                selector: "titleText2", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
+                style: { "font-size": "15px" }
+              },
+              {
+                selector: "titleText3", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
+                text: { halign: "right", valign: "bottom" },
+                style: { "font-size": "15px" }
+              }
             ]
             //   children: [
             //     {
