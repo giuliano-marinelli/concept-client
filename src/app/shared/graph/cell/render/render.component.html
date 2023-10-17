@@ -1,12 +1,17 @@
-<!-- <svg:svg [attr.x]="transform.outsideX" [attr.y]="transform.outsideY" [attr.width]="transform.outsideWidth"
-  [attr.height]="transform.outsideHeight"> -->
 <svg:g attr.transform="translate({{transform.outsideX}} {{transform.outsideY}})">
 
   <svg:g attr.transform="translate({{transform.x}} {{transform.y}})">
     <svg:rect *ngIf="markup.type == 'rect'" [attr.width]="transform.width" [attr.height]="transform.height"
       [attr.rx]="geometry.rx" [attr.ry]="geometry.ry" [ngStyle]="markup.style" />
-    <svg:text *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style">
-      {{ markup.bind ? values[markup.bind] : text.text }}
+    <svg:text xml:space="preserve" *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style">
+      <!-- {{ markup.bind ? values[markup.bind] : text.text }} -->
+      <!-- <svg:g class="render-text" [value]="markup.bind ? values[markup.bind] : text.text"></svg:g> -->
+      <!-- <svg:tspan #textTemplate>{{ markup.bind ? values[markup.bind] : text.text }}</svg:tspan> -->
+      <svg:tspan
+        *ngFor="let part of calculateText(markup.bind ? values[markup.bind] : text.text); let first = first"
+        [attr.dy]="first ? 0 : '1.2em'" [attr.x]="text.x">
+        {{ part }}
+      </svg:tspan>
     </svg:text>
     <svg:circle *ngIf="markup.type == 'circle'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy" [attr.r]="geometry.r"
       [ngStyle]="markup.style" />
@@ -17,27 +22,23 @@
     <svg:line *ngIf="markup.type == 'line'" [attr.x1]="geometry.x1" [attr.y1]="geometry.y1" [attr.x2]="geometry.x2"
       [attr.y2]="geometry.y2" [ngStyle]="markup.style" />
     <svg:polyline *ngIf="markup.type == 'polyline'" [attr.points]="markup.points" [ngStyle]="markup.style" />
-
   </svg:g>
-  <!-- <svg:g [attr.x]="transform.insideX" [attr.y]="transform.insideY" [attr.width]="transform.insideWidth"
-    [attr.height]="transform.insideHeight" *ngIf="markup.children?.length"> -->
+
   <svg:g *ngIf="markup.children?.length" attr.transform="translate({{transform.insideX}} {{transform.insideY}})">
 
     <ng-container
       *ngFor="let child of markup.children | filter: { $or: [{position: 'relative' }, { position: null }] }; let i = index; let last = last;">
       <svg:g #relative class="render" *ngIf="!last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="onChangeChild($event)" [values]="values">
+        (changeTransform)="onChangeChild($event)" [values]="values" [hidden]="hidden">
       </svg:g>
       <svg:g #relative class="render" *ngIf="last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="onChangeLastChild($event)" [values]="values">
+        (changeTransform)="onChangeLastChild($event)" [values]="values" [hidden]="hidden">
       </svg:g>
     </ng-container>
     <ng-container *ngFor="let child of markup.children | filter: { position: 'absolute' }">
       <svg:g #absolute class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        [values]="values"></svg:g>
+        [values]="values" [hidden]="hidden"></svg:g>
     </ng-container>
 
   </svg:g>
 </svg:g>
-<!-- </svg:svg> -->
-<!-- </svg:svg> -->

@@ -37,11 +37,11 @@ export class EditorComponent implements OnInit {
                 text: { halign: "left", valign: "top" },
                 style: { "font-size": "15px" }
               },
-              {
-                selector: "titleText2", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
-                text: { halign: "right", valign: "bottom" },
-                style: { "font-size": "15px" }
-              }
+              // {
+              //   selector: "titleText2", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
+              //   text: { halign: "right", valign: "bottom" },
+              //   style: { "font-size": "15px" }
+              // }
             ]
             //   children: [
             //     {

@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Markup, Token, Transform, Value, Position, defaultMarkup, defaultTransform, CellTransform, Geometry, Text } from 'src/app/shared/models/graph.model';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { Markup, Transform, Value, Position, defaultMarkup, defaultTransform, CellTransform, Geometry, Text } from 'src/app/shared/models/graph.model';
 import { Global } from 'src/app/shared/global/global';
 import _ from 'lodash';
+import { hide } from '@popperjs/core';
 
 @Component({
   selector: '.render',
@@ -16,6 +16,7 @@ export class RenderComponent implements OnInit {
   @Input() parent?: RenderComponent;
   @Input() relativePrev?: RenderComponent;
   @Input() relativeNext?: RenderComponent;
+  @Input() hidden!: HTMLElement; // for calculate sizes of specific elements
 
   @Output() changeTransform = new EventEmitter<RenderComponent>();
   // to know previous and new transform on change event
@@ -25,6 +26,8 @@ export class RenderComponent implements OnInit {
   @ViewChildren("absolute") absoluteChildren?: QueryList<RenderComponent>;
   @ViewChildren("relative") relativeChildren?: QueryList<RenderComponent>;
 
+  // @ViewChild("hidden") hidden!: ElementRef;
+
   transform: Transform = defaultTransform();
   geometry: Geometry = {};
   text: Text = {};
@@ -33,6 +36,11 @@ export class RenderComponent implements OnInit {
     if (!this.markup.position) this.markup.position = "relative";
     if (!this.markup.x) this.markup.x = 0;
     if (!this.markup.y) this.markup.y = 0;
+    if (this.markup.type == "text") {
+      if (!this.markup.style) this.markup.style = {};
+      if (!this.markup.style?.['font-family']) this.markup.style['font-family'] = "sans-serif";
+      if (!this.markup.style?.['font-size']) this.markup.style['font-size'] = "12px";
+    }
   }
 
   updateTransforms() {
@@ -49,11 +57,7 @@ export class RenderComponent implements OnInit {
     }, 0);
   }
 
-  calculateTransform(caller?: RenderComponent, propagation: boolean = true) {
-
-    // let prevTransform = _.clone(this.transform);
-
-    //get parent or cell transform
+  calculateParentTransform(): Transform {
     let parentTransform: Transform = defaultTransform();
     if (this.parent) {
       parentTransform = this.parent.transform;
@@ -63,6 +67,15 @@ export class RenderComponent implements OnInit {
       parentTransform.width = this.cell.width; parentTransform.insideWidth = this.cell.width; parentTransform.outsideWidth = this.cell.width;
       parentTransform.height = this.cell.height; parentTransform.insideHeight = this.cell.height; parentTransform.outsideHeight = this.cell.height;
     }
+    return parentTransform;
+  }
+
+  calculateTransform(caller?: RenderComponent, propagation: boolean = true) {
+
+    // let prevTransform = _.clone(this.transform);
+
+    //get parent or cell transform
+    let parentTransform: Transform = this.calculateParentTransform();
 
     //calculate padding and margin
     let padding = { left: 0, right: 0, top: 0, bottom: 0 };
@@ -269,6 +282,34 @@ export class RenderComponent implements OnInit {
     }, 0);
   }
 
+  calculateText(value?: string | boolean | number | string[] | Value[] | Value,): string[] {
+    // get parent or cell transform
+    let parentTransform: Transform = this.calculateParentTransform();
+
+    if (typeof value !== "string" || parentTransform?.insideWidth <= 0) return [];
+
+    let parts: string[] = [];
+
+    // let font: string = this.markup.style?.['font-size'] ? "" + this.markup.style['font-size'] : "12px";
+    // font += this.markup.style?.['font-family'] ? " " + this.markup.style['font-family'] : " sans-serif";
+
+    // check if text is too long to fit in parent
+    if (parentTransform.insideWidth >= Global.getTextWidth(value, this.markup.style, this.hidden)) {
+      parts.push(value);
+      console.log("part", parts.length, ":", parts[parts.length - 1]);
+    } else {
+      // text is too long, we must wrap it in parts that fit in parent inside width
+      let rest = value;
+      while (rest.length > 0) {
+        let partIndex = Global.getTextFitIndex(value, this.markup.style, parentTransform.insideWidth, this.hidden);
+        parts.push(rest.substring(0, partIndex));
+        rest = rest.substring(partIndex);
+        console.log("part", parts.length, ":", parts[parts.length - 1], "rest", rest, "index", partIndex);
+      }
+    }
+    return parts;
+  }
+
   onChangeChild(child: RenderComponent) {
     // notify next relative child to update their transform
     child.relativeNext?.calculateTransform(child);
@@ -290,4 +331,5 @@ export class RenderComponent implements OnInit {
       }, 0);
     }
   }
+
 }

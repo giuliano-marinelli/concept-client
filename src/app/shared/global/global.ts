@@ -117,4 +117,90 @@ export class Global {
       : this.lenghtToNumber(lenghtPercentage as Lenght);
   }
 
+
+
+  //given a text, a svg style for that text, and a svg container, calculates text width in pixels using the svg bounding box
+  static getTextWidth(text: string, style: any, svg: HTMLElement) {
+    let width = 0;
+    let textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    Object.keys(style).forEach(key => {
+      textElement.setAttribute(key, style[key]);
+    });
+    textElement.textContent = text;
+    svg.appendChild(textElement);
+    width = textElement.getBBox().width;
+    textElement.remove();
+    return width;
+    // let element = document.createElement('canvas');
+    // let context = element.getContext("2d");
+    // if (context) {
+    //   context.font = font;
+    //   width = context.measureText(text).width;
+    // }
+    // element.remove();
+    // return width;
+  }
+
+  //given a text, a svg style for that text, a width in pixels, and a svg container, return a index that represent the last character that fit in the width
+  static getTextFitIndex(text: string, style: any, width: number, svg: HTMLElement) {
+    let textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    Object.keys(style).forEach((key: string) => {
+      (<any>textElement.style)[key] = style[key];
+    });
+    svg.appendChild(textElement);
+
+    // calculate the estimated index based on width and font size in the style (by default 12px)
+    let index = Math.floor(width / (Number(style["font-size"]) || 12) / 2);
+    let textWidth = 0;
+
+    textElement.textContent = text.substring(0, index);
+    textWidth = textElement.getBBox().width;
+
+    console.log("index", index, "bbox", textElement.getBBox());
+
+    // if the textWidth is less than the width, we increase the index until the textWidth is greater than the width
+    // else we decrease the index until the textWidth is less than the width
+    if (textWidth < width) {
+      while (textWidth <= width && index <= text.length) {
+        index++;
+        textElement.textContent = text.substring(0, index);
+        textWidth = textElement.getBBox().width;
+        console.log("index", index, "bbox", textElement.getBBox());
+
+      }
+      index--;
+    } else {
+      while (textWidth > width && index > 0) {
+        index--;
+        textElement.textContent = text.substring(0, index);
+        textWidth = textElement.getBBox().width;
+        console.log("index", index, "bbox", textElement.getBBox());
+      }
+    }
+
+    textElement.textContent = text.substring(0, index);
+    textWidth = textElement.getBBox().width;
+
+    console.log("index", index, "bbox", textElement.getBBox());
+
+    console.log("computed part width", textWidth, "<", width);
+    textElement.remove();
+
+    return index;
+    // if (width <= 0) return text.length - 1;
+    // let index = 0;
+    // let element = document.createElement('canvas');
+    // let context = element.getContext("2d");
+    // if (context) {
+    //   context.font = font;
+    //   while (context.measureText(text.substring(0, index)).width <= width && index <= text.length) {
+    //     index++;
+    //   }
+    //   console.log("computed part width", context.measureText(text.substring(0, index - 1)).width, "<", width);
+    // }
+    // element.remove();
+    // return index - 1;
+  }
+
+
 }

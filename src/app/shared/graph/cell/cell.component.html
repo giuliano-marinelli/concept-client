@@ -1,5 +1,6 @@
 <svg:g class="cell-content" attr.transform="translate({{instance.transform.x}} {{instance.transform.y}})"
   (click)="selected.emit(this)">
+  <svg:svg #hidden visibility="hidden"></svg:svg>
   <svg:g class="render" [markup]="markup" [cell]="instance.transform" [attr.selector]="markup.selector"
-    [values]="instance.values"></svg:g>
+    [values]="instance.values" [hidden]="hidden"></svg:g>
 </svg:g>
