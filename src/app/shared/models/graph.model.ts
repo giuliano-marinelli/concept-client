@@ -200,6 +200,7 @@ export interface Text {
   x?: number,
   y?: number,
   text?: string,
+  parts?: string[];
 }
 
 // export function defaultText(): Text {

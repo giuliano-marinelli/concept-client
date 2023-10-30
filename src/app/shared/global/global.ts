@@ -172,4 +172,37 @@ export class Global {
     return index;
   }
 
+  // given amount of lines of text, the style, the line height and the hidden svg container, return the calculated height of the text
+  // based on the bbox size of text svg element
+  static getTextHeight(lines: number, style: any, lineHeight: FontLengthPercentage, svg: HTMLElement) {
+    let textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    textElement.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space", "preserve");
+    Object.keys(style).forEach((key: string) => {
+      (<any>textElement.style)[key] = style[key];
+    });
+    svg.appendChild(textElement);
+
+    let tspanElement = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+    tspanElement.textContent = "A";
+    textElement.appendChild(tspanElement);
+
+    let bboxHeight = textElement.getBBox().height;
+
+    if (lines > 1) {
+      let tspanElement2 = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+      tspanElement2.textContent = "A";
+      tspanElement2.setAttribute("dy", lineHeight as string);
+      textElement.appendChild(tspanElement2);
+
+      bboxHeight = textElement.getBBox().height / 2;
+    }
+
+    let textHeight = bboxHeight * lines;
+    textElement.remove();
+
+    // console.log("textHeight", textHeight, "lines", lines);
+
+    return textHeight;
+  }
+
 }

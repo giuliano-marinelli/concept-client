@@ -1,37 +1,40 @@
 <svg:g attr.transform="translate({{transform.outsideX}} {{transform.outsideY}})">
 
-  <svg:g attr.transform="translate({{transform.x}} {{transform.y}})">
-    <svg:rect *ngIf="markup.type == 'rect'" [attr.width]="transform.width" [attr.height]="transform.height"
+  <svg:g #elementContainer attr.transform="translate({{transform.x}} {{transform.y}})">
+    <svg:rect #element *ngIf="markup.type == 'rect'" [attr.width]="transform.width" [attr.height]="transform.height"
       [attr.rx]="geometry.rx" [attr.ry]="geometry.ry" [ngStyle]="markup.style" />
-    <svg:text *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style">
-      <svg:tspan xml:space="preserve"
-        *ngFor="let part of calculateText(markup.bind ? values[markup.bind] : text.text); let first = first; let last = last; ; let count = count"
+    <svg:text #element *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style"
+      xml:space="preserve">
+      <svg:tspan
+        *ngFor="let part of calculateText(markup.bind ? values[markup.bind] : text.text); let first = first; let count = count"
         [attr.x]="text.x" [attr.dy]="calculateTextPosition(first, count)">{{ part }}</svg:tspan>
     </svg:text>
-    <svg:circle *ngIf="markup.type == 'circle'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy" [attr.r]="geometry.r"
-      [ngStyle]="markup.style" />
-    <svg:ellipse *ngIf="markup.type == 'ellipse'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy"
+    <svg:circle #element *ngIf="markup.type == 'circle'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy"
+      [attr.r]="geometry.r" [ngStyle]="markup.style" />
+    <svg:ellipse #element *ngIf="markup.type == 'ellipse'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy"
       [attr.rx]="geometry.rx" [attr.ry]="geometry.ry" [ngStyle]="markup.style" />
     <svg:polygon *ngIf="markup.type == 'polygon'" [attr.points]="markup.points" [ngStyle]="markup.style" />
 
-    <svg:line *ngIf="markup.type == 'line'" [attr.x1]="geometry.x1" [attr.y1]="geometry.y1" [attr.x2]="geometry.x2"
-      [attr.y2]="geometry.y2" [ngStyle]="markup.style" />
-    <svg:polyline *ngIf="markup.type == 'polyline'" [attr.points]="markup.points" [ngStyle]="markup.style" />
+    <svg:line #element *ngIf="markup.type == 'line'" [attr.x1]="geometry.x1" [attr.y1]="geometry.y1"
+      [attr.x2]="geometry.x2" [attr.y2]="geometry.y2" [ngStyle]="markup.style" />
+    <svg:polyline #element *ngIf="markup.type == 'polyline'" [attr.points]="markup.points" [ngStyle]="markup.style" />
   </svg:g>
 
-  <svg:g *ngIf="markup.children?.length" attr.transform="translate({{transform.insideX}} {{transform.insideY}})">
+  <svg:g #childrenContainer *ngIf="markup.children?.length"
+    attr.transform="translate({{transform.insideX}} {{transform.insideY}})">
 
     <ng-container
       *ngFor="let child of markup.children | filter: { $or: [{position: 'relative' }, { position: null }] }; let i = index; let last = last;">
-      <svg:g #relative class="render" *ngIf="!last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="onChangeChild($event)" [values]="values" [hidden]="hidden">
+      <svg:g #relativeChildren class="render" *ngIf="!last" [markup]="child" [parent]="this"
+        [attr.selector]="child.selector" (changeTransform)="onChangeChild($event)" [values]="values" [hidden]="hidden">
       </svg:g>
-      <svg:g #relative class="render" *ngIf="last" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        (changeTransform)="onChangeLastChild($event)" [values]="values" [hidden]="hidden">
+      <svg:g #relativeChildren class="render" *ngIf="last" [markup]="child" [parent]="this"
+        [attr.selector]="child.selector" (changeTransform)="onChangeLastChild($event)" [values]="values"
+        [hidden]="hidden">
       </svg:g>
     </ng-container>
     <ng-container *ngFor="let child of markup.children | filter: { position: 'absolute' }">
-      <svg:g #absolute class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
+      <svg:g #absoluteChildren class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
         [values]="values" [hidden]="hidden"></svg:g>
     </ng-container>
 

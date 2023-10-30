@@ -24,7 +24,7 @@ export class EditorComponent implements OnInit {
         style: { fill: "white", stroke: "black", "stroke-width": "1px" },
         children: [
           {
-            selector: "titleContainer", type: "rect", position: "relative", width: "100%", height: "100px", minHeight: 20,
+            selector: "titleContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 40,
             padding: 5, rx: 4.5, ry: 4.5,
             style: { fill: "blue", "opacity": 0.5 },
             children: [
@@ -32,20 +32,20 @@ export class EditorComponent implements OnInit {
                 selector: "titleBackground", type: "rect", position: "absolute", width: "100%", height: "100%",
                 style: { fill: "blue", opacity: 0.25 }
               },
+              // {
+              //   selector: "titleText", type: "text", width: "100%", height: "auto", minHeight: 20, bind: "name",
+              //   text: { halign: "left", valign: "top", lineHeight: "1em" },
+              //   style: { "font-size": "15px" }
+              // },
               {
-                selector: "titleText", type: "text", width: "100%", height: "auto", minHeight: 20, bind: "name",
-                text: { halign: "left", valign: "top", lineHeight: "1em" },
+                selector: "titleText2", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 50, bind: "name",
                 style: { "font-size": "15px" }
               },
-              {
-                selector: "titleText2", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
-                style: { "font-size": "15px" }
-              },
-              {
-                selector: "titleText3", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
-                text: { halign: "right", valign: "bottom" },
-                style: { "font-size": "15px" }
-              }
+              // {
+              //   selector: "titleText3", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
+              //   text: { halign: "right", valign: "bottom" },
+              //   style: { "font-size": "15px" }
+              // }
             ]
             //   children: [
             //     {
@@ -284,36 +284,36 @@ export class EditorComponent implements OnInit {
         });
       }
     }
-    this.instance.push({
-      model: "class2",
-      values: {},
-      transform: {
-        x: 150,
-        y: 20,
-        width: 100,
-        height: 100
-      }
-    });
-    this.instance.push({
-      model: "percAuto",
-      values: {},
-      transform: {
-        x: 20,
-        y: 150,
-        width: 100,
-        height: 100
-      }
-    });
-    this.instance.push({
-      model: "autoPerc",
-      values: {},
-      transform: {
-        x: 140,
-        y: 150,
-        width: 100,
-        height: 100
-      }
-    });
+    // this.instance.push({
+    //   model: "class2",
+    //   values: {},
+    //   transform: {
+    //     x: 150,
+    //     y: 20,
+    //     width: 100,
+    //     height: 100
+    //   }
+    // });
+    // this.instance.push({
+    //   model: "percAuto",
+    //   values: {},
+    //   transform: {
+    //     x: 20,
+    //     y: 150,
+    //     width: 100,
+    //     height: 100
+    //   }
+    // });
+    // this.instance.push({
+    //   model: "autoPerc",
+    //   values: {},
+    //   transform: {
+    //     x: 140,
+    //     y: 150,
+    //     width: 100,
+    //     height: 100
+    //   }
+    // });
   }
 
   changeTest() {
