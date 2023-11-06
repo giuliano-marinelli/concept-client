@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Instance, Token, Value } from '../models/graph.model';
+import { Instance, Token } from '../models/graph.model';
 import _ from 'lodash';
 
 @Component({
@@ -17,7 +17,7 @@ export class InspectorComponent {
   getValue(path: string): any {
     let value = this.instance.values;
     path.split(".").forEach((key) => {
-      value = value[key] as Value;
+      value = value[key] as any;
     });
     return value;
   }

@@ -1,13 +1,12 @@
 <svg:g attr.transform="translate({{transform.outsideX}} {{transform.outsideY}})">
 
-  <svg:g #elementContainer attr.transform="translate({{transform.x}} {{transform.y}})">
+  <svg:g #elementContainer *ngIf="markup.type != 'list'" attr.transform="translate({{transform.x}} {{transform.y}})">
     <svg:rect #element *ngIf="markup.type == 'rect'" [attr.width]="transform.width" [attr.height]="transform.height"
       [attr.rx]="geometry.rx" [attr.ry]="geometry.ry" [ngStyle]="markup.style" />
     <svg:text #element *ngIf="markup.type == 'text'" [attr.x]="text.x" [attr.y]="text.y" [ngStyle]="markup.style"
       xml:space="preserve">
-      <svg:tspan
-        *ngFor="let part of calculateText(markup.bind ? values[markup.bind] : text.text); let first = first; let count = count"
-        [attr.x]="text.x" [attr.dy]="calculateTextPosition(first, count)">{{ part }}</svg:tspan>
+      <svg:tspan *ngFor="let part of text.parts;
+        let i = index" [attr.x]="text.x" [attr.dy]="text.positions ? text.positions[i] : 0">{{ part }}</svg:tspan>
     </svg:text>
     <svg:circle #element *ngIf="markup.type == 'circle'" [attr.cx]="geometry.cx" [attr.cy]="geometry.cy"
       [attr.r]="geometry.r" [ngStyle]="markup.style" />
@@ -20,22 +19,40 @@
     <svg:polyline #element *ngIf="markup.type == 'polyline'" [attr.points]="markup.points" [ngStyle]="markup.style" />
   </svg:g>
 
-  <svg:g #childrenContainer *ngIf="markup.children?.length"
+  <svg:g #childrenContainer *ngIf="markup.children?.length || (markup.type == 'list' && markup.template)"
     attr.transform="translate({{transform.insideX}} {{transform.insideY}})">
 
-    <ng-container
-      *ngFor="let child of markup.children | filter: { $or: [{position: 'relative' }, { position: null }] }; let i = index; let last = last;">
-      <svg:g #relativeChildren class="render" *ngIf="!last" [markup]="child" [parent]="this"
-        [attr.selector]="child.selector" (changeTransform)="onChangeChild($event)" [values]="values" [hidden]="hidden">
-      </svg:g>
-      <svg:g #relativeChildren class="render" *ngIf="last" [markup]="child" [parent]="this"
-        [attr.selector]="child.selector" (changeTransform)="onChangeLastChild($event)" [values]="values"
-        [hidden]="hidden">
-      </svg:g>
+    <ng-container *ngIf="markup.type == 'list' && markup.template">
+      <ng-container *ngFor="let listItem of list.items;
+      let i = index; let last = last;">
+        <svg:g #relativeChildren class="render" *ngIf="!last" [markup]="markup.template" [parent]="this"
+          [attr.selector]="markup.template.selector + i" (changeTransform)="onChangeChild($event)" [values]="values"
+          [hidden]="hidden" [listBind]="markup.bind" [listIndex]="i">
+        </svg:g>
+        <svg:g #relativeChildren class="render" *ngIf="last" [markup]="markup.template" [parent]="this"
+          [attr.selector]="markup.template.selector + i" (changeTransform)="onChangeLastChild($event)" [values]="values"
+          [hidden]="hidden" [listBind]="markup.bind" [listIndex]="i">
+        </svg:g>
+      </ng-container>
     </ng-container>
-    <ng-container *ngFor="let child of markup.children | filter: { position: 'absolute' }">
-      <svg:g #absoluteChildren class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-        [values]="values" [hidden]="hidden"></svg:g>
+
+    <ng-container *ngIf="markup.type != 'list'">
+      <ng-container *ngFor="let child of markup.children | filter: { $or: [{position: 'relative' }, { position: null }] };
+      let i = index; let last = last;">
+        <svg:g #relativeChildren class="render" *ngIf="!last" [markup]="child" [parent]="this"
+          [attr.selector]="child.selector" (changeTransform)="onChangeChild($event)" [values]="values" [hidden]="hidden"
+          [listBind]="listBind" [listIndex]="listIndex">
+        </svg:g>
+        <svg:g #relativeChildren class="render" *ngIf="last" [markup]="child" [parent]="this"
+          [attr.selector]="child.selector" (changeTransform)="onChangeLastChild($event)" [values]="values"
+          [hidden]="hidden" [listBind]="listBind" [listIndex]="listIndex">
+        </svg:g>
+      </ng-container>
+      <ng-container *ngFor="let child of markup.children | filter: { position: 'absolute' }">
+        <svg:g #absoluteChildren class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
+          [values]="values" [hidden]="hidden" [listBind]="listBind" [listIndex]="listIndex">
+        </svg:g>
+      </ng-container>
     </ng-container>
 
   </svg:g>

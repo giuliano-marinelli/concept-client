@@ -33,13 +33,13 @@ export class EditorComponent implements OnInit {
                 style: { fill: "blue", opacity: 0.25 }
               },
               // {
-              //   selector: "titleText", type: "text", width: "100%", height: "auto", minHeight: 20, bind: "name",
+              //   selector: "titleText1", type: "text", width: "100%", height: "auto", minHeight: 20, bind: "name",
               //   text: { halign: "left", valign: "top", lineHeight: "1em" },
               //   style: { "font-size": "15px" }
               // },
               {
-                selector: "titleText2", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 50, bind: "name",
-                style: { "font-size": "15px" }
+                selector: "titleText", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 50, bind: "name",
+                text: { halign: "center", valign: "center" }, style: { "font-size": "15px" }
               },
               // {
               //   selector: "titleText3", type: "text", position: "absolute", width: "100%", height: "auto", minHeight: 20, bind: "name",
@@ -71,23 +71,68 @@ export class EditorComponent implements OnInit {
             type: "line", x1: 0, y1: 0.5, x2: "100%", y2: 0.5, style: { stroke: "black", "stroke-width": "1px" }
           },
           {
-            selector: "attributesContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 20,
-            padding: 10,
+            selector: "attributesContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 30,
+            padding: 5,
             style: { fill: "orange", "opacity": 0.5 }, rx: 4.5, ry: 4.5,
             children: [
               {
-                selector: "attributesList", type: "list", direction: "vertical", bind: "attributes",
+                selector: "attributeBackground", type: "rect", position: "absolute", width: "100%", height: "100%",
+                style: { fill: "red", opacity: 0.25 }
+              },
+              {
+                selector: "attributesList", type: "list", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                direction: "vertical", bind: "attributes",
                 template:
                 {
-                  selector: "attributeText", type: "text", "text-anchor": "start",
-                  children: [
-                    { selector: "attributeTextPublic", type: "tspan", bind: "attributes.public", bindMap: { true: "+", false: "-" } },
-                    " ",
-                    { selector: "attributeTextName", type: "tspan", bind: "attributes.name" },
-                    " : ",
-                    { selector: "attributeTextDatatype", type: "tspan", bind: "attributes.datatype" },
-                  ]
+                  selector: "attributeText", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                  style: { "font-size": "15px" }, bind: "name",
                 }
+                // {
+                //   selector: "attributeContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                //   style: { fill: "transparent", "opacity": 1 },
+                //   children: [
+                //     {
+                //       selector: "attributeContainerPublic", type: "rect", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //       style: { fill: "transparent", "opacity": 1 },
+                //       children: [
+                //         {
+                //           selector: "attributePublic", type: "text", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //           text: { text: "-" }, style: { "font-size": "15px" }
+                //         }
+                //       ]
+                //     },
+                //     {
+                //       selector: "attributeContainerName", type: "rect", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //       style: { fill: "transparent", "opacity": 1 },
+                //       children: [
+                //         {
+                //           selector: "attributeName", type: "text", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //           style: { "font-size": "15px" }, bind: "name",
+                //         }
+                //       ]
+                //     },
+                //     {
+                //       selector: "attributeContainerSeparator", type: "rect", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //       style: { fill: "transparent", "opacity": 1 },
+                //       children: [
+                //         {
+                //           selector: "attributeSeparator", type: "text", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //           text: { text: ":" }, style: { "font-size": "15px" }
+                //         },
+                //       ]
+                //     },
+                //     {
+                //       selector: "attributeContainerDatatype", type: "rect", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //       style: { fill: "transparent", "opacity": 1 },
+                //       children: [
+                //         {
+                //           selector: "attributeDatatype", type: "text", position: "relative", width: "auto", height: "auto", minHeight: 10,
+                //           style: { "font-size": "15px" }, bind: "datatype",
+                //         },
+                //       ]
+                //     },
+                //   ]
+                // }
               }
             ]
           },
@@ -101,6 +146,26 @@ export class EditorComponent implements OnInit {
         { name: "name", label: "Name", icon: "pen", type: "text", input: "text", placeholder: "ClassName" },
         { name: "commentary", label: "Commentary", icon: "comment", type: "text", input: "textarea", fullLabel: true, placeholder: "Add a commentary..." },
         { name: "testBool", label: "Test Bool", icon: "circle-half-stroke", type: "bool", input: "checkbox" },
+        { name: "cosas", type: "list", label: "Cosas", icon: "box-archive", itemLabel: "Cosa", default: "cosa", item: { type: "text", input: "text", icon: "box-open" } },
+        {
+          name: "attributes", type: "list", icon: "layer-group", label: "Attributes", itemLabel: "Attribute",
+          default: { name: "attribute", datatype: "string", public: false },
+          item: {
+            type: "object",
+            properties: [
+              { name: "name", label: "Name", type: "text" },
+              {
+                name: "datatype", label: "Datatype", type: "enum", input: "select",
+                options: {
+                  "string": "String",
+                  "integer": "Integer",
+                  "boolean": "Boolean"
+                }
+              },
+              { name: "public", label: "Is Public?", type: "bool" }
+            ]
+          }
+        },
         {
           name: "datatype", label: "Datatype", type: "enum", input: "radio", default: "string",
           options: {
@@ -134,26 +199,6 @@ export class EditorComponent implements OnInit {
             { name: "public", label: "Is Public?", type: "bool" }
           ]
         },
-        { name: "cosas", type: "list", label: "Cosas", icon: "box-archive", itemLabel: "Cosa", default: "cosa", item: { type: "text", input: "text", icon: "box-open" } },
-        {
-          name: "attributes", type: "list", icon: "layer-group", label: "Attributes", itemLabel: "Attribute",
-          default: { name: "attribute", datatype: "string", public: false },
-          item: {
-            type: "object",
-            properties: [
-              { name: "name", label: "Name", type: "text" },
-              {
-                name: "datatype", label: "Datatype", type: "enum", input: "select",
-                options: {
-                  "string": "String",
-                  "integer": "Integer",
-                  "boolean": "Boolean"
-                }
-              },
-              { name: "public", label: "Is Public?", type: "bool" }
-            ]
-          }
-        }
       ]
     },
     class2: {
@@ -265,9 +310,11 @@ export class EditorComponent implements OnInit {
               public: true
             },
             cosas: [
-              ...Array.from(Array(5).keys()).map(i => "cosa" + i)
+              ...Array.from(Array(1).keys()).map(i => "cosa" + i)
             ],
             attributes: [
+              // "-nombre: string",
+              // "-apellido: string"
               {
                 name: "nombre",
                 datatype: "string",

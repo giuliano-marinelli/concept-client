@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CellTransform, Instance, Markup, Token, Value, defaultCellTransform, defaultMarkup } from '../../models/graph.model';
+import { CellTransform, Instance, Markup, Token, defaultCellTransform, defaultMarkup } from '../../models/graph.model';
 import { RenderComponent } from './render/render.component';
 
 @Component({

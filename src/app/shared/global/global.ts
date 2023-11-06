@@ -205,4 +205,20 @@ export class Global {
     return textHeight;
   }
 
+  // obtain the binded value traversing the values object by the bind string
+  static getBindValue(bind?: string, values?: any, parent?: boolean): any {
+    if (!bind || !values) return undefined;
+    let value = values;
+    let bindParts = bind.split(".");
+    let partsToAccess = parent ? bindParts.length - 1 : bindParts.length;
+    for (let i = 0; i < partsToAccess; i++) {
+      if (!value[bindParts[i]]) {
+        value = undefined;
+        break;
+      }
+      value = value[bindParts[i]];
+    }
+    return value;
+  }
+
 }

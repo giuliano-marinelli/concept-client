@@ -8,7 +8,7 @@ export type LenghtPercentage = Lenght | Percentage;
 export type FontLengthPercentage = FontLength | Percentage;
 export type Position = { top?: LenghtPercentage, right?: LenghtPercentage, bottom?: LenghtPercentage, left?: LenghtPercentage };
 export type Color = string;
-export type Bind = string;
+// export type Bind = string;
 
 export interface Markup {
   selector: string,
@@ -42,12 +42,15 @@ export interface Markup {
   points?: string,
   //text attributes
   text?: {
+    text?: string,
     valign?: "top" | "center" | "bottom",
     halign?: "left" | "center" | "right",
     lineHeight?: FontLengthPercentage,
   },
   //binding
-  bind?: Bind,
+  bind?: string,
+  //list
+  template?: Markup,
   //style attributes
   style?: {
     "fill"?: Color,
@@ -93,7 +96,7 @@ export interface Token {
   name: string,
   type: "text" | "bool" | "enum" | "object" | "list",
   label: string,
-  default: Value | string | boolean,
+  default: any,
   input?:
   "text" | "textarea" | //for text
   "checkbox" | "switch" | //for bool
@@ -117,9 +120,9 @@ export interface Token {
   item: Token
 }
 
-export interface Value {
-  [tokenName: string]: string | boolean | number | string[] | Value[] | Value
-}
+// export interface Value {
+//   [tokenName: string]: string | boolean | number | string[] | boolean[] | number[] | Value[] | Value
+// }
 
 export interface Primitive {
   markup: Markup,
@@ -132,7 +135,7 @@ export interface Model {
 
 export interface Instance {
   model: string,
-  values: Value,
+  values: any,
   transform: CellTransform,
   // attributes?: any
 }
@@ -199,8 +202,8 @@ export interface Text {
   //text attributes
   x?: number,
   y?: number,
-  text?: string,
   parts?: string[];
+  positions?: any[]; // can be numbers or strings
 }
 
 // export function defaultText(): Text {
@@ -208,3 +211,8 @@ export interface Text {
 //     x: 0, y: 0, text: ""
 //   }
 // }
+
+export interface List {
+  //list attributes
+  items?: any[],
+}
