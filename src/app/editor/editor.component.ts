@@ -83,9 +83,27 @@ export class EditorComponent implements OnInit {
                 selector: "attributesList", type: "list", position: "relative", width: "100%", height: "auto", minHeight: 10,
                 direction: "vertical", bind: "attributes",
                 template:
+                // {
+                //   selector: "attributeText", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                //   style: { "font-size": "15px" }, bind: "attributes.#.name",
+                // }
                 {
-                  selector: "attributeText", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 10,
-                  style: { "font-size": "15px" }, bind: "name",
+                  selector: "attributeContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                  style: { fill: "transparent", "opacity": 1 },
+                  children: [
+                    {
+                      selector: "attributeText", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                      style: { "font-size": "15px" }, bind: "attributes.#.name",
+                    },
+                    {
+                      selector: "attributeCosas", type: "list", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                      direction: "vertical", bind: "attributes.#.cosas",
+                      template: {
+                        selector: "attributeCosa", type: "text", position: "relative", width: "100%", height: "auto", minHeight: 10,
+                        style: { "font-size": "15px" }, bind: "attributes.#.cosas.#",
+                      }
+                    }
+                  ]
                 }
                 // {
                 //   selector: "attributeContainer", type: "rect", position: "relative", width: "100%", height: "auto", minHeight: 10,
@@ -146,10 +164,9 @@ export class EditorComponent implements OnInit {
         { name: "name", label: "Name", icon: "pen", type: "text", input: "text", placeholder: "ClassName" },
         { name: "commentary", label: "Commentary", icon: "comment", type: "text", input: "textarea", fullLabel: true, placeholder: "Add a commentary..." },
         { name: "testBool", label: "Test Bool", icon: "circle-half-stroke", type: "bool", input: "checkbox" },
-        { name: "cosas", type: "list", label: "Cosas", icon: "box-archive", itemLabel: "Cosa", default: "cosa", item: { type: "text", input: "text", icon: "box-open" } },
         {
           name: "attributes", type: "list", icon: "layer-group", label: "Attributes", itemLabel: "Attribute",
-          default: { name: "attribute", datatype: "string", public: false },
+          default: { name: "attribute", datatype: "string", public: false, cosas: [] },
           item: {
             type: "object",
             properties: [
@@ -162,10 +179,12 @@ export class EditorComponent implements OnInit {
                   "boolean": "Boolean"
                 }
               },
-              { name: "public", label: "Is Public?", type: "bool" }
+              { name: "public", label: "Is Public?", type: "bool" },
+              { name: "cosas", label: "Cosas", type: "list", itemLabel: "Cosa", default: "cosa", item: { type: "text", input: "text", icon: "box-open" } }
             ]
           }
         },
+        { name: "cosas", type: "list", label: "Cosas", icon: "box-archive", itemLabel: "Cosa", default: "cosa", item: { type: "text", input: "text", icon: "box-open" } },
         {
           name: "datatype", label: "Datatype", type: "enum", input: "radio", default: "string",
           options: {
@@ -318,7 +337,8 @@ export class EditorComponent implements OnInit {
               {
                 name: "nombre",
                 datatype: "string",
-                public: false
+                public: false,
+                cosas: []
               }
             ]
           },

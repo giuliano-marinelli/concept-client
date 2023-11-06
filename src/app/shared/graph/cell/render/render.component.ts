@@ -16,8 +16,7 @@ export class RenderComponent implements OnInit, DoCheck {
   @Input() relativePrev?: RenderComponent;
   @Input() relativeNext?: RenderComponent;
   @Input() hidden!: HTMLElement; // for calculate sizes of specific elements
-  @Input() listBind?: string; // bind inherited from parent list
-  @Input() listIndex?: number; // index that has render on their parent list
+  @Input() listIndex: number[] = []; // index that has render on their parent list
 
   @Output() changeTransform = new EventEmitter<RenderComponent>();
   // to know previous and new transform on change event
@@ -66,19 +65,10 @@ export class RenderComponent implements OnInit, DoCheck {
     if (this.markup.type == "text") {
       let bindKey = this.getBind();
       let bindedValue = Global.getBindValue(bindKey, this.values, true);
-      // console.log(this.markup.selector, 'bindKey', bindKey, "bindValue", bindedValue);
       if (bindedValue != undefined) {
         let changes = this.differ.diff(bindedValue);
         if (changes) {
-          // console.log(this.markup.selector, 'changes:', changes);
           this.calculateTextParts();
-          // changes.forEachChangedItem((item: any) => {
-          //   // console.log(this.markup.selector, 'bindKeyLast', bindKey.substring(bindKey.lastIndexOf('.') + 1), "itemKey", item.key);
-          //   if (item.key == bindKey.substring(bindKey.lastIndexOf('.') + 1)) {
-          //     console.log(this.markup.selector, 'changes:', changes);
-          //     this.calculateTextParts();
-          //   }
-          // });
         }
       }
     } else if (this.markup.type == "list") {
@@ -86,12 +76,11 @@ export class RenderComponent implements OnInit, DoCheck {
       if (bindedValue != undefined) {
         let iterableChanges = this.iterableDiffer.diff(bindedValue);
         if (iterableChanges) {
-          this.calculateListItems();
-          this.calculateRelatives();
-          setTimeout(() => {
-            // console.log(this.markup.selector, 'iterableChanges:', iterableChanges);
-            this.calculateTransform();
-          }, 0);
+          if (this.list.items?.length != bindedValue?.length) {
+            setTimeout(() => {
+              this.updateTransforms();
+            }, 0);
+          }
         }
       }
     }
@@ -104,15 +93,17 @@ export class RenderComponent implements OnInit, DoCheck {
     if (this.markup.type == "list") this.calculateListItems();
     this.calculateRelatives();
     if (this.markup.type == "text") this.calculateTextParts(); // it calls calculateTransform later
-    else this.calculateTransform();
     setTimeout(() => {
-      // this.relativeChildren?.first?.updateTransforms();
-      this.relativeChildren?.forEach((child) => {
-        child.updateTransforms();
-      });
-      this.absoluteChildren?.forEach((child) => {
-        child.updateTransforms();
-      });
+      if (this.markup.type != "text") this.calculateTransform();
+      setTimeout(() => {
+        // this.relativeChildren?.first?.updateTransforms();
+        this.relativeChildren?.forEach((child) => {
+          child.updateTransforms();
+        });
+        this.absoluteChildren?.forEach((child) => {
+          child.updateTransforms();
+        });
+      }, 0);
     }, 0);
   }
 
@@ -439,13 +430,19 @@ export class RenderComponent implements OnInit, DoCheck {
 
   calculateListItems() {
     // get binded list from markup bind or listBind with listIndex
-    this.list.items = Array(Global.getBindValue(this.getBind(), this.values).length).fill(true);
+    this.list.items = Array(Global.getBindValue(this.getBind(), this.values)?.length)?.fill(true);
   }
 
   getBind(): string {
-    let bind: string = this.listBind || "";
-    if (this.listIndex != undefined) bind = bind + "." + this.listIndex;
-    if (this.markup.bind) bind = (bind ? bind + "." : "") + this.markup.bind;
+    let bind: string = "";
+    if (this.markup.bind) {
+      bind = this.markup.bind;
+      // we have to add list indexes in order to get the correct bind string
+      // for example: "cosas.#.cosas.#" => "cosas.1.cosas.2"
+      for (let i = 0; i < this.listIndex.length; i++) {
+        bind = bind.replace("#", this.listIndex[i].toString());
+      }
+    }
 
     return bind;
   }

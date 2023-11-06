@@ -35,9 +35,9 @@ export class InspectorComponent {
   addListItem(item: any, instance: any, token: Token, parentToken: Token, index: number) {
     if (item) {
       if (parentToken)
-        instance[parentToken.name][index].push(_.clone(item));
+        instance[parentToken.name][index].push(_.cloneDeep(item));
       else
-        instance[token.name].push(_.clone(item));
+        instance[token.name].push(_.cloneDeep(item));
     }
   }
 

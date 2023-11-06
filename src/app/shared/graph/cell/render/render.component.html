@@ -27,11 +27,11 @@
       let i = index; let last = last;">
         <svg:g #relativeChildren class="render" *ngIf="!last" [markup]="markup.template" [parent]="this"
           [attr.selector]="markup.template.selector + i" (changeTransform)="onChangeChild($event)" [values]="values"
-          [hidden]="hidden" [listBind]="markup.bind" [listIndex]="i">
+          [hidden]="hidden" [listIndex]="listIndex.concat([i])">
         </svg:g>
         <svg:g #relativeChildren class="render" *ngIf="last" [markup]="markup.template" [parent]="this"
           [attr.selector]="markup.template.selector + i" (changeTransform)="onChangeLastChild($event)" [values]="values"
-          [hidden]="hidden" [listBind]="markup.bind" [listIndex]="i">
+          [hidden]="hidden" [listIndex]="listIndex.concat([i])">
         </svg:g>
       </ng-container>
     </ng-container>
@@ -41,16 +41,16 @@
       let i = index; let last = last;">
         <svg:g #relativeChildren class="render" *ngIf="!last" [markup]="child" [parent]="this"
           [attr.selector]="child.selector" (changeTransform)="onChangeChild($event)" [values]="values" [hidden]="hidden"
-          [listBind]="listBind" [listIndex]="listIndex">
+          [listIndex]="listIndex">
         </svg:g>
         <svg:g #relativeChildren class="render" *ngIf="last" [markup]="child" [parent]="this"
           [attr.selector]="child.selector" (changeTransform)="onChangeLastChild($event)" [values]="values"
-          [hidden]="hidden" [listBind]="listBind" [listIndex]="listIndex">
+          [hidden]="hidden" [listIndex]="listIndex">
         </svg:g>
       </ng-container>
       <ng-container *ngFor="let child of markup.children | filter: { position: 'absolute' }">
         <svg:g #absoluteChildren class="render" [markup]="child" [parent]="this" [attr.selector]="child.selector"
-          [values]="values" [hidden]="hidden" [listBind]="listBind" [listIndex]="listIndex">
+          [values]="values" [hidden]="hidden" [listIndex]="listIndex">
         </svg:g>
       </ng-container>
     </ng-container>
