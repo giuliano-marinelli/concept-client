@@ -1,0 +1,141 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import '../assets/scss/variables.scss';
+
+::ng-deep main > * > .container {
+  padding: 60px 15px 0;
+}
+
+.navbar-custom {
+  background-color: rgba($body-secondary-bg, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+::ng-deep html[data-bs-theme='dark'] .navbar-custom {
+  background-color: rgba($body-secondary-bg-dark, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+@include media-breakpoint-down(sm) {
+  .navbar-custom {
+    background-color: rgba($body-bg, 0.7);
+  }
+
+  ::ng-deep html[data-bs-theme='dark'] .navbar-custom {
+    background-color: rgba($body-bg-dark, 0.8);
+  }
+}
+
+.logo {
+  padding-top: 11px;
+  border-radius: 0px 40px 40px 0px;
+  flex-basis: 60px;
+  overflow: hidden;
+  transition: flex-basis 0.2s ease-in-out;
+}
+
+.logo:hover {
+  flex-basis: 180px;
+}
+
+.logo-icon {
+  opacity: 0.75;
+  transition: opacity 0.5s;
+}
+
+.logo-icon:hover {
+  opacity: 1;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  padding: 1px !important;
+}
+
+@include media-breakpoint-down(md) {
+  .profile-img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* navbar collapse button */
+.navbar-toggler span {
+  display: block;
+  background-color: $body-color;
+  height: 3px;
+  width: 25px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  position: relative;
+  left: 0;
+  opacity: 0.8;
+  transition: all 0.35s ease-out;
+  transform-origin: center left;
+}
+
+::ng-deep html[data-bs-theme='dark'] .navbar-toggler span {
+  background-color: $body-color-dark !important;
+}
+
+.navbar-toggler:hover span {
+  opacity: 1;
+}
+
+.navbar-toggler span:nth-child(1) {
+  transform: translate(0%, 0%) rotate(0deg);
+}
+
+.navbar-toggler span:nth-child(2) {
+  opacity: 1;
+}
+
+.navbar-toggler span:nth-child(3) {
+  transform: translate(0%, 0%) rotate(0deg);
+}
+
+.navbar-toggler span:nth-child(1) {
+  margin-top: 0.3em;
+}
+
+.navbar-toggler:not(.collapsed) span:nth-child(1) {
+  transform: translate(15%, -33%) rotate(45deg);
+}
+
+.navbar-toggler:not(.collapsed) span:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggler:not(.collapsed) span:nth-child(3) {
+  transform: translate(15%, 33%) rotate(-45deg);
+}
+
+.close-navbar-toggler {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 4;
+  backdrop-filter: blur(5px);
+  // background-color: rgba(0, 0, 0, 0.9);
+}
+
+.close-navbar-toggler.collapsed {
+  background-color: unset;
+  z-index: -1;
+}
+
+.close-navbar-toggler:not(.collapsed) ~ .navbar-custom {
+  background-color: rgba($body-secondary-bg, 0.7);
+}
+
+::ng-deep html[data-bs-theme='dark'] .close-navbar-toggler:not(.collapsed) ~ .navbar-custom {
+  background-color: rgba($body-secondary-bg-dark, 0.8) !important;
+}
+
+.container-transition {
+  transition: 0.5s max-width;
+}
+
+.container-full {
+  max-width: 100% !important;
+}
