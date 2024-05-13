@@ -17,7 +17,7 @@ import { MessagesService } from './services/messages.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app-client';
+  title = 'Concept';
   currentYear = new Date().getUTCFullYear();
   fullNavbar = false;
   isDevelopment: boolean = !environment.production;
