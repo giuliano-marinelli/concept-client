@@ -53,12 +53,12 @@ export class AppComponent {
       )
       .subscribe((title: string) => {
         if (title) {
-          this.titleService.setTitle(`${title} · App`);
+          this.titleService.setTitle(`${title} · Concept`);
 
           //for make navbar take full size when using Editor
           this.fullNavbar = title == 'Editor';
         } else {
-          this.titleService.setTitle(`App`);
+          this.titleService.setTitle(`Concept`);
         }
       });
   }
