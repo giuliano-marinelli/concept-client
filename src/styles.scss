@@ -115,6 +115,27 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import 'tippy.js/themes/material.css';
 @import 'tippy.js/animations/scale.css';
 
+/* Importing GLSP files (for sprotty diagrams) */
+@import '@eclipse-glsp/client/css/autocomplete-palette.css';
+@import '@eclipse-glsp/client/css/change-bounds.css';
+@import '@eclipse-glsp/client/css/command-palette.css';
+@import '@eclipse-glsp/client/css/debug.css';
+@import '@eclipse-glsp/client/css/decoration.css';
+@import '@eclipse-glsp/client/css/ghost-element.css';
+@import '@eclipse-glsp/client/css/glsp-sprotty.css';
+@import '@eclipse-glsp/client/css/grid.css';
+@import '@eclipse-glsp/client/css/helper-lines.css';
+@import '@eclipse-glsp/client/css/key-shortcut.css';
+@import '@eclipse-glsp/client/css/keyboard-tool-palette.css';
+@import '@eclipse-glsp/client/css/keyboard.css';
+@import '@eclipse-glsp/client/css/navigation.css';
+@import '@eclipse-glsp/client/css/status-overlay.css';
+@import '@eclipse-glsp/client/css/toast.css';
+@import '@eclipse-glsp/client/css/tool-palette.css';
+
+/* Importing codicons */
+@import '@vscode/codicons/dist/codicon.css';
+
 /* Adds animations to the masonry layout component items */
 .masonry-item {
   transition:

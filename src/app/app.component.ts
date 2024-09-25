@@ -19,6 +19,7 @@ import { MessagesService } from './services/messages.service';
 export class AppComponent {
   title = 'Concept';
   currentYear = new Date().getUTCFullYear();
+  fullNavbarComponents: string[] = ['Models'];
   fullNavbar = false;
   isDevelopment: boolean = !environment.production;
 
@@ -54,12 +55,12 @@ export class AppComponent {
       .subscribe((title: string) => {
         if (title) {
           this.titleService.setTitle(`${title} · Concept`);
-
-          //for make navbar take full size when using Editor
-          this.fullNavbar = title == 'Editor';
         } else {
           this.titleService.setTitle(`Concept`);
         }
+
+        //for make navbar take full size for some components
+        this.fullNavbar = this.fullNavbarComponents.includes(title);
       });
   }
 

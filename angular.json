@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "loader": {
+              ".ttf": "binary"
+            },
             "outputPath": "dist/concept-client",
             "index": "src/index.html",
             "browser": "src/main.ts",

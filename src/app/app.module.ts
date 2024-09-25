@@ -52,6 +52,7 @@ import { LeaveGuardWarningComponent } from './shared/components/leave-guard-warn
 import { SearchComponent } from './shared/components/search/search.component';
 import { InvalidFeedbackComponent } from './shared/components/invalid-feedback/invalid-feedback.component';
 import { VerifiedMarkComponent } from './shared/components/verified-mark/verified-mark.component';
+import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
 //components
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -67,6 +68,8 @@ import { SecuritySettingsComponent } from './account/security-settings/security-
 import { DevicesSettingsComponent } from './account/devices-settings/devices-settings.component';
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
+import { MetamodelsComponent } from './metamodels/metamodels.component';
+import { ModelsComponent } from './models/models.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +85,7 @@ import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
     SearchComponent,
     InvalidFeedbackComponent,
     VerifiedMarkComponent,
+    ModelEditorComponent,
     //components
     AppComponent,
     NotFoundComponent,
@@ -96,7 +100,9 @@ import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
     SecuritySettingsComponent,
     DevicesSettingsComponent,
     AdminComponent,
-    UsersAdminComponent
+    UsersAdminComponent,
+    MetamodelsComponent,
+    ModelsComponent
   ],
   imports: [
     //angular modules

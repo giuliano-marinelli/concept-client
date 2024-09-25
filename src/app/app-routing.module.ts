@@ -21,6 +21,9 @@ import { ProfileComponent } from './profile/profile.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
+import { MetamodelsComponent } from './metamodels/metamodels.component';
+import { ModelsComponent } from './models/models.component';
+import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: '' } },
@@ -82,6 +85,13 @@ const routes: Routes = [
     ]
   },
   // { path: 'graphql' },
+  { path: 'metamodels', component: MetamodelsComponent, data: { title: 'Metamodels' } },
+  {
+    path: 'models',
+    component: ModelsComponent,
+    data: { title: 'Models' }
+    // children: [{ path: 'editor', component: ModelEditorComponent, data: { title: 'Models > Editor' } }]
+  },
   { path: 'notfound', component: NotFoundComponent, data: { title: 'Page not found' } },
   { path: '**', redirectTo: '/notfound' }
 ];

@@ -1,0 +1,92 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import '../../../../assets/scss/variables.scss';
+
+::ng-deep .sprotty {
+  position: relative;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+
+  > .tool-palette {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    min-width: 200px;
+  }
+
+  > .minimize-palette-button {
+    top: 10px;
+    right: 25px;
+  }
+
+  [aria-label='Diagram'] {
+    outline: none;
+  }
+
+  > .sprotty-empty,
+  > [aria-label='Diagram'] > .sprotty-graph,
+  > [aria-label='Diagram'] > .sprotty-graph:focus {
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+    position: relative;
+    overflow: hidden;
+    border-style: none;
+    outline: none;
+  }
+
+  > .label-edit {
+    z-index: 1;
+    margin-top: -60px;
+  }
+}
+
+::ng-deep .sprotty-hidden {
+  position: fixed;
+}
+
+::ng-deep .node > .sprotty-node {
+  fill: $body-bg-dark;
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
+::ng-deep html[data-bs-theme='dark'] .node > .sprotty-node {
+  fill: $body-bg;
+}
+
+::ng-deep .node > .sprotty-node:not(.selected) {
+  stroke: $body-bg-dark;
+}
+
+::ng-deep html[data-bs-theme='dark'] .node > .sprotty-node:not(.selected) {
+  stroke: $body-bg;
+}
+
+::ng-deep .node > .label {
+  fill: $body-bg;
+}
+
+::ng-deep html[data-bs-theme='dark'] .node > .label {
+  fill: $body-bg-dark;
+}
+
+::ng-deep .sprotty-edge {
+  cursor: pointer;
+}
+
+::ng-deep .sprotty-edge:not(.selected),
+::ng-deep .sprotty-edge.feedback-edge {
+  stroke: $body-bg-dark;
+}
+
+::ng-deep html[data-bs-theme='dark'] .sprotty-edge:not(.selected),
+::ng-deep html[data-bs-theme='dark'] .sprotty-edge.feedback-edge {
+  stroke: $body-bg;
+}
+
+::ng-deep .sprotty-edge .label {
+  fill: $body-bg-dark;
+}
+
+::ng-deep html[data-bs-theme='dark'] .sprotty-edge .label {
+  fill: $body-bg;
+}

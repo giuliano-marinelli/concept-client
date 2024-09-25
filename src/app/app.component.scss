@@ -1,13 +1,24 @@
 //this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
 @import '../assets/scss/variables.scss';
 
+::ng-deep main {
+  flex-grow: 1;
+}
+
 ::ng-deep main > * > .container {
   padding: 60px 15px 0;
+}
+
+::ng-deep main > * > .container-stretch {
+  padding: 60px 0 0;
+  width: 100%;
+  height: 100%;
 }
 
 .navbar-custom {
   background-color: rgba($body-secondary-bg, 0.7);
   backdrop-filter: blur(5px);
+  user-select: none;
 }
 
 ::ng-deep html[data-bs-theme='dark'] .navbar-custom {
