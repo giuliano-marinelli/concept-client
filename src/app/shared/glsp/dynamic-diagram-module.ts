@@ -17,6 +17,7 @@ import {
   accessibilityModule,
   bindAsService,
   bindOrRebind,
+  configureActionHandler,
   configureDefaultModelElements,
   debugModule,
   edgeEditToolModule,
@@ -35,7 +36,8 @@ import { DynamicStartup } from './dynamic-startup';
 export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
   const context = { bind, unbind, isBound, rebind };
 
-  // allow to enable/disable default features of the diagram on startup
+  // allow to do actions on the diagram startup, before request the model from the server
+  // here we send the action for load the language specification
   // e.g. enable/disable the grid on startup
   bindAsService(context, TYPES.IDiagramStartup, DynamicStartup);
 
