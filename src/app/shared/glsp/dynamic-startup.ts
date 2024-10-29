@@ -8,9 +8,10 @@ import {
   ResponseAction,
   hasObjectProp
 } from '@eclipse-glsp/client';
-import { MaybePromise } from '@eclipse-glsp/sprotty';
 
 import { inject, injectable, optional } from 'inversify';
+
+import { ExternalServices } from './dynamic-external-services';
 
 /*
  This RequestAction and ResponseActions interfaces must be in a shared project to be used in both the client and server.
@@ -71,10 +72,13 @@ export class DynamicStartup implements IDiagramStartup {
   @optional()
   protected gridManager?: GridManager;
 
+  @inject(ExternalServices)
+  protected services?: ExternalServices;
+
   async preRequestModel(): Promise<void> {
     // action for loading the language specification
     const requestAction = LoadLanguageSpecificationAction.create('dynamic');
-    const response = await this.actionDispatcher?.request<ReadyLanguageSpecificationAction>(requestAction);
+    await this.actionDispatcher?.request<ReadyLanguageSpecificationAction>(requestAction);
 
     // action for setting the grid visible
     this.gridManager?.setGridVisible(true);

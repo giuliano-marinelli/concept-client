@@ -82,10 +82,10 @@ export function initializeDynamicDiagramContainer(...containerConfiguration: Con
       remove: toolPaletteModule
     },
     STANDALONE_MODULE_CONFIG, // contains a set of default modules for basic features like undo/redo, copy/paste, selection, etc.
+    dynamicDiagramModule, // load all the bindings for the dynamic diagram language
     helperLineModule, // load bindings for helper lines for alignment
     gridModule, // load bindings for grid on the diagram and button to toggle the grid
     edgeEditToolModule, // load bindings for debug mode (it can be enable with an option at command palette)
-    dynamicDiagramModule, // load all the bindings for the dynamic diagram language
     debugModule
   );
 }
