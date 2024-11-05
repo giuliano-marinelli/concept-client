@@ -31,6 +31,8 @@ import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { NgxMasonryModule } from 'ngx-masonry';
 import { AngularResizeEventModule } from 'angular-resize-event';
+import { JsonFormsModule } from '@jsonforms/angular';
+import { JsonFormsAngularMaterialModule } from '@jsonforms/angular-material';
 //environment
 import { environment } from '../environments/environment';
 //icons
@@ -140,7 +142,9 @@ import { ModelsComponent } from './models/models.component';
       }
     }),
     //directives
-    TippyDirective
+    TippyDirective,
+    JsonFormsModule,
+    JsonFormsAngularMaterialModule
   ],
   providers: [
     //configurations

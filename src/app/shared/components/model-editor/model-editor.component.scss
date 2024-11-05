@@ -61,11 +61,11 @@
   stroke: $body-bg;
 }
 
-::ng-deep .node > .label {
+::ng-deep .node .label {
   fill: $body-bg;
 }
 
-::ng-deep html[data-bs-theme='dark'] .node > .label {
+::ng-deep html[data-bs-theme='dark'] .node .label {
   fill: $body-bg-dark;
 }
 

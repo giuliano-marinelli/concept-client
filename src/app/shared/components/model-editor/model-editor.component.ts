@@ -11,6 +11,7 @@ import {
   StatusAction,
   createDiagramOptionsModule
 } from '@eclipse-glsp/client';
+import { JsonFormsAngularService } from '@jsonforms/angular';
 
 import { ExternalServices } from '../../glsp/dynamic-external-services';
 import { DynamicGLSPWebSocketProvider } from '../../glsp/dynamic-glsp-ws-provider';
@@ -44,7 +45,8 @@ export class ModelEditorComponent implements AfterViewInit {
 
   constructor(
     public auth: AuthService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private jsonFormsService: JsonFormsAngularService
   ) {}
 
   ngAfterViewInit(): void {
@@ -54,6 +56,7 @@ export class ModelEditorComponent implements AfterViewInit {
       // define Angular services that can be used in the GLSP diagram module
       const services = {
         // ADD SERVICES HERE...
+        jsonFormsService: this.jsonFormsService
       };
 
       // create a new custom WebSocket provider for the GLSP client, which sends authentication headers as protocol messages

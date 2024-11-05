@@ -17,7 +17,6 @@ import {
   accessibilityModule,
   bindAsService,
   bindOrRebind,
-  configureActionHandler,
   configureDefaultModelElements,
   debugModule,
   edgeEditToolModule,
@@ -31,6 +30,7 @@ import {
 
 import { Container, ContainerModule } from 'inversify';
 
+import { DynamicInspector } from './dynamic-inspector';
 import { DynamicStartup } from './dynamic-startup';
 
 export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
@@ -40,6 +40,11 @@ export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, 
   // here we send the action for load the language specification
   // e.g. enable/disable the grid on startup
   bindAsService(context, TYPES.IDiagramStartup, DynamicStartup);
+
+  // configure the dynamic inspector that allow to edit elements abstract properties
+  bind(DynamicInspector).toSelf().inSingletonScope();
+  bind(TYPES.IUIExtension).toService(DynamicInspector);
+  bind(TYPES.IDiagramStartup).toService(DynamicInspector);
 
   // configure the default logger to show only warnings and errors
   bindOrRebind(context, TYPES.LogLevel).toConstantValue(LogLevel.warn);
