@@ -1,6 +1,6 @@
 <div class="container mb-3">
   <div class="row mt-3 text-center" *ngIf="userLoading && !user">
-    <fa-icon [icon]="'spinner'" [spin]="true" [pulse]="true" size="3x"></fa-icon>
+    <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
   </div>
   <div class="text-center mt-3" *ngIf="!userLoading && !user">
     <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
@@ -9,7 +9,7 @@
   <form *ngIf="user" [formGroup]="usernameForm">
     <div class="mt-3 mt-sm-0 border-bottom">
       <h4>Change username <a class="btn p-0 text-muted border-0" [hidden]="!userLoading" [class.disabled]="userLoading">
-          <fa-icon [icon]="'rotate-right'" size="lg" [spin]="userLoading" [pulse]="userLoading"></fa-icon>
+          <fa-icon [icon]="'rotate-right'" size="lg" [animation]="userLoading ? 'spin-pulse' : undefined"></fa-icon>
         </a>
       </h4>
     </div>
@@ -18,14 +18,14 @@
       <div class="input-spinner">
         <input class="form-control bg-dark-subtle" type="text" name="username" formControlName="username"
           [ngClass]="setValid(username)" autocomplete="off">
-        <fa-icon *ngIf="username.pending" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+        <fa-icon *ngIf="username.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
         <invalid-feedback [control]="username" name="Username"
           [messages]="{ pattern: 'Username can only have characters, numbers and _ or - symbols' }"></invalid-feedback>
       </div>
     </div>
     <button type="button" class="btn btn-success text-white" (click)="updateUsername()"
       [disabled]="!usernameForm.valid || updateSubmitLoading || deleteSubmitLoading">
-      Update username <fa-icon *ngIf="updateSubmitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+      Update username <fa-icon *ngIf="updateSubmitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
     </button>
 
     <div class="mt-4 border-bottom text-danger">
@@ -35,7 +35,7 @@
     <p class="mt-3 mb-3">Once you delete your account, there is no going back. Please be certain.</p>
     <button type="button" class="btn btn-outline-danger" (confirm)="deleteUser($event)" [requiredPassword]="true"
       [disabled]="updateSubmitLoading || deleteSubmitLoading">
-      Delete your account <fa-icon *ngIf="deleteSubmitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true">
+      Delete your account <fa-icon *ngIf="deleteSubmitLoading" [icon]="'spinner'" [animation]="'spin-pulse'">
       </fa-icon>
     </button>
   </form>

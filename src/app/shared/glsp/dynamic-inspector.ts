@@ -1,15 +1,14 @@
 import {
   AbstractUIExtension,
-  Action,
-  CenterAction,
   EditorContextService,
-  FitToScreenAction,
-  GLSPAbstractUIExtension,
+  GEdge,
+  GModelRoot,
+  GNode,
   IActionDispatcher,
   IDiagramStartup,
+  ISelectionListener,
   MaybePromise,
-  TYPES,
-  codiconCSSClasses
+  TYPES
 } from '@eclipse-glsp/client';
 
 import { inject, injectable } from 'inversify';
@@ -19,7 +18,7 @@ import { ExternalServices } from './dynamic-external-services';
 export const IInspector = Symbol('IInspector');
 
 @injectable()
-export class DynamicInspector extends GLSPAbstractUIExtension implements IDiagramStartup {
+export class Inspector extends AbstractUIExtension implements ISelectionListener, IDiagramStartup {
   @inject(TYPES.IActionDispatcher)
   protected readonly actionDispatcher!: IActionDispatcher;
 
@@ -29,76 +28,108 @@ export class DynamicInspector extends GLSPAbstractUIExtension implements IDiagra
   @inject(ExternalServices)
   protected services!: ExternalServices;
 
-  static readonly ID = 'button-overlay';
+  static readonly ID = 'inspector';
 
   id() {
-    return DynamicInspector.ID;
+    return Inspector.ID;
   }
 
   containerClass() {
-    return DynamicInspector.ID;
+    return Inspector.ID;
   }
+
+  exampleData = {
+    name: 'John Doe'
+  };
+
+  exampleSchema = {
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string'
+      }
+    }
+  };
+
+  exampleUiSchema = {
+    type: 'VerticalLayout',
+    elements: [
+      {
+        type: 'Control',
+        scope: '#/properties/name'
+      }
+    ]
+  };
 
   protected initializeContents(containerElement: HTMLElement): void {
-    const exampleData = {
-      name: 'John Doe'
-    };
-
-    const exampleSchema = {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string'
-        }
-      }
-    };
-
-    const exampleUiSchema = {
-      type: 'VerticalLayout',
-      elements: [
-        {
-          type: 'Control',
-          scope: '#/properties/name'
-        }
-      ]
-    };
-
-    this.services['jsonFormsService'].init({
-      data: exampleData,
-      schema: exampleSchema,
-      uischema: exampleUiSchema,
-      renderers: this.services['jsonFormsService'].getRenderers()
-    });
-
-    this.services['jsonFormsService'].render(this.options.baseDiv);
-    // containerElement.appendChild(
-    //   this.createButton('btn_center_diagram', 'Center', 'screen-normal', CenterAction.create([]))
-    // );
+    this.setNoSelection();
   }
 
-  protected createButton(): HTMLElement {
-    // const baseDiv = document.getElementById(this.options.baseDiv);
-    // if (baseDiv) {
-    //   const button = document.createElement('div');
-    //   const insertedDiv = baseDiv.insertBefore(button, baseDiv.firstChild);
-    //   button.id = id;
-    //   button.classList.add('overlay-button');
-    //   const icon = this.createIcon(codiconId);
-    //   insertedDiv.appendChild(icon);
-    //   insertedDiv.onclick = () => this.actionDispatcher.dispatch(action);
-    //   insertedDiv.insertAdjacentText('beforeend', label);
-    //   return button;
-    // }
-    return document.createElement('div');
+  /**
+   * Sets the inspector content when no element is selected.
+   */
+  protected setNoSelection() {
+    // const noSelection = document.createElement('div');
+    // noSelection.classList.add('no-selection');
+    // noSelection.textContent = 'Select an element to inspect';
+
+    this.containerElement.classList.add('collapsed');
+
+    // wait for the container to be collapsed before removing the content
+    setTimeout(() => {
+      this.containerElement.innerHTML = '';
+    }, 200);
+
+    // this.containerElement.appendChild(noSelection);
   }
 
-  // protected createIcon(codiconId: string): HTMLElement {
-  //   const icon = document.createElement('i');
-  //   icon.classList.add(...codiconCSSClasses(codiconId), 'overlay-icon');
-  //   return icon;
-  // }
+  /**
+   * Sets the inspector content for the given element.
+   */
+  protected setElement(selectedElement: any) {
+    console.log('SELECTED ELEMENT', selectedElement);
+
+    this.containerElement.innerHTML = '';
+
+    const formContainer = document.createElement('div');
+    formContainer.classList.add('form-container');
+    this.containerElement.appendChild(formContainer);
+
+    this.services['editor'].createForm(
+      formContainer,
+      selectedElement.args?.model,
+      selectedElement.args?.aModel
+      // this.exampleUiSchema
+    );
+
+    this.containerElement.classList.remove('collapsed');
+  }
 
   postModelInitialization(): MaybePromise<void> {
     this.show(this.editorContext.modelRoot);
+  }
+
+  selectionChanged(root: Readonly<GModelRoot>, selectedElements: string[], deselectedElements?: string[]): void {
+    if (selectedElements.length === 1) {
+      const selectedElement = this.getGModelElement(root, selectedElements[0]);
+      if (selectedElement) this.setElement(selectedElement);
+    } else {
+      this.setNoSelection();
+    }
+  }
+
+  /**
+   * Get the GModel element for the given id and root.
+   */
+  getGModelElement(root: Readonly<GModelRoot>, id: string): GNode | GEdge | undefined {
+    const element = root.children.find((child) => child.id === id);
+    switch (element?.type) {
+      case 'node':
+        return element as GNode;
+      case 'edge':
+        return element as GEdge;
+      default:
+        return undefined;
+    }
   }
 }

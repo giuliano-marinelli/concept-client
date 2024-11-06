@@ -2,7 +2,7 @@
   <div class="mt-3 mt-sm-0 border-bottom">
     <h2>Users <a class="btn p-0 text-muted border-0" (click)="search_input.onSearch(false)"
         [class.disabled]="usersLoading">
-        <fa-icon [icon]="'rotate-right'" size="lg" [spin]="usersLoading" [pulse]="usersLoading"></fa-icon>
+        <fa-icon [icon]="'rotate-right'" size="lg" [animation]="usersLoading ? 'spin-pulse' : undefined"></fa-icon>
       </a>
     </h2>
   </div>
@@ -40,7 +40,7 @@
   <div class="card bg-dark-subtle" (resized)="masonry.layout()">
     <div *ngIf="submitLoading.includes(user._id)"
       class="overlay d-flex align-items-center text-center text-body rounded">
-      <fa-icon class="flex-fill" [icon]="'spinner'" [spin]="true" [pulse]="true" size="2x"></fa-icon>
+      <fa-icon class="flex-fill" [icon]="'spinner'" [animation]="'spin-pulse'" size="2x"></fa-icon>
     </div>
     <div class="card-body">
       <div class="card-text">

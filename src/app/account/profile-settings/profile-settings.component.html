@@ -1,7 +1,7 @@
 <div class="container mb-3">
   <div class="mt-3 mt-sm-0 border-bottom">
     <h2>Profile <a class="btn p-0 text-muted border-0" [hidden]="!userLoading" [class.disabled]="userLoading">
-        <fa-icon [icon]="'rotate-right'" size="lg" [spin]="userLoading" [pulse]="userLoading"></fa-icon>
+        <fa-icon [icon]="'rotate-right'" size="lg" [animation]="userLoading ? 'spin-pulse' : undefined"></fa-icon>
       </a>
     </h2>
   </div>
@@ -72,7 +72,7 @@
         </p>
         <div>
           <button type="submit" class="btn btn-success text-white" [disabled]="!profileForm.valid || submitLoading">
-            Update profile <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+            Update profile <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
           </button>
         </div>
       </div>

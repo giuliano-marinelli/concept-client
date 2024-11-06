@@ -18,6 +18,45 @@
     right: 25px;
   }
 
+  > .inspector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 250px;
+    transform: scaleY(1);
+    transform-origin: top;
+    padding: 10px;
+    z-index: 1000;
+    background-color: $body-bg;
+    user-select: none;
+    color: $body-color;
+    transition: transform 0.2s ease;
+  }
+
+  > .inspector.collapsed {
+    transform: scaleY(0);
+  }
+
+  > .inspector table tr {
+    color: $body-color;
+  }
+
+  > .inspector .vertical-layout {
+    gap: 0px;
+  }
+
+  > .inspector .mat-mdc-form-field-infix {
+    margin-top: 20px;
+  }
+
+  > .inspector .mat-mdc-text-field-wrapper {
+    padding: 0px;
+  }
+
+  > .inspector .no-selection {
+    text-align: center;
+  }
+
   [aria-label='Diagram'] {
     outline: none;
   }
@@ -37,6 +76,23 @@
     z-index: 1;
     margin-top: -60px;
   }
+}
+
+::ng-deep html[data-bs-theme='dark'] .sprotty {
+  > .inspector {
+    background-color: $body-bg-dark;
+    color: $body-color-dark;
+  }
+
+  > .inspector table tr {
+    background-color: $body-tertiary-bg-dark;
+    color: $body-color-dark;
+  }
+}
+
+::ng-deep .cdk-describedby-message-container,
+::ng-deep .cdk-overlay-container {
+  position: fixed;
 }
 
 ::ng-deep .sprotty-hidden {

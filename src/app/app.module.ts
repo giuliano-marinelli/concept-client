@@ -2,7 +2,7 @@
 //angular modules
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,8 +30,8 @@ import { MomentModule } from 'ngx-moment';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { NgxMasonryModule } from 'ngx-masonry';
-import { AngularResizeEventModule } from 'angular-resize-event';
-import { JsonFormsModule } from '@jsonforms/angular';
+import { AngularResizeEventModule } from 'angular-resize-event-package';
+import { JsonFormsAngularService, JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsAngularMaterialModule } from '@jsonforms/angular-material';
 //environment
 import { environment } from '../environments/environment';
@@ -72,6 +72,7 @@ import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { MetamodelsComponent } from './metamodels/metamodels.component';
 import { ModelsComponent } from './models/models.component';
+import { JsonFormsRendererComponent } from './shared/components/json-forms-renderer/json-forms-renderer.component';
 
 @NgModule({
   declarations: [
@@ -104,8 +105,10 @@ import { ModelsComponent } from './models/models.component';
     AdminComponent,
     UsersAdminComponent,
     MetamodelsComponent,
-    ModelsComponent
+    ModelsComponent,
+    JsonFormsRendererComponent
   ],
+  bootstrap: [AppComponent],
   imports: [
     //angular modules
     CommonModule,
@@ -113,7 +116,6 @@ import { ModelsComponent } from './models/models.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     HammerModule,
     //graphql modules
     ApolloModule,
@@ -182,19 +184,16 @@ import { ModelsComponent } from './models/models.component';
           //here we can set the headers for all http requests
           headers: new HttpHeaders().set('apollo-require-preflight', 'true') //required for upload files
         });
-
         //create a websocket link (if it's needed for subscriptions)
         const ws = new GraphQLWsLink(
           createClient({
             url: environment.graphqlWSUri
           })
         );
-
         //add authentication token to the headers
         const auth = setContext(() => {
           //get the authentication token from local storage if it exists
           const token = localStorage.getItem('token');
-
           //add the token to the headers
           return token
             ? {
@@ -204,14 +203,12 @@ import { ModelsComponent } from './models/models.component';
               }
             : {};
         });
-
         //general error handling behavior (for all requests)
         //specifically for network errors that only shows from here
         const error = onError(({ graphQLErrors, networkError }) => {
           if (graphQLErrors) {
             graphQLErrors.map((error: any) => console.error('[GraphQL error]', error));
           }
-
           if (networkError) {
             console.error('[Network error]', networkError);
             messages.error('<b>Network error</b>. Please check your internet connection.', {
@@ -223,7 +220,6 @@ import { ModelsComponent } from './models/models.component';
             });
           }
         });
-
         //general success handling behavior (for all requests)
         const success = new ApolloLink((operation, forward) => {
           return forward(operation).map((data) => {
@@ -232,7 +228,6 @@ import { ModelsComponent } from './models/models.component';
             return data;
           });
         });
-
         //split for set the link type (http or ws) based on the operation type
         //add the auth context to the link
         //set the general error handling behavior
@@ -250,7 +245,6 @@ import { ModelsComponent } from './models/models.component';
             http
           )
         ]);
-
         return {
           link: link,
           cache: new InMemoryCache({
@@ -276,9 +270,10 @@ import { ModelsComponent } from './models/models.component';
     },
     //services
     MessagesService,
-    AuthService
-  ],
-  bootstrap: [AppComponent]
+    AuthService,
+    provideHttpClient(withInterceptorsFromDi()),
+    JsonFormsAngularService
+  ]
 })
 export class AppModule {
   constructor(fontawesomeLibrary: FaIconLibrary, fontawesomeConfig: FaConfig) {

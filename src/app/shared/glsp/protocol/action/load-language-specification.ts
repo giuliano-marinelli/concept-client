@@ -1,17 +1,4 @@
-import {
-  Action,
-  Args,
-  GLSPActionDispatcher,
-  GridManager,
-  IDiagramStartup,
-  RequestAction,
-  ResponseAction,
-  hasObjectProp
-} from '@eclipse-glsp/client';
-
-import { inject, injectable, optional } from 'inversify';
-
-import { ExternalServices } from './dynamic-external-services';
+import { Action, Args, RequestAction, ResponseAction, hasObjectProp } from '@eclipse-glsp/client';
 
 /*
  This RequestAction and ResponseActions interfaces must be in a shared project to be used in both the client and server.
@@ -58,29 +45,5 @@ export namespace ReadyLanguageSpecificationAction {
       responseId: '',
       ...options
     };
-  }
-}
-
-@injectable()
-export class DynamicStartup implements IDiagramStartup {
-  rank = -1;
-
-  @inject(GLSPActionDispatcher)
-  protected actionDispatcher?: GLSPActionDispatcher;
-
-  @inject(GridManager)
-  @optional()
-  protected gridManager?: GridManager;
-
-  @inject(ExternalServices)
-  protected services?: ExternalServices;
-
-  async preRequestModel(): Promise<void> {
-    // action for loading the language specification
-    const requestAction = LoadLanguageSpecificationAction.create('96cc12d7-41e0-4e06-b097-1d97a57da87b'); // it's a hardcoded languageID
-    await this.actionDispatcher?.request<ReadyLanguageSpecificationAction>(requestAction);
-
-    // action for setting the grid visible
-    this.gridManager?.setGridVisible(true);
   }
 }

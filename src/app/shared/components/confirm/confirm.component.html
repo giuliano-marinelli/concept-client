@@ -40,8 +40,8 @@
       </button>
       <button type="button" class="btn btn-{{ confirmColor }} btn-sm" (click)="confirmActionPassword()"
         [disabled]="!passwordForm.valid || checkPasswordLoading">
-        {{ confirmActionButtonPassword }} <fa-icon *ngIf="checkPasswordLoading" [icon]="'spinner'" [spin]="true"
-          [pulse]="true"></fa-icon>
+        {{ confirmActionButtonPassword }} <fa-icon *ngIf="checkPasswordLoading" [icon]="'spinner'"
+          [animation]="'spin-pulse'"></fa-icon>
       </button>
     </div>
   </div>
@@ -72,7 +72,7 @@
       <button type="button" class="btn btn-{{ confirmColor }} btn-sm" (click)="confirmActionVerificationCodeAdvice()"
         [disabled]="checkVerificationCodeAdviceLoading">
         {{ confirmActionButtonVerificationCodeAdvice }} <fa-icon *ngIf="checkVerificationCodeAdviceLoading"
-          [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+          [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
       </button>
     </div>
   </div>
@@ -103,7 +103,7 @@
         <p class="mt-3 mb-0">
           <a class="link-info pe-pointer" (click)="!checkVerificationCodeAdviceLoading && sendVerificationCode()">
             Didn't receive your code or is expired? Send it again. <fa-icon *ngIf="checkVerificationCodeAdviceLoading"
-              [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
           </a>
         </p>
       </div>
@@ -116,7 +116,7 @@
       <button type="button" class="btn btn-{{ confirmColor }} btn-sm" (click)="confirmActionVerificationCode()"
         [disabled]="!verificationCodeForm.valid || checkVerificationCodeLoading">
         {{ confirmActionButtonVerificationCode }} <fa-icon *ngIf="checkVerificationCodeLoading" [icon]="'spinner'"
-          [spin]="true" [pulse]="true"></fa-icon>
+          [animation]="'spin-pulse'"></fa-icon>
       </button>
     </div>
   </div>

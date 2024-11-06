@@ -3,7 +3,7 @@
     <h2>
       Devices
       <a class="btn p-0 text-muted border-0" (click)="getSessions()" [class.disabled]="sessionsLoading">
-        <fa-icon [icon]="'rotate-right'" size="lg" [spin]="sessionsLoading" [pulse]="sessionsLoading"></fa-icon>
+        <fa-icon [icon]="'rotate-right'" size="lg" [animation]="sessionsLoading ? 'spin-pulse' : undefined"></fa-icon>
       </a>
     </h2>
   </div>
@@ -36,7 +36,7 @@
   <div class="card bg-dark-subtle">
     <div *ngIf="submitLoading.includes(session.id)"
       class="overlay d-flex align-items-center text-center text-body rounded">
-      <fa-icon class="flex-fill" [icon]="'spinner'" [spin]="true" [pulse]="true" size="2x"></fa-icon>
+      <fa-icon class="flex-fill" [icon]="'spinner'" [animation]="'spin-pulse'" size="2x"></fa-icon>
     </div>
     <div class="card-body">
       <div class="card-text">

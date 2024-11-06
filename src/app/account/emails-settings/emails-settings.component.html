@@ -1,7 +1,7 @@
 <div class="container mb-3">
   <div class="mt-3 mt-sm-0 border-bottom">
     <h2>Emails <a class="btn p-0 text-muted border-0" [hidden]="!userLoading" [class.disabled]="userLoading">
-        <fa-icon [icon]="'rotate-right'" size="lg" [spin]="userLoading" [pulse]="userLoading"></fa-icon>
+        <fa-icon [icon]="'rotate-right'" size="lg" [animation]="userLoading ? 'spin-pulse' : undefined"></fa-icon>
       </a>
     </h2>
   </div>
@@ -25,7 +25,7 @@
             [onlyPassword]="true" requiredPasswordMessage="Please enter your password to continue."
             [disabled]="removeEmailSubmitLoading" *ngIf="user.primaryEmail?.id !== email.id">
             <fa-icon [icon]="'trash-alt'"></fa-icon> <fa-icon *ngIf="removeEmailSubmitLoading == email.id"
-              [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
           </button>
         </div>
         <p class="text-muted small mb-2" *ngIf="user.primaryEmail?.id === email.id && email.verified">
@@ -76,7 +76,7 @@
             <div class="input-spinner">
               <input class="form-control form-control-sm bg-dark-subtle" type="email" formControlName="address"
                 autocomplete="off" placeholder="{{user.primaryEmail?.address}}" [ngClass]="setValid(addEmailAddress)" />
-              <fa-icon *ngIf="addEmailAddress?.pending" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              <fa-icon *ngIf="addEmailAddress?.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
               <invalid-feedback [control]="addEmailAddress" name="Email"
                 [messages]="{ notIncludedIn: 'Email is already added to your account, please try another one' }"></invalid-feedback>
             </div>
@@ -84,7 +84,7 @@
           <div class="col-auto ps-0">
             <button type="button" class="btn btn-secondary btn-sm" (click)="addEmail()"
               [disabled]="!addEmailForm.valid || addEmailSubmitLoading">
-              Add <fa-icon *ngIf="addEmailSubmitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              Add <fa-icon *ngIf="addEmailSubmitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
             </button>
           </div>
         </div>
@@ -114,7 +114,7 @@
               [requiredPassword]="true" [requiredVerificationCode]="true" [onlyPassword]="true"
               [confirmColor]="'success'" requiredPasswordMessage="Please enter your password to continue."
               [disabled]="!primaryEmailForm.valid || primaryEmailSubmitLoading">
-              Save <fa-icon *ngIf="primaryEmailSubmitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              Save <fa-icon *ngIf="primaryEmailSubmitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
             </button>
           </div>
         </div>

@@ -22,7 +22,7 @@
         </div>
         <div class="d-grid gap-2">
           <button type="submit" class="btn btn-success text-white" [disabled]="!loginForm.valid || submitLoading">
-            Sign in <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+            Sign in <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
           </button>
         </div>
       </form>

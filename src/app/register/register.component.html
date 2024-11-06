@@ -11,7 +11,7 @@
             <div class="input-spinner">
               <input class="form-control" type="email" name="email" formControlName="email" autofocus autocomplete="off"
                 [ngClass]="setValid(email)" />
-              <fa-icon *ngIf="email.pending" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              <fa-icon *ngIf="email.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
               <invalid-feedback [control]="email" name="Email"></invalid-feedback>
             </div>
           </div>
@@ -22,7 +22,7 @@
             <div class="input-spinner">
               <input class="form-control" type="text" name="username" formControlName="username" autocomplete="off"
                 [ngClass]="setValid(username)" />
-              <fa-icon *ngIf="username.pending" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              <fa-icon *ngIf="username.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
               <invalid-feedback [control]="username" name="Username"
                 [messages]="{ pattern: 'Username can only have characters, numbers and _ or - symbols' }"></invalid-feedback>
             </div>
@@ -42,7 +42,7 @@
           </div>
           <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary text-white" [disabled]="!registerForm.valid || submitLoading">
-              Register <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+              Register <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
             </button>
           </div>
         </form>

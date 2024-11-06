@@ -30,21 +30,26 @@ import {
 
 import { Container, ContainerModule } from 'inversify';
 
-import { DynamicInspector } from './dynamic-inspector';
-import { DynamicStartup } from './dynamic-startup';
+import { Inspector } from './dynamic-inspector';
+import { LoadLanguageSpecification } from './dynamic-load-language-specification';
+import { StartupConfiguration } from './dynamic-startup-configurations';
 
 export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
   const context = { bind, unbind, isBound, rebind };
 
-  // allow to do actions on the diagram startup, before request the model from the server
-  // here we send the action for load the language specification
-  // e.g. enable/disable the grid on startup
-  bindAsService(context, TYPES.IDiagramStartup, DynamicStartup);
+  // send the action for load the language specification before loading model
+  bind(LoadLanguageSpecification).toSelf().inSingletonScope();
+  bind(TYPES.IDiagramStartup).toService(LoadLanguageSpecification);
 
-  // configure the dynamic inspector that allow to edit elements abstract properties
-  bind(DynamicInspector).toSelf().inSingletonScope();
-  bind(TYPES.IUIExtension).toService(DynamicInspector);
-  bind(TYPES.IDiagramStartup).toService(DynamicInspector);
+  // configure general utilities on startup
+  bind(StartupConfiguration).toSelf().inSingletonScope();
+  bind(TYPES.IDiagramStartup).toService(StartupConfiguration);
+
+  // configure the inspector that allow to edit elements abstract properties
+  bind(Inspector).toSelf().inSingletonScope();
+  bind(TYPES.IUIExtension).toService(Inspector);
+  bind(TYPES.IDiagramStartup).toService(Inspector);
+  bind(TYPES.ISelectionListener).toService(Inspector);
 
   // configure the default logger to show only warnings and errors
   bindOrRebind(context, TYPES.LogLevel).toConstantValue(LogLevel.warn);

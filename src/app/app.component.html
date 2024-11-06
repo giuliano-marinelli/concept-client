@@ -64,7 +64,7 @@
             </a>
           </li>
           <li class="nav-item border-top border-md-0 text-body" *ngIf="auth.loading">
-            <fa-icon [icon]="'spinner'" [spin]="true" [pulse]="true"></fa-icon>
+            <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
           </li>
           <li class="nav-item border-top border-md-0" *ngIf="!auth.loading && auth.user">
             <a class="nav-link d-block d-md-none" routerLink="/user/{{ auth.user.username }}" routerLinkActive="active"

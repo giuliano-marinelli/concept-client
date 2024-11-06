@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone } from '@angular/core';
+import { AfterViewInit, ApplicationRef, Component, NgZone, ViewContainerRef } from '@angular/core';
 
 import {
   BaseJsonrpcGLSPClient,
@@ -16,6 +16,8 @@ import { JsonFormsAngularService } from '@jsonforms/angular';
 import { ExternalServices } from '../../glsp/dynamic-external-services';
 import { DynamicGLSPWebSocketProvider } from '../../glsp/dynamic-glsp-ws-provider';
 import { Container } from 'inversify';
+
+import { JsonFormsRendererComponent } from '../json-forms-renderer/json-forms-renderer.component';
 
 import { AuthService } from '../../../services/auth.service';
 
@@ -46,7 +48,8 @@ export class ModelEditorComponent implements AfterViewInit {
   constructor(
     public auth: AuthService,
     private ngZone: NgZone,
-    private jsonFormsService: JsonFormsAngularService
+    private jsonFormsService: JsonFormsAngularService,
+    private viewContainerRef: ViewContainerRef
   ) {}
 
   ngAfterViewInit(): void {
@@ -56,7 +59,8 @@ export class ModelEditorComponent implements AfterViewInit {
       // define Angular services that can be used in the GLSP diagram module
       const services = {
         // ADD SERVICES HERE...
-        jsonFormsService: this.jsonFormsService
+        jsonFormsService: this.jsonFormsService,
+        editor: this
       };
 
       // create a new custom WebSocket provider for the GLSP client, which sends authentication headers as protocol messages
@@ -121,5 +125,13 @@ export class ModelEditorComponent implements AfterViewInit {
 
       this.wsProvider.listen({ onConnection: glspOnConnection, onReconnect: glspOnReconnect, logger: console });
     });
+  }
+
+  createForm(container: HTMLElement, data: any, schema: any, uischema: any): void {
+    const componentRef = this.viewContainerRef.createComponent(JsonFormsRendererComponent);
+    componentRef.instance.data = data;
+    componentRef.instance.schema = schema;
+    componentRef.instance.uischema = uischema;
+    container.appendChild(componentRef.location.nativeElement);
   }
 }
