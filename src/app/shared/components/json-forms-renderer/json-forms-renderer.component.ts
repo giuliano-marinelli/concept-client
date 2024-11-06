@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { angularMaterialRenderers } from '@jsonforms/angular-material';
 
@@ -8,11 +8,15 @@ import { angularMaterialRenderers } from '@jsonforms/angular-material';
   styleUrls: ['./json-forms-renderer.component.scss']
 })
 export class JsonFormsRendererComponent {
-  @Input() uischema: any;
-
-  @Input() schema: any;
-
+  @Input() elementId: string = '';
   @Input() data: any;
+  @Input() schema: any;
+  @Input() uischema: any;
+  @Output() dataChange = new EventEmitter<any>();
 
   renderers = [...angularMaterialRenderers];
+
+  onDataChange(event: any) {
+    this.dataChange.emit({ elementId: this.elementId, newModel: event });
+  }
 }

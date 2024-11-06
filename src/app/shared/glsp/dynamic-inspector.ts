@@ -14,6 +14,7 @@ import {
 import { inject, injectable } from 'inversify';
 
 import { ExternalServices } from './dynamic-external-services';
+import { ModelChangeOperation } from './protocol/operation/model-change';
 
 export const IInspector = Symbol('IInspector');
 
@@ -62,7 +63,25 @@ export class Inspector extends AbstractUIExtension implements ISelectionListener
   };
 
   protected initializeContents(containerElement: HTMLElement): void {
+    this.services.inspectorElementChanged = async (elementId: string, newModel: any) => {
+      console.log('Model Changed', elementId, newModel);
+      const modelChangeOperation = ModelChangeOperation.create({ elementId, newModel });
+      await this.actionDispatcher.dispatch(modelChangeOperation);
+    };
     this.setNoSelection();
+  }
+
+  postModelInitialization(): MaybePromise<void> {
+    this.show(this.editorContext.modelRoot);
+  }
+
+  selectionChanged(root: Readonly<GModelRoot>, selectedElements: string[], deselectedElements?: string[]): void {
+    if (selectedElements.length === 1) {
+      const selectedElement = this.getGModelElement(root, selectedElements[0]);
+      if (selectedElement) this.setElement(selectedElement);
+    } else {
+      this.setNoSelection();
+    }
   }
 
   /**
@@ -95,33 +114,35 @@ export class Inspector extends AbstractUIExtension implements ISelectionListener
     formContainer.classList.add('form-container');
     this.containerElement.appendChild(formContainer);
 
-    this.services['editor'].createForm(
-      formContainer,
-      selectedElement.args?.model,
-      selectedElement.args?.aModel
-      // this.exampleUiSchema
-    );
+    // if the selected element has no aModel or model, do not create the element
+    // probably must show a error message
+    if (!selectedElement.args?.aModel || !selectedElement.args?.model) {
+      console.error('AModel or Model not found in element to inspect.');
+      this.setNoSelection();
+      return;
+    }
+
+    // check if the inspectorCreateElement method is defined and call it
+    if (this.services.inspectorCreateElement) {
+      this.services.inspectorCreateElement(
+        formContainer,
+        selectedElement.id,
+        selectedElement.args?.aModel,
+        selectedElement.args?.model
+      );
+    } else {
+      console.error('inspectorCreateElement method not provided to GLSP ExternalServices.');
+      this.setNoSelection();
+      return;
+    }
 
     this.containerElement.classList.remove('collapsed');
-  }
-
-  postModelInitialization(): MaybePromise<void> {
-    this.show(this.editorContext.modelRoot);
-  }
-
-  selectionChanged(root: Readonly<GModelRoot>, selectedElements: string[], deselectedElements?: string[]): void {
-    if (selectedElements.length === 1) {
-      const selectedElement = this.getGModelElement(root, selectedElements[0]);
-      if (selectedElement) this.setElement(selectedElement);
-    } else {
-      this.setNoSelection();
-    }
   }
 
   /**
    * Get the GModel element for the given id and root.
    */
-  getGModelElement(root: Readonly<GModelRoot>, id: string): GNode | GEdge | undefined {
+  protected getGModelElement(root: Readonly<GModelRoot>, id: string): GNode | GEdge | undefined {
     const element = root.children.find((child) => child.id === id);
     switch (element?.type) {
       case 'node':

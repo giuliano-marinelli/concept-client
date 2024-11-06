@@ -17,6 +17,8 @@ import { ExternalServices } from '../../glsp/dynamic-external-services';
 import { DynamicGLSPWebSocketProvider } from '../../glsp/dynamic-glsp-ws-provider';
 import { Container } from 'inversify';
 
+import { AModelRootSchema } from '../../glsp/protocol/amodel';
+
 import { JsonFormsRendererComponent } from '../json-forms-renderer/json-forms-renderer.component';
 
 import { AuthService } from '../../../services/auth.service';
@@ -45,6 +47,8 @@ export class ModelEditorComponent implements AfterViewInit {
   container!: Container;
   wsProvider?: DynamicGLSPWebSocketProvider;
 
+  services: ExternalServices = {};
+
   constructor(
     public auth: AuthService,
     private ngZone: NgZone,
@@ -56,11 +60,14 @@ export class ModelEditorComponent implements AfterViewInit {
     this.ngZone.runOutsideAngular(() => {
       let self = this;
 
-      // define Angular services that can be used in the GLSP diagram module
-      const services = {
-        // ADD SERVICES HERE...
-        jsonFormsService: this.jsonFormsService,
-        editor: this
+      // define services for the inspector
+      this.services.inspectorCreateElement = (
+        container: HTMLElement,
+        elementId: string,
+        elementAModel: AModelRootSchema,
+        elementModel: any
+      ) => {
+        self.createJsonForms(container, elementId, elementAModel, elementModel);
       };
 
       // create a new custom WebSocket provider for the GLSP client, which sends authentication headers as protocol messages
@@ -70,7 +77,7 @@ export class ModelEditorComponent implements AfterViewInit {
       const externalServicesModule = new FeatureModule(
         (bind, unbind, isBound, rebind) => {
           const context = { bind, unbind, isBound, rebind };
-          bind(ExternalServices).toConstantValue(services);
+          bind(ExternalServices).toConstantValue(this.services);
         },
         { featureId: Symbol('externalServices') }
       );
@@ -127,11 +134,15 @@ export class ModelEditorComponent implements AfterViewInit {
     });
   }
 
-  createForm(container: HTMLElement, data: any, schema: any, uischema: any): void {
+  createJsonForms(container: HTMLElement, elementId: string, elementAModel: AModelRootSchema, elementModel: any): void {
     const componentRef = this.viewContainerRef.createComponent(JsonFormsRendererComponent);
-    componentRef.instance.data = data;
-    componentRef.instance.schema = schema;
-    componentRef.instance.uischema = uischema;
+    componentRef.instance.data = elementModel;
+    componentRef.instance.schema = elementAModel;
+    componentRef.instance.elementId = elementId;
+    componentRef.instance.dataChange.subscribe((event: { elementId: string; newModel: any }) => {
+      // send the new model to the GLSP external services so it can be used by the inspector
+      this.services.inspectorElementChanged?.(event.elementId, event.newModel);
+    });
     container.appendChild(componentRef.location.nativeElement);
   }
 }

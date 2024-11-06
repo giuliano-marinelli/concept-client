@@ -1,1 +1,3 @@
-<jsonforms [data]="data" [schema]="schema" [uischema]="uischema" [renderers]="renderers"></jsonforms>
+<jsonforms [data]="data" [schema]="schema" [uischema]="uischema" [renderers]="renderers"
+  (dataChange)="onDataChange($event)">
+</jsonforms>

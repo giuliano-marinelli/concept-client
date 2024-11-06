@@ -1,5 +1,13 @@
+import { AModelRootSchema } from './protocol/amodel';
+
 export const ExternalServices = Symbol('ExternalServices');
 
 export interface ExternalServices {
-  [key: string]: any;
+  inspectorCreateElement?: (
+    container: HTMLElement,
+    elementId: string,
+    elementAModel: AModelRootSchema,
+    elementModel: any
+  ) => void;
+  inspectorElementChanged?: (elementId: string, newModel: any) => void;
 }
