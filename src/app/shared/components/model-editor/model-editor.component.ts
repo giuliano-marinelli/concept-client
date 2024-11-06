@@ -1,4 +1,4 @@
-import { AfterViewInit, ApplicationRef, Component, NgZone, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, NgZone, ViewContainerRef } from '@angular/core';
 
 import {
   BaseJsonrpcGLSPClient,
@@ -11,13 +11,17 @@ import {
   StatusAction,
   createDiagramOptionsModule
 } from '@eclipse-glsp/client';
-import { JsonFormsAngularService } from '@jsonforms/angular';
 
 import { ExternalServices } from '../../glsp/dynamic-external-services';
 import { DynamicGLSPWebSocketProvider } from '../../glsp/dynamic-glsp-ws-provider';
 import { Container } from 'inversify';
 
-import { AModelRootSchema } from '../../glsp/protocol/amodel';
+import {
+  AModelArraySchema,
+  AModelElementSchema,
+  AModelObjectSchema,
+  AModelRootSchema
+} from '../../glsp/protocol/amodel';
 
 import { JsonFormsRendererComponent } from '../json-forms-renderer/json-forms-renderer.component';
 
@@ -52,7 +56,6 @@ export class ModelEditorComponent implements AfterViewInit {
   constructor(
     public auth: AuthService,
     private ngZone: NgZone,
-    private jsonFormsService: JsonFormsAngularService,
     private viewContainerRef: ViewContainerRef
   ) {}
 
@@ -138,11 +141,58 @@ export class ModelEditorComponent implements AfterViewInit {
     const componentRef = this.viewContainerRef.createComponent(JsonFormsRendererComponent);
     componentRef.instance.data = elementModel;
     componentRef.instance.schema = elementAModel;
+    componentRef.instance.uiSchema = this.createJsonFormsUI(elementAModel);
     componentRef.instance.elementId = elementId;
-    componentRef.instance.dataChange.subscribe((event: { elementId: string; newModel: any }) => {
-      // send the new model to the GLSP external services so it can be used by the inspector
-      this.services.inspectorElementChanged?.(event.elementId, event.newModel);
-    });
+
     container.appendChild(componentRef.location.nativeElement);
+
+    // to avoid firing the change event before the component is initialized
+    setTimeout(() => {
+      componentRef.instance.dataChange.subscribe((event: { elementId: string; newModel: any }) => {
+        // send the new model to the GLSP external services so it can be used by the inspector
+        this.services.inspectorElementChanged?.(event.elementId, event.newModel);
+      });
+    }, 0);
+  }
+
+  createJsonFormsUI(elementAModel: AModelElementSchema): any {
+    const uiSchema: any = {};
+
+    if (elementAModel.type == 'string' || elementAModel.type == 'integer' || elementAModel.type == 'boolean') {
+      uiSchema.type = 'Control';
+    }
+
+    if (elementAModel.type == 'object') {
+      uiSchema.type = 'VerticalLayout';
+      uiSchema.elements = [];
+    }
+
+    if ((elementAModel as AModelObjectSchema).properties) {
+      // traverse the AModelRootSchema and create the corresponding UI schema
+      Object.keys((elementAModel as AModelObjectSchema).properties).forEach((propertyKey) => {
+        const property = (elementAModel as AModelObjectSchema).properties[propertyKey];
+        let arrayElements =
+          property.type == 'array' ? this.createJsonFormsUI((property as AModelArraySchema).items) : undefined;
+        if (arrayElements && arrayElements.elements) arrayElements = arrayElements.elements;
+        const uiElement = {
+          type: 'Control',
+          scope: `#/properties/${propertyKey}`,
+          label: property.label,
+          ...(property.type == 'array'
+            ? {
+                options: {
+                  detail: {
+                    type: 'VerticalLayout',
+                    elements: [...arrayElements]
+                  }
+                }
+              }
+            : {})
+        };
+        uiSchema.elements.push(uiElement);
+      });
+    }
+
+    return uiSchema;
   }
 }

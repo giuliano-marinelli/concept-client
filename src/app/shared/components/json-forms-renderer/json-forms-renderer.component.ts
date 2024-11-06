@@ -11,7 +11,7 @@ export class JsonFormsRendererComponent {
   @Input() elementId: string = '';
   @Input() data: any;
   @Input() schema: any;
-  @Input() uischema: any;
+  @Input() uiSchema: any;
   @Output() dataChange = new EventEmitter<any>();
 
   renderers = [...angularMaterialRenderers];

@@ -11,7 +11,7 @@
         <span class="icon-bar middle-bar"></span>
         <span class="icon-bar bottom-bar"></span>
       </button>
-      <a class="navbar-brand p-2 m-0" routerLink="/">
+      <a class="navbar-brand p-2 ps-4 m-0" routerLink="/">
         <fa-icon class="logo-icon" [icon]="'dice-d6'" size="2x"></fa-icon>
       </a>
       <!-- <div class="bg-black flex-shrink-0 logo pe-pointer" routerLink="/" (mouseover)="navbarSettings.logoHover = true"
@@ -33,7 +33,6 @@
       </div>
       <div class="collapse navbar-collapse p-2 pb-0 pb-md-2" [ngbCollapse]="navbarSettings.collapsed">
         <ul class="navbar-nav me-auto">
-
           <li class="nav-item border-top border-md-0">
             <a class="nav-link" routerLink="/metamodels" routerLinkActive="active"
               (click)="navbarSettings.collapsed = true">
@@ -125,6 +124,6 @@
 
 <footer class="footer mt-auto py-3">
   <div class="container text-end pe-4 container-transition" [class.container-full]="fullNavbar">
-    <span class="text-muted"> <fa-icon [icon]="'dice-d6'"></fa-icon> App © {{ currentYear }} </span>
+    <span class="text-muted"> <fa-icon [icon]="'dice-d6'"></fa-icon> Concept © {{ currentYear }} </span>
   </div>
 </footer>

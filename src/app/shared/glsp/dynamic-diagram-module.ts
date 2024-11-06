@@ -74,7 +74,7 @@ export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, 
 
   // configure the GLabel (graphical model label element) with the GLabelView (default view for rendering labels)
   // and enable the edit label feature (double click on label to edit)
-  overrideModelElement(context, DefaultTypes.LABEL, GLabel, GLabelView, { enable: [editLabelFeature] });
+  overrideModelElement(context, DefaultTypes.LABEL, GLabel, GLabelView /*, { enable: [editLabelFeature] }*/); // disable edit label feature for now
 
   // configure the GEdge (graphical model edge element) with the PolylineEdgeViewWithGapsOnIntersections view to render edges with gaps on intersections
   overrideModelElement(context, DefaultTypes.EDGE, GEdge, PolylineEdgeViewWithGapsOnIntersections);
