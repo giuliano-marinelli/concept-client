@@ -7,7 +7,7 @@
   padding: 2px !important;
 }
 
-.nav-item:hover,
+.nav-item a:hover,
 .navbar-collapse-btn:hover {
   background-color: rgba(121, 82, 179, 0.1);
 }
@@ -25,4 +25,13 @@
   content: '';
   background: $primary;
   border-radius: 6px;
+}
+
+.nav-item a[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.nav-item a[disabled]:hover {
+  background-color: transparent;
 }
