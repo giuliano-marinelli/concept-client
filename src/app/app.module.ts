@@ -70,7 +70,7 @@ import { SecuritySettingsComponent } from './account/security-settings/security-
 import { DevicesSettingsComponent } from './account/devices-settings/devices-settings.component';
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
-import { MetamodelsComponent } from './metamodels/metamodels.component';
+import { LanguagesComponent } from './languages/languages.component';
 import { ModelsComponent } from './models/models.component';
 import { JsonFormsRendererComponent } from './shared/components/json-forms-renderer/json-forms-renderer.component';
 
@@ -104,7 +104,7 @@ import { JsonFormsRendererComponent } from './shared/components/json-forms-rende
     DevicesSettingsComponent,
     AdminComponent,
     UsersAdminComponent,
-    MetamodelsComponent,
+    LanguagesComponent,
     ModelsComponent,
     JsonFormsRendererComponent
   ],
