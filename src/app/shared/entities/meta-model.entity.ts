@@ -38,6 +38,8 @@ export class MetaModel {
   @SelectionField()
   version?: string;
   @SelectionField()
+  description?: string;
+  @SelectionField()
   logo?: string;
   @SelectionField()
   createdAt?: Date;

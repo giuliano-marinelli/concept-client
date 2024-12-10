@@ -55,6 +55,7 @@ import { SearchComponent } from './shared/components/search/search.component';
 import { InvalidFeedbackComponent } from './shared/components/invalid-feedback/invalid-feedback.component';
 import { VerifiedMarkComponent } from './shared/components/verified-mark/verified-mark.component';
 import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
+import { JsonFormsRendererComponent } from './shared/components/json-forms-renderer/json-forms-renderer.component';
 //components
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -71,8 +72,8 @@ import { DevicesSettingsComponent } from './account/devices-settings/devices-set
 import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { LanguagesComponent } from './languages/languages.component';
+import { LanguageComponent } from './languages/language/language.component';
 import { ModelsComponent } from './models/models.component';
-import { JsonFormsRendererComponent } from './shared/components/json-forms-renderer/json-forms-renderer.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { JsonFormsRendererComponent } from './shared/components/json-forms-rende
     InvalidFeedbackComponent,
     VerifiedMarkComponent,
     ModelEditorComponent,
+    JsonFormsRendererComponent,
     //components
     AppComponent,
     NotFoundComponent,
@@ -105,8 +107,8 @@ import { JsonFormsRendererComponent } from './shared/components/json-forms-rende
     AdminComponent,
     UsersAdminComponent,
     LanguagesComponent,
-    ModelsComponent,
-    JsonFormsRendererComponent
+    LanguageComponent,
+    ModelsComponent
   ],
   bootstrap: [AppComponent],
   imports: [

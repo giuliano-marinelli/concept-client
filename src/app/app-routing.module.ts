@@ -23,6 +23,7 @@ import { AdminComponent } from './admin/admin.component';
 import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
+import { LanguageComponent } from './languages/language/language.component';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: '' } },
@@ -85,6 +86,7 @@ const routes: Routes = [
   },
   // { path: 'graphql' },
   { path: 'languages', component: LanguagesComponent, data: { title: 'Languages' } },
+  { path: 'language/:language', component: LanguageComponent, data: { title: 'Language' } },
   {
     path: 'models',
     component: ModelsComponent,

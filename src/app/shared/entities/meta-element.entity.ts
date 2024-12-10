@@ -25,6 +25,8 @@ export class MetaElement {
   @SelectionField()
   defaultModel?: any;
   @SelectionField()
+  preview?: string;
+  @SelectionField()
   createdAt?: Date;
   @SelectionField()
   updatedAt?: Date;

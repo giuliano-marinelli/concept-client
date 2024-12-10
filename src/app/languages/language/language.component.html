@@ -1,0 +1,138 @@
+<div class="container">
+  <div class="row mt-3 text-center" *ngIf="languageLoading">
+    <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
+  </div>
+  <div class="mt-3" *ngIf="!languageLoading && language">
+    <div class="d-flex flex-row pb-3 border-bottom">
+      <div class="flex-shrink-0">
+        <img class="me-3 img-thumbnail rounded-circle logo-img" [src]="language.logo"
+          onerror="this.src='assets/images/default-language.png'" />
+      </div>
+      <div class="flex-fill d-flex flex-column">
+        <h2>{{ language.name }}</h2>
+        <h4 class="text-muted">{{ language.tag }}&#64;{{ language.version}}</h4>
+      </div>
+    </div>
+    <div class="py-3 px-2 px-sm-3 border-bottom">
+      <span *ngIf="language.description">{{ language.description }}</span>
+      <span *ngIf="!language.description" class="text-muted fst-italic">No description</span>
+    </div>
+    <div class="py-3">
+      <h3>Nodes</h3>
+      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
+        class="row mt-3" [class.loading]="languageLoading"
+        *ngIf="filter(language.metaElements, { type: 'NODE' })?.length">
+        <div ngxMasonryItem class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 masonry-item"
+          *ngFor="let node of language.metaElements | filter: { type: 'NODE' }">
+          <ng-container [ngTemplateOutlet]="elementCard"
+            [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
+          </ng-container>
+        </div>
+      </ngx-masonry>
+      <h3>Edges</h3>
+      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
+        class="row mt-3" [class.loading]="languageLoading"
+        *ngIf="filter(language.metaElements, { type: 'EDGE' })?.length">
+        <div ngxMasonryItem class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 masonry-item"
+          *ngFor="let node of language.metaElements | filter: { type: 'EDGE' }">
+          <ng-container [ngTemplateOutlet]="elementCard"
+            [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
+          </ng-container>
+        </div>
+      </ngx-masonry>
+    </div>
+  </div>
+</div>
+
+<ng-template #elementCard let-element="element" let-language="language" let-masonry="masonry">
+  <div class="card bg-dark-subtle" (resized)="masonry.layout()">
+    <div *ngIf="submitLoading.includes(element.id)"
+      class="overlay d-flex align-items-center text-center text-body rounded">
+      <fa-icon class="flex-fill" [icon]="'spinner'" [animation]="'spin-pulse'" size="2x"></fa-icon>
+    </div>
+    <div class="card-body">
+      <div class="card-text">
+        <div class="d-flex flex-row pb-1">
+          <div class="flex-shrink-0">
+            <img class="me-3 img-thumbnail rounded-circle element-img" [src]="element.preview"
+              onerror="this.src='assets/images/default-element.png'" />
+          </div>
+          <div class="flex-fill d-flex flex-column text-break">
+            <span class="small" *ngIf="element.name">{{ element.name }}</span>
+            <span [ngClass]="element.name ? 'text-muted small' : ''">{{ element.tag }}</span>
+          </div>
+          <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
+            <a class="btn p-0 text-body">
+              <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
+            </a>
+            <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'ADMIN'"
+              class="dropdown-menu shadow-sm" ngbDropdownMenu>
+              <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteElement(element)"
+                [confirmTemplate]="delete_message" confirmActionButton="Delete">
+                <fa-icon [icon]="'trash'"></fa-icon> Delete
+              </a>
+              <ng-template #delete_message>
+                <p class="mb-0">
+                  Are you sure you want to delete the element:
+                </p>
+                <ng-container [ngTemplateOutlet]="elementMini" [ngTemplateOutletContext]="{ element: element }">
+                </ng-container>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="mt-1 small" *ngVar="{ gModelCollapsed: true } as gModelSettings">
+          <a [ngClass]="element.gModel ? 'pe-pointer dropdown-toggle text-body' : ''"
+            (click)="element.gModel ? gModelCollapse.toggle() : null"
+            [attr.aria-expanded]="!gModelSettings.gModelCollapsed">
+            <b>Graphical Structure</b>
+            <span *ngIf="!element.gModel" class="text-muted">&nbsp;empty</span>
+          </a>
+          <div #gModelCollapse="ngbCollapse" [(ngbCollapse)]="gModelSettings.gModelCollapsed">
+            <div class="card">
+              <div class="card-body p-2">
+                <pre class="m-0" style="max-height: 200px;">
+                  {{ JSON.stringify(element.gModel, null, 1) }}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-1 small" *ngVar="{ aModelCollapsed: true } as aModelSettings">
+          <a [ngClass]="element.aModel ? 'pe-pointer dropdown-toggle text-body' : ''"
+            (click)="element.aModel ? aModelCollapse.toggle() : null"
+            [attr.aria-expanded]="!aModelSettings.aModelCollapsed">
+            <b>Abstract Structure</b>
+            <span *ngIf="!element.aModel" class="text-muted">&nbsp;empty</span>
+          </a>
+          <div #aModelCollapse="ngbCollapse" [(ngbCollapse)]="aModelSettings.aModelCollapsed">
+            <div class="card">
+              <div class="card-body p-2">
+                <pre class="m-0" style="max-height: 200px;">
+                  {{ JSON.stringify(element.aModel, null, 1) }}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #elementMini let-element="element">
+  <div class="card m-auto mt-2" style="max-width: 220px;">
+    <div class="card-body p-2">
+      <div class="d-flex flex-row">
+        <div class="flex-shrink-0">
+          <img class="me-3 img-thumbnail rounded-circle element-img" [src]="element.preview"
+            onerror="this.src='assets/images/default-element.png'" />
+        </div>
+        <div class="flex-fill d-flex flex-column text-break">
+          <span class="small" *ngIf="element.name">{{ element.name }}</span>
+          <span [ngClass]="element.name ? 'text-muted small' : ''">{{ element.tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

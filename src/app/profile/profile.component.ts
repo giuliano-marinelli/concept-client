@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit {
             this.user = data.users.set[0] ?? null;
             if (this.user) {
               this.titleService.setTitle(
-                this.user.username + (this.user.profile?.name ? ' (' + this.user.profile?.name + ')' : '')
+                this.user.username + (this.user.profile?.name ? ' · ' + this.user.profile?.name : '')
               );
             } else {
               this.router.navigate(['not-found']);

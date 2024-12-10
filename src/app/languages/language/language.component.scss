@@ -1,0 +1,21 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import '../../../assets/scss/variables.scss';
+
+.logo-img {
+  width: 80px;
+  height: 80px;
+  padding: 2px !important;
+}
+
+.element-img {
+  width: 40px;
+  height: 40px;
+  padding: 2px !important;
+}
+
+@include media-breakpoint-down(sm) {
+  .logo-img {
+    width: 60px;
+    height: 60px;
+  }
+}
