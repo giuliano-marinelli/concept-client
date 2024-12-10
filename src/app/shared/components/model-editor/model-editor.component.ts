@@ -12,8 +12,8 @@ import {
   createDiagramOptionsModule
 } from '@eclipse-glsp/client';
 
-import { ExternalServices } from '../../glsp/dynamic-external-services';
-import { DynamicGLSPWebSocketProvider } from '../../glsp/dynamic-glsp-ws-provider';
+import { DynamicGLSPWebSocketProvider } from '../../dynamic-glsp/connection/dynamic-websocket-provider';
+import { ExternalServices } from '../../dynamic-glsp/diagram/dynamic-external-services';
 import { Container } from 'inversify';
 
 import {
@@ -21,13 +21,13 @@ import {
   AModelElementSchema,
   AModelObjectSchema,
   AModelRootSchema
-} from '../../glsp/protocol/amodel';
+} from '../../dynamic-glsp/protocol/amodel';
 
 import { JsonFormsRendererComponent } from '../json-forms-renderer/json-forms-renderer.component';
 
 import { AuthService } from '../../../services/auth.service';
 
-import { initializeDynamicDiagramContainer } from '../../glsp/dynamic-diagram-module';
+import { initializeDynamicDiagramContainer } from '../../dynamic-glsp/diagram/dynamic-diagram-module';
 
 @Component({
   selector: 'model-editor',

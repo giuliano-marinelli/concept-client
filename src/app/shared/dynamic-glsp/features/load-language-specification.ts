@@ -1,11 +1,10 @@
 import { GLSPActionDispatcher, IDiagramStartup } from '@eclipse-glsp/client';
 
-import { inject, injectable } from 'inversify';
-
 import {
   LoadLanguageSpecificationAction,
   ReadyLanguageSpecificationAction
-} from './protocol/action/load-language-specification';
+} from '../protocol/action/language-specification-load';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class LoadLanguageSpecification implements IDiagramStartup {

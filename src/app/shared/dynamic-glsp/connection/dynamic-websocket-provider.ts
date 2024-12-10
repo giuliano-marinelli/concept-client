@@ -1,11 +1,12 @@
-import { GLSPWebSocketProvider } from '@eclipse-glsp/protocol';
+import { GLSPWebSocketOptions, GLSPWebSocketProvider } from '@eclipse-glsp/protocol';
 
 export class DynamicGLSPWebSocketProvider extends GLSPWebSocketProvider {
   constructor(
     protected override url: string,
-    protected authToken?: string
+    protected authToken?: string,
+    options?: GLSPWebSocketOptions
   ) {
-    super(url);
+    super(url, options);
   }
 
   protected override createWebSocket(url: string): WebSocket {

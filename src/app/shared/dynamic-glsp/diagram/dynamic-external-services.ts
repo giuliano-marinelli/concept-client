@@ -1,4 +1,4 @@
-import { AModelRootSchema } from './protocol/amodel';
+import { AModelRootSchema } from '../protocol/amodel';
 
 export const ExternalServices = Symbol('ExternalServices');
 

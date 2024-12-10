@@ -11,10 +11,9 @@ import {
   TYPES
 } from '@eclipse-glsp/client';
 
+import { ExternalServices } from '../diagram/dynamic-external-services';
+import { ModelChangeOperation } from '../protocol/operation/model-change';
 import { inject, injectable } from 'inversify';
-
-import { ExternalServices } from './dynamic-external-services';
-import { ModelChangeOperation } from './protocol/operation/model-change';
 
 export const IInspector = Symbol('IInspector');
 

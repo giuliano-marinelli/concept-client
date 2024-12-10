@@ -21,18 +21,23 @@ import {
   debugModule,
   edgeEditToolModule,
   editLabelFeature,
+  exportModule,
   gridModule,
   helperLineModule,
   initializeDiagramContainer,
   overrideModelElement,
+  saveModule,
   toolPaletteModule
 } from '@eclipse-glsp/client';
 
+import { Inspector } from '../features/inspector';
+import { LoadLanguageSpecification } from '../features/load-language-specification';
+import { SvgExporter } from '../features/svg-exporter';
 import { Container, ContainerModule } from 'inversify';
 
-import { Inspector } from './dynamic-inspector';
-import { LoadLanguageSpecification } from './dynamic-load-language-specification';
 import { StartupConfiguration } from './dynamic-startup-configurations';
+
+import { SaveModelKeyboardListener } from '../features/save-model';
 
 export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
   const context = { bind, unbind, isBound, rebind };
@@ -40,6 +45,13 @@ export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, 
   // send the action for load the language specification before loading model
   bind(LoadLanguageSpecification).toSelf().inSingletonScope();
   bind(TYPES.IDiagramStartup).toService(LoadLanguageSpecification);
+
+  // configure the custom svg exporter to allow get svg from the GModel
+  bind(TYPES.SvgExporter).to(SvgExporter).inSingletonScope();
+
+  // configure the save model action with (Ctrl + S) shortcut
+  bind(SaveModelKeyboardListener).toSelf().inSingletonScope();
+  bind(TYPES.KeyListener).toService(SaveModelKeyboardListener);
 
   // configure general utilities on startup
   bind(StartupConfiguration).toSelf().inSingletonScope();
@@ -87,15 +99,15 @@ export function initializeDynamicDiagramContainer(...containerConfiguration: Con
   return initializeDiagramContainer(
     new Container(),
     ...containerConfiguration,
-    {
-      add: accessibilityModule,
-      remove: toolPaletteModule
-    },
     STANDALONE_MODULE_CONFIG, // contains a set of default modules for basic features like undo/redo, copy/paste, selection, etc.
     dynamicDiagramModule, // load all the bindings for the dynamic diagram language
     helperLineModule, // load bindings for helper lines for alignment
     gridModule, // load bindings for grid on the diagram and button to toggle the grid
     edgeEditToolModule, // load bindings for debug mode (it can be enable with an option at command palette)
-    debugModule
+    debugModule,
+    {
+      add: accessibilityModule,
+      remove: [toolPaletteModule, saveModule, exportModule]
+    }
   );
 }
