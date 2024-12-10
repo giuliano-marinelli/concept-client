@@ -115,6 +115,9 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import 'tippy.js/themes/material.css';
 @import 'tippy.js/animations/scale.css';
 
+/* Importing codicons */
+@import '@vscode/codicons/dist/codicon.css';
+
 /* Importing GLSP files (for sprotty diagrams) */
 @import '@eclipse-glsp/client/css/autocomplete-palette.css';
 @import '@eclipse-glsp/client/css/change-bounds.css';
@@ -133,8 +136,8 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import '@eclipse-glsp/client/css/toast.css';
 @import '@eclipse-glsp/client/css/tool-palette.css';
 
-/* Importing codicons */
-@import '@vscode/codicons/dist/codicon.css';
+/* Importing Dynamic GLSP files */
+@import 'assets/scss/dynamic-glsp.scss';
 
 /* Adds animations to the masonry layout component items */
 .masonry-item {

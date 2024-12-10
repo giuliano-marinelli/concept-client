@@ -1,0 +1,168 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import 'variables.scss';
+
+.sprotty {
+  position: relative;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+
+  > .tool-palette {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    min-width: 200px;
+  }
+
+  > .minimize-palette-button {
+    top: 10px;
+    right: 25px;
+  }
+
+  > .inspector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 350px;
+    max-height: calc(100% - 40px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: scaleY(1);
+    transform-origin: top;
+    z-index: 1000;
+    background-color: rgba($body-bg, 0.7);
+    user-select: none;
+    color: $body-color;
+    transition: transform 0.2s ease;
+    border: 10px solid;
+    border-color: rgba($body-bg, 0.7);
+    backdrop-filter: blur(5px);
+  }
+
+  > .inspector.collapsed {
+    transform: scaleY(0);
+  }
+
+  > .inspector * {
+    user-select: none;
+  }
+
+  > .inspector .form-container {
+    margin-right: 10px;
+  }
+
+  > .inspector table tr {
+    color: $body-color;
+  }
+
+  > .inspector .vertical-layout {
+    gap: 0px;
+  }
+
+  > .inspector .mat-mdc-form-field-infix {
+    margin-top: 20px;
+  }
+
+  > .inspector .mat-mdc-text-field-wrapper {
+    padding: 0px;
+  }
+
+  > .inspector .no-selection {
+    text-align: center;
+  }
+
+  [aria-label='Diagram'] {
+    outline: none;
+  }
+
+  > .sprotty-empty,
+  > [aria-label='Diagram'] > .sprotty-graph,
+  > [aria-label='Diagram'] > .sprotty-graph:focus {
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+    position: relative;
+    overflow: hidden;
+    border-style: none;
+    outline: none;
+  }
+
+  > .label-edit {
+    z-index: 1;
+    margin-top: -60px;
+  }
+}
+
+html[data-bs-theme='dark'] .sprotty {
+  > .inspector {
+    background-color: rgba($body-bg-dark, 0.7);
+    color: $body-color-dark;
+    border-color: rgba($body-bg-dark, 0.7);
+  }
+
+  > .inspector table tr {
+    background-color: $body-tertiary-bg-dark;
+    color: $body-color-dark;
+  }
+}
+
+.sprotty-graph {
+  .node > .sprotty-node {
+    fill: $body-bg-dark;
+    stroke-width: 1.5px;
+    cursor: pointer;
+  }
+
+  .node > .sprotty-node:not(.selected) {
+    stroke: $body-bg-dark;
+  }
+
+  .node .label {
+    fill: $body-bg;
+    cursor: pointer;
+  }
+
+  .sprotty-edge {
+    cursor: pointer;
+  }
+
+  .sprotty-edge:not(.selected),
+  .sprotty-edge.feedback-edge {
+    stroke: $body-bg-dark;
+  }
+
+  .sprotty-edge .label {
+    fill: $body-bg-dark;
+    cursor: pointer;
+  }
+}
+
+html[data-bs-theme='dark'] .sprotty-graph {
+  .node > .sprotty-node {
+    fill: $body-bg;
+  }
+
+  .node > .sprotty-node:not(.selected) {
+    stroke: $body-bg;
+  }
+
+  .node .label {
+    fill: $body-bg-dark;
+  }
+
+  .sprotty-edge:not(.selected),
+  .sprotty-edge.feedback-edge {
+    stroke: $body-bg;
+  }
+
+  .sprotty-edge .label {
+    fill: $body-bg;
+  }
+}
+
+.sprotty-hidden {
+  position: fixed;
+}
+
+.cdk-describedby-message-container,
+.cdk-overlay-container {
+  position: fixed;
+}
