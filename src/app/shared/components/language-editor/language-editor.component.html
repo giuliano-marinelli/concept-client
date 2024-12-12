@@ -20,22 +20,21 @@
       </div>
       <div class="w-100 mb-3"></div>
       <div class="row">
-        <div class="col-12 col-lg-6">
-          <div class="row mb-4">
-            <label class="text-center">
-              Graphical Structure
-            </label>
-          </div>
+        <div class="col-12 col-lg-4 col-xl-3">
+          <gmodel-tree [gModel]="element.gModel" [config]="gModelConfig"></gmodel-tree>
+        </div>
+        <div class="col col-xl-5">
           <div class="row">
-            <gmodel-editor [gModel]="element.gModel"></gmodel-editor>
+            <div class="col-12 align-content-center bg-info">
+              <gmodel-editor [gModel]="element.gModel"></gmodel-editor>
+            </div>
+            <div class="col-12 order-lg-first align-content-center bg-success" style="height: 200px;">
+              V
+            </div>
           </div>
         </div>
-        <div class="col-12 col-lg-6">
-          <div class="row mb-4">
-            <label class="text-center">
-              Visualization
-            </label>
-          </div>
+        <div class="col-12 col-xl-4 align-content-center bg-warning">
+          A
         </div>
       </div>
     </form>

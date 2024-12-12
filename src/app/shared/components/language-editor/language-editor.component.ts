@@ -15,6 +15,37 @@ export class LanguageEditorComponent implements OnInit {
   @Input() element!: MetaElement;
   @Input() type: 'NODE' | 'EDGE' = 'NODE';
 
+  gModelConfig = {
+    nodes: {
+      node: {
+        icon: 'circle',
+        children: true
+      },
+      edge: {
+        icon: 'arrows-left-right',
+        children: true
+      },
+      label: {
+        icon: 'tag',
+        children: false
+      },
+      comp: {
+        icon: 'box-open',
+        children: true
+      }
+    },
+    structures: {
+      decision: {
+        icon: 'arrows-turn-to-dots',
+        fields: ['then', 'else']
+      },
+      iteration: {
+        icon: 'arrows-rotate',
+        fields: ['template']
+      }
+    }
+  };
+
   elementLoading: boolean = true;
   submitLoading: boolean = false;
 
