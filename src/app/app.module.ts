@@ -77,6 +77,7 @@ import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
 import { ModelsComponent } from './models/models.component';
+import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/module';
 
 @NgModule({
   declarations: [
@@ -154,7 +155,8 @@ import { ModelsComponent } from './models/models.component';
     //directives
     TippyDirective,
     JsonFormsModule,
-    JsonFormsAngularMaterialModule
+    JsonFormsAngularMaterialModule,
+    JsonFormsBootstrapModule
   ],
   providers: [
     //configurations
