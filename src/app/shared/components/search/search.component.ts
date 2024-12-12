@@ -78,7 +78,7 @@ export interface SearchAttribute {
 @Component({
   selector: 'search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrl: './search.component.scss'
 })
 export class SearchComponent implements OnInit {
   //search input attributes

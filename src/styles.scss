@@ -152,6 +152,10 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
   box-shadow: none !important;
 }
 
+.no-outline:active {
+  border-color: transparent !important;
+}
+
 /* For show cursor pointer when hover */
 .pe-pointer {
   cursor: pointer;

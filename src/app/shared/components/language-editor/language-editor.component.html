@@ -1,0 +1,47 @@
+<div class="modal-content" *ngIf="element">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <fa-icon [icon]="'palette'"></fa-icon> Edit {{ element.type }}
+    </h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form [class.loading]="elementLoading" [formGroup]="elementForm" (ngSubmit)="updateElement()">
+      <div class="row">
+        <label class="col-2 col-lg-1 col-form-label">
+          Name
+        </label>
+        <div class="col-10 col-lg-5">
+          <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name" autocomplete="off"
+            [ngClass]="setValid(name)" />
+          <invalid-feedback [control]="name" name="Name"
+            [messages]="{ pattern: 'Name can only have characters and numbers' }"></invalid-feedback>
+        </div>
+      </div>
+      <div class="w-100 mb-3"></div>
+      <div class="row">
+        <div class="col-12 col-lg-6">
+          <div class="row mb-4">
+            <label class="text-center">
+              Graphical Structure
+            </label>
+          </div>
+          <div class="row">
+            <gmodel-editor [gModel]="element.gModel"></gmodel-editor>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="row mb-4">
+            <label class="text-center">
+              Visualization
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ngbAutofocus class="btn btn-default"
+      (click)="activeModal.dismiss('Close click')">Close</button>
+  </div>
+</div>

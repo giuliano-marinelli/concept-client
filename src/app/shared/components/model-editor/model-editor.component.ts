@@ -32,7 +32,7 @@ import { initializeDynamicDiagramContainer } from '../../../../dynamic-glsp/diag
 @Component({
   selector: 'model-editor',
   templateUrl: './model-editor.component.html',
-  styleUrls: ['./model-editor.component.scss']
+  styleUrl: './model-editor.component.scss'
 })
 export class ModelEditorComponent implements AfterViewInit {
   port: number = 3001;

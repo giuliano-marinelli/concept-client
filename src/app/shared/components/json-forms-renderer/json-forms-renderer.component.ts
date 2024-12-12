@@ -5,7 +5,7 @@ import { angularMaterialRenderers } from '@jsonforms/angular-material';
 @Component({
   selector: '[json-forms-renderer]',
   templateUrl: './json-forms-renderer.component.html',
-  styleUrls: ['./json-forms-renderer.component.scss']
+  styleUrl: './json-forms-renderer.component.scss'
 })
 export class JsonFormsRendererComponent {
   @Input() elementId: string = '';

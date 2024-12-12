@@ -2,16 +2,20 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { MetaElement } from '../../shared/entities/meta-element.entity';
 import { FindMetaModels, MetaModel } from '../../shared/entities/meta-model.entity';
 import { Global } from '../../shared/global/global';
+
+import { LanguageEditorComponent } from '../../shared/components/language-editor/language-editor.component';
 
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-language',
   templateUrl: './language.component.html',
-  styleUrls: ['./language.component.scss']
+  styleUrl: './language.component.scss'
 })
 export class LanguageComponent implements OnInit {
   JSON: any = JSON;
@@ -31,6 +35,7 @@ export class LanguageComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public titleService: Title,
+    public modalService: NgbModal,
     public changeDetector: ChangeDetectorRef,
     private _findMetaModels: FindMetaModels
   ) {
@@ -62,6 +67,7 @@ export class LanguageComponent implements OnInit {
             this.language = data.metaModels.set[0] ?? null;
             if (this.language) {
               this.titleService.setTitle(this.language.tag + '@' + this.language.version + ' · ' + this.language.name);
+              if (this.language && this.language.metaElements) this.editElement(this.language.metaElements[1]);
             } else {
               this.router.navigate(['not-found']);
             }
@@ -75,5 +81,11 @@ export class LanguageComponent implements OnInit {
 
   deleteElement(element: MetaElement): void {
     //TODO
+  }
+
+  editElement(element: MetaElement): void {
+    const modalRef = this.modalService.open(LanguageEditorComponent, { size: 'xl', backdrop: 'static' });
+    modalRef.componentInstance.element = element;
+    modalRef.componentInstance.type = element.type;
   }
 }

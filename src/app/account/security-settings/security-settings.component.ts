@@ -14,7 +14,7 @@ import { MessagesService } from '../../services/messages.service';
 @Component({
   selector: 'app-security-settings',
   templateUrl: './security-settings.component.html',
-  styleUrls: ['./security-settings.component.scss']
+  styleUrl: './security-settings.component.scss'
 })
 export class SecuritySettingsComponent implements OnInit {
   @ViewChild('message_container_update') messageContainerUpdate!: ElementRef;

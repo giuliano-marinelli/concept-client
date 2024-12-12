@@ -12,7 +12,7 @@ import { MessagesService } from '../../services/messages.service';
 @Component({
   selector: 'app-devices-settings',
   templateUrl: './devices-settings.component.html',
-  styleUrls: ['./devices-settings.component.scss']
+  styleUrl: './devices-settings.component.scss'
 })
 export class DevicesSettingsComponent implements OnInit {
   @ViewChild('message_container') messageContainer!: ElementRef;

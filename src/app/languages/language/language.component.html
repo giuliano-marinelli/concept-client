@@ -67,6 +67,9 @@
             </a>
             <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'ADMIN'"
               class="dropdown-menu shadow-sm" ngbDropdownMenu>
+              <a ngbDropdownItem class="small pe-pointer" (click)="editElement(element)">
+                <fa-icon [icon]="'pencil'"></fa-icon> Edit
+              </a>
               <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteElement(element)"
                 [confirmTemplate]="delete_message" confirmActionButton="Delete">
                 <fa-icon [icon]="'trash'"></fa-icon> Delete

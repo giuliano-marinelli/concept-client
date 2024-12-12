@@ -12,7 +12,7 @@ import { MessagesService } from '../../../services/messages.service';
 @Component({
   selector: '[confirm]',
   templateUrl: './confirm.component.html',
-  styleUrls: ['./confirm.component.scss']
+  styleUrl: './confirm.component.scss'
 })
 export class ConfirmComponent {
   @Input() confirmMessage: string = 'Are you sure you want to do this?';

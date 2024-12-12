@@ -19,7 +19,7 @@ import { MessagesService } from '../../services/messages.service';
 @Component({
   selector: 'app-profile-settings',
   templateUrl: './profile-settings.component.html',
-  styleUrls: ['./profile-settings.component.scss']
+  styleUrl: './profile-settings.component.scss'
 })
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild('message_container') messageContainer!: ElementRef;

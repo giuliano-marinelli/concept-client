@@ -1,0 +1,55 @@
+.tree-root {
+  list-style-type: none;
+}
+
+.node-children {
+  padding-left: 20px;
+  list-style-type: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+}
+
+.node-children.expanded {
+  max-height: 1000px;
+  transition: max-height 0.5s ease-in-out;
+}
+
+.node-container {
+  border: 1px solid transparent;
+  border-radius: 5px;
+}
+
+.node-container.selected {
+  border: 1px dashed;
+  background-color: rgba(1, 1, 1, 0.2);
+}
+
+.dropzone {
+  border: 1px dashed;
+  border-radius: 5px;
+  background-color: rgba(1, 1, 1, 0.1);
+}
+
+.node-placeholder {
+  height: 0px;
+  transition: height 0.1s ease;
+}
+
+.node-placeholder:hover {
+  background-color: rgba(1, 1, 1, 0.2);
+}
+
+.node-placeholder.show {
+  height: 31px;
+  margin: 0.25rem 0 0.25rem 2.25rem;
+  border: 1px dashed;
+  border-radius: 5px;
+  background-color: rgba(1, 1, 1, 0.1);
+}
+
+.node-placeholder-container {
+  // background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid transparent;
+  // border-radius: 5px;
+}

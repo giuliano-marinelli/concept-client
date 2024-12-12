@@ -6,7 +6,7 @@ import { MessagesService } from '../services/messages.service';
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
-  styleUrls: ['./about.component.scss']
+  styleUrl: './about.component.scss'
 })
 export class AboutComponent implements OnInit {
   JSON = JSON;

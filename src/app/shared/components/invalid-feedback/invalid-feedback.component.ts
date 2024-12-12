@@ -4,7 +4,7 @@ import { AbstractControl, FormControl } from '@angular/forms';
 @Component({
   selector: 'invalid-feedback',
   templateUrl: './invalid-feedback.component.html',
-  styleUrls: ['./invalid-feedback.component.scss']
+  styleUrl: './invalid-feedback.component.scss'
 })
 export class InvalidFeedbackComponent {
   @Input() control?: FormControl | AbstractControl | null;
