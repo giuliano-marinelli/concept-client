@@ -9,7 +9,7 @@ import merge from 'lodash/merge';
   selector: 'NumberControlRenderer',
   template: `
     <div class="row w-100 mb-2 ps-2" [style.display]="hidden ? 'none' : ''">
-      <label class="form-label col-auto">{{ label }}</label>
+      <label class="form-label col-form-label-sm col-auto">{{ label }}</label>
       <div class="col-auto">
         <input
           class="form-control form-control-sm"

@@ -109,7 +109,7 @@ export class Inspector extends AbstractUIExtension implements ISelectionListener
 
     this.containerElement.innerHTML = '';
 
-    const title = document.createElement('h1');
+    const title = document.createElement('h4');
     title.textContent = selectedElement.args?.elementLabel;
     this.containerElement.appendChild(title);
 

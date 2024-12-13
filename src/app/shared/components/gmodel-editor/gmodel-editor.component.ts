@@ -11,7 +11,6 @@ export class GModelEditorComponent implements OnInit {
   @Input() gModel?: GModelElementSchema;
 
   ngOnInit(): void {
-    console.log('gModel', this.gModel);
     // if (!this.gModel) this.gModel = { type: 'NODE' } as GModelElementSchema;
   }
 }

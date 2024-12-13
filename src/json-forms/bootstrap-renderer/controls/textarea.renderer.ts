@@ -1,31 +1,30 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
-import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
+import { RankedTester, isMultiLineControl, rankWith } from '@jsonforms/core';
 
 @Component({
-  selector: 'TextControlRenderer',
+  selector: 'TextAreaControlRenderer',
   template: `
     <div class="row w-100 ps-2" [style.display]="hidden ? 'none' : ''">
       <label class="form-label col-form-label-sm col-auto">{{ label }}</label>
-      <div class="col">
-        <input
+      <div class="col-auto">
+        <textarea
           class="form-control form-control-sm"
-          type="text"
+          rows="3"
           [id]="id"
           [formControl]="form"
-          [type]="getType()"
           (input)="onChange($event)"
           (focus)="focused = true"
           (focusout)="focused = false"
-        />
+        ></textarea>
       </div>
     </div>
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextControlRenderer extends JsonFormsControl {
+export class TextAreaControlRenderer extends JsonFormsControl {
   focused = false;
 
   constructor(jsonformsService: JsonFormsAngularService) {
@@ -33,23 +32,5 @@ export class TextControlRenderer extends JsonFormsControl {
   }
 
   override getEventValue = (event: any) => event.target.value || undefined;
-
-  getType(): string {
-    if (this.uischema.options && this.uischema.options['format']) {
-      return this.uischema.options['format'];
-    }
-
-    if (this.scopedSchema && this.scopedSchema.format) {
-      switch (this.scopedSchema.format) {
-        case 'email':
-          return 'email';
-        case 'tel':
-          return 'tel';
-        default:
-          return 'text';
-      }
-    }
-    return 'text';
-  }
 }
-export const TextControlRendererTester: RankedTester = rankWith(1, isStringControl);
+export const TextAreaControlRendererTester: RankedTester = rankWith(2, isMultiLineControl);

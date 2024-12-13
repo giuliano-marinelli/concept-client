@@ -23,8 +23,24 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { JsonFormsModule } from '@jsonforms/angular';
 
-import { NumberControlRenderer, ObjectControlRenderer, TextControlRenderer } from './controls';
-import { GroupLayoutRenderer, LayoutChildrenRenderPropsPipe } from './layouts';
+import {
+  BooleanControlRenderer,
+  DateControlRenderer,
+  NumberControlRenderer,
+  ObjectControlRenderer,
+  RangeControlRenderer,
+  TextAreaControlRenderer,
+  TextControlRenderer
+} from './controls';
+import { ToggleControlRenderer } from './controls/toggle.renderer';
+import {
+  CategorizationTabLayoutRenderer,
+  GroupLayoutRenderer,
+  HorizontalLayoutRenderer,
+  LabelRenderer,
+  LayoutChildrenRenderPropsPipe,
+  VerticalLayoutRenderer
+} from './layouts';
 
 @NgModule({
   imports: [
@@ -52,10 +68,19 @@ import { GroupLayoutRenderer, LayoutChildrenRenderPropsPipe } from './layouts';
     MatBadgeModule
   ],
   declarations: [
+    BooleanControlRenderer,
     TextControlRenderer,
+    TextAreaControlRenderer,
     NumberControlRenderer,
+    RangeControlRenderer,
+    DateControlRenderer,
+    ToggleControlRenderer,
     ObjectControlRenderer,
+    VerticalLayoutRenderer,
+    HorizontalLayoutRenderer,
     GroupLayoutRenderer,
+    CategorizationTabLayoutRenderer,
+    LabelRenderer,
     LayoutChildrenRenderPropsPipe
   ],
   exports: [

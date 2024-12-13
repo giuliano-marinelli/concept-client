@@ -72,6 +72,9 @@ export class LanguageEditorComponent implements OnInit {
     if (!this.element) this.activeModal.dismiss('No element provided');
     this.elementForm.patchValue(this.element);
     this.elementLoading = false;
+
+    console.log('gModel', this.element.gModel);
+    console.log('aModel', this.element.aModel);
   }
 
   updateElement(): void {}
