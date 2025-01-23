@@ -26,13 +26,14 @@ import { JsonFormsModule } from '@jsonforms/angular';
 import {
   BooleanControlRenderer,
   DateControlRenderer,
+  EnumControlRenderer,
   NumberControlRenderer,
   ObjectControlRenderer,
   RangeControlRenderer,
   TextAreaControlRenderer,
-  TextControlRenderer
+  TextControlRenderer,
+  ToggleControlRenderer
 } from './controls';
-import { ToggleControlRenderer } from './controls/toggle.renderer';
 import {
   CategorizationTabLayoutRenderer,
   GroupLayoutRenderer,
@@ -76,6 +77,7 @@ import {
     DateControlRenderer,
     ToggleControlRenderer,
     ObjectControlRenderer,
+    EnumControlRenderer,
     VerticalLayoutRenderer,
     HorizontalLayoutRenderer,
     GroupLayoutRenderer,

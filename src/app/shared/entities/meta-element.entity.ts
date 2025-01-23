@@ -4,7 +4,7 @@ import { SelectionField, SelectionType } from 'apollo-dynamic';
 
 import { MetaModel } from './meta-model.entity';
 
-import { AModelElementSchema } from '../../../dynamic-glsp/protocol/amodel';
+import { AModelRootSchema } from '../../../dynamic-glsp/protocol/amodel';
 
 @SelectionType('MetaElement')
 export class MetaElement {
@@ -21,7 +21,7 @@ export class MetaElement {
   @SelectionField()
   gModel?: GModelElementSchema;
   @SelectionField()
-  aModel?: AModelElementSchema;
+  aModel?: AModelRootSchema;
   @SelectionField()
   defaultModel?: any;
   @SelectionField()

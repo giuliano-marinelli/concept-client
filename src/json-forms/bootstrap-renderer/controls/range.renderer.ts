@@ -17,6 +17,7 @@ import { RankedTester, isRangeControl, rankWith } from '@jsonforms/core';
           [max]="max"
           [min]="min"
           [step]="multipleOf"
+          [readonly]="disabled"
           (valueChange)="onChange($event)"
         />
       </div>

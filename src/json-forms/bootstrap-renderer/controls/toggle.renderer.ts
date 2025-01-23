@@ -15,6 +15,7 @@ import { RankedTester, and, isBooleanControl, optionIs, rankWith } from '@jsonfo
           [id]="id"
           [disabled]="!isEnabled()"
           [checked]="isChecked()"
+          [readonly]="disabled"
           (change)="onChange($event)"
         />
         <label class="form-check-label" [for]="id">{{ label }}</label>

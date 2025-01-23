@@ -14,6 +14,7 @@ import { RankedTester, isMultiLineControl, rankWith } from '@jsonforms/core';
           rows="3"
           [id]="id"
           [formControl]="form"
+          [readonly]="disabled"
           (input)="onChange($event)"
           (focus)="focused = true"
           (focusout)="focused = false"

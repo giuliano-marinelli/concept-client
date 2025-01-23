@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
 import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
@@ -15,6 +15,7 @@ import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
           [id]="id"
           [formControl]="form"
           [type]="getType()"
+          [readonly]="disabled"
           (input)="onChange($event)"
           (focus)="focused = true"
           (focusout)="focused = false"
@@ -25,11 +26,16 @@ import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextControlRenderer extends JsonFormsControl {
+export class TextControlRenderer extends JsonFormsControl implements OnInit {
   focused = false;
 
   constructor(jsonformsService: JsonFormsAngularService) {
     super(jsonformsService);
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    console.log('Text Props', this.getOwnProps());
   }
 
   override getEventValue = (event: any) => event.target.value || undefined;

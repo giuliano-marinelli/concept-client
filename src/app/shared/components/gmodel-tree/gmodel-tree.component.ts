@@ -1,25 +1,9 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 
 import { GModelElementSchema } from '@eclipse-glsp/protocol';
-import { IconName } from '@fortawesome/angular-fontawesome';
 
+import { GModelConfig, GModelContext, Global } from '../../global/global';
 import _ from 'lodash';
-
-export interface GModelTreeConfig {
-  nodeIcon?: IconName;
-  nodes?: {
-    [key: string]: {
-      icon?: IconName;
-      children?: boolean;
-    };
-  };
-  structures?: {
-    [key: string]: {
-      icon?: IconName;
-      fields?: string[];
-    };
-  };
-}
 
 @Component({
   selector: 'gmodel-tree',
@@ -28,28 +12,42 @@ export interface GModelTreeConfig {
 })
 export class GModelTreeComponent implements OnInit {
   @Input() gModel?: GModelElementSchema;
-  @Input() config: GModelTreeConfig = {};
+  @Input() gModelConfig: GModelConfig = {};
+
+  @Output() gModelChange = new EventEmitter<GModelElementSchema>();
+  @Output() selectedChange = new EventEmitter<string>();
 
   @ViewChildren('placeholder') placeholders?: QueryList<ElementRef>;
   @ViewChildren('nodeContainer') nodeContainers?: QueryList<ElementRef>;
 
-  _gModel?: GModelElementSchema;
+  gModelUtils = Global.GModelUtils;
+
+  gModelContext!: GModelContext;
+
+  selectedNodePath: string = '';
 
   dragNode?: any;
   dragNodePath?: string;
 
   ngOnInit(): void {
     // set default config
-    if (!this.config.nodeIcon) this.config.nodeIcon = 'circle';
-    if (!this.config.structures) this.config.structures = {};
+    if (!this.gModelConfig.nodeIcon) this.gModelConfig.nodeIcon = 'circle';
+    if (!this.gModelConfig.structures) this.gModelConfig.structures = {};
 
-    // clone the gModel to prevent mutation
-    this._gModel = _.cloneDeep(this.gModel);
+    // set context with a gModel clone and config
+    this.gModelContext = { gModel: _.cloneDeep(this.gModel)!, config: this.gModelConfig };
+
+    // set the selected node to the root node
+    this.selectNode('', this.gModelContext.gModel);
+  }
+
+  onNodeClick(path: string, node: any): void {
+    if (node) this.selectNode(path, node);
   }
 
   onNodeDragStart(event: DragEvent, nodePath: string): void {
     // save a copy of the node being dragged and its path
-    this.dragNode = _.cloneDeep(this.getNodeByPath(nodePath));
+    this.dragNode = _.cloneDeep(this.gModelUtils.getNodeByPath(this.gModelContext, nodePath));
     this.dragNodePath = nodePath;
 
     // set the drag effect to move
@@ -69,7 +67,7 @@ export class GModelTreeComponent implements OnInit {
 
   onNodeDragOver(event: DragEvent, nodePath: string, node: any): void {
     // prevent default to allow drop event
-    if (this.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
+    if (this.gModelUtils.checkNodeCanMoveToPath(this.gModelContext, this.dragNodePath, nodePath, node)) {
       event.preventDefault();
     }
   }
@@ -77,7 +75,7 @@ export class GModelTreeComponent implements OnInit {
   onNodeDragEnter(event: DragEvent, nodePath: string, node: any): void {
     event.preventDefault();
     // add dropzone class to indicate that the node can be dropped there
-    if (this.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
+    if (this.gModelUtils.checkNodeCanMoveToPath(this.gModelContext, this.dragNodePath, nodePath, node)) {
       const dropZone = event.target as HTMLElement;
       dropZone.classList.add('dropzone');
 
@@ -90,7 +88,7 @@ export class GModelTreeComponent implements OnInit {
         const placeholder = this.placeholders?.find(
           (placeholder) => placeholder.nativeElement.dataset.path === nodePath
         )?.nativeElement;
-        placeholder.classList.add('show');
+        placeholder?.classList.add('show');
       }
     }
   }
@@ -111,7 +109,10 @@ export class GModelTreeComponent implements OnInit {
 
   onNodeDrop(event: DragEvent, nodePath: string, node: any, dropOnParent: boolean = true): void {
     event.preventDefault();
-    if (this.dragNodePath && this.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
+    if (
+      this.dragNodePath &&
+      this.gModelUtils.checkNodeCanMoveToPath(this.gModelContext, this.dragNodePath, nodePath, node)
+    ) {
       // remove dropzone class when the node leaves the drop zone
       const dropZone = event.target as HTMLElement;
       dropZone.classList.remove('dropzone');
@@ -123,6 +124,10 @@ export class GModelTreeComponent implements OnInit {
       this.markNodeForRemoval(this.dragNodePath);
       this.addNodeByPath(nodePath, this.dragNode, dropOnParent);
       this.removeMarkedNodes();
+      this.updateSelectedNodePath();
+
+      // emit the updated gModel
+      this.gModelChange.emit(this.gModelContext.gModel);
     }
 
     // reset drag state
@@ -133,16 +138,16 @@ export class GModelTreeComponent implements OnInit {
   // if path is an empty field, the node will be added in that field
   // if path is a node that can have children, the node will be added as a child
   addNodeByPath(path: string, node: any, dropOnParent: boolean = true): void {
-    const toNode = this.getNodeByPath(path);
-    const parent = this.getNodeParentByPath(path);
+    const toNode = this.gModelUtils.getNodeByPath(this.gModelContext, path);
+    const parent = this.gModelUtils.getNodeParentByPath(this.gModelContext, path);
     if (!toNode) {
-      const field = this.getNodeIndexOrFieldByPath(path);
+      const field = this.gModelUtils.getNodeIndexOrFieldByPath(path);
       parent[field] = node;
     } else {
-      if (dropOnParent || !this.checkNodeCanHaveChildren(toNode)) {
+      if (dropOnParent || !this.gModelUtils.checkNodeCanHaveChildren(this.gModelContext, toNode)) {
         if (!parent.children) parent.children = [];
         // add the node as children of parent at the position of the path
-        parent.children.splice(Number(this.getNodeIndexOrFieldByPath(path)), 0, node);
+        parent.children.splice(Number(this.gModelUtils.getNodeIndexOrFieldByPath(path)), 0, node);
       } else {
         if (!toNode.children) toNode.children = [];
         toNode.children.push(node);
@@ -154,10 +159,9 @@ export class GModelTreeComponent implements OnInit {
   // if path is an index, the node will be removed from the children array of the parent node
   // if path is a field, the field will be set to null
   removeNodeByPath(path: string): void {
-    const parent = this.getNodeParentByPath(path);
-    const indexOrField = this.getNodeIndexOrFieldByPath(path);
+    const parent = this.gModelUtils.getNodeParentByPath(this.gModelContext, path);
+    const indexOrField = this.gModelUtils.getNodeIndexOrFieldByPath(path);
     if (parent) {
-      console.log('removeNodeByPath', parent, indexOrField);
       if (!isNaN(indexOrField as any)) {
         parent.children.splice(Number(indexOrField), 1);
       } else {
@@ -168,30 +172,35 @@ export class GModelTreeComponent implements OnInit {
 
   // mark a node that must be removed later
   markNodeForRemoval(path: string): void {
-    const node = this.getNodeByPath(path);
+    const node = this.gModelUtils.getNodeByPath(this.gModelContext, path);
     if (node) node._remove = true;
   }
 
   // remove all nodes that are marked for removal
-  removeMarkedNodes(node?: any): void {
-    if (!node) node = this._gModel;
-    if (this.checkNodeIsStructure(node)) {
-      const fields = this.config?.structures?.[node.type]?.fields;
-      if (fields?.length) {
-        for (const field of fields) {
-          if (node[field]?._remove) node[field] = null;
-          else if (node[field]) this.removeMarkedNodes(node[field]);
-        }
-      }
-    } else {
-      if (node.children) {
-        node.children = node.children.filter((child: any) => {
-          if (child._remove) return false;
-          this.removeMarkedNodes(child);
-          return true;
-        });
-      }
+  removeMarkedNodes(): void {
+    const removePaths: string[] = this.gModelUtils.getPathsByProperty(this.gModelContext, '_remove');
+    removePaths.forEach((path: string) => {
+      this.removeNodeByPath(path);
+    });
+  }
+
+  // update the selected node path for when the gModel is updated
+  updateSelectedNodePath(): void {
+    const selectedPath: string = this.gModelUtils.getPathsByProperty(this.gModelContext, '_selected')[0];
+    if (selectedPath) this.selectNode(selectedPath);
+  }
+
+  // sets the selected node path and emits the selected node path
+  // if node reference is provided, previous selected node will be unselected and the new node will be selected
+  selectNode(path: string, node?: any): void {
+    if (node) {
+      let selectedNode = this.gModelUtils.getNodeByPath(this.gModelContext, this.selectedNodePath);
+      if (selectedNode) delete selectedNode._selected;
+
+      node._selected = true;
     }
+    this.selectedNodePath = path;
+    this.selectedChange.emit(path);
   }
 
   // reset the drag state
@@ -215,59 +224,5 @@ export class GModelTreeComponent implements OnInit {
     this.placeholders?.forEach((placeholder) => {
       placeholder.nativeElement.classList.remove('show');
     });
-  }
-
-  // check if a node can be moved to the given path
-  // if the toPath is not the same as the fromPath, and the toPath is not a child of the fromPath, and the toNode can have children
-  checkNodeCanMoveToPath(fromPath: string | undefined, toPath: string, toNode: any): boolean {
-    // obtain the parent node of the toPath to check if it can have children
-    const toParent = this.getNodeParentByPath(toPath);
-    return (
-      fromPath != undefined &&
-      toPath != undefined &&
-      fromPath !== toPath &&
-      !toPath.startsWith(fromPath) &&
-      toParent != undefined &&
-      (!toNode || this.checkNodeCanHaveChildren(toParent) || this.checkNodeCanHaveChildren(toNode))
-    );
-  }
-
-  // check if a node can have children
-  // if it's not explicitly set to false in the config, and it's not a structure node
-  checkNodeCanHaveChildren(node: any): boolean {
-    return node && this.config?.nodes?.[node.type]?.children !== false && !this.checkNodeIsStructure(node);
-  }
-
-  // check if a node is a structure node by checking if it's defined in the structures config
-  checkNodeIsStructure(node: any): boolean {
-    return this.config?.structures?.[node?.type] !== undefined;
-  }
-
-  // returns the node at the given path
-  // for example: getNodeByPath('0/1/2') will return the third child of the second child of the first child of the root node
-  // for example: getNodeByPath('0/1/then) will return the 'then' field of the second child of the first child of the root node
-  getNodeByPath(path: string): any {
-    const pathArray: string[] = path.split('/').splice(1);
-    let currentNode = this._gModel;
-    if (!currentNode) return;
-    for (const indexOrField of pathArray) {
-      if (!isNaN(indexOrField as any)) {
-        currentNode = currentNode?.children?.[Number(indexOrField)];
-      } else {
-        currentNode = (currentNode as any)?.[indexOrField];
-      }
-    }
-    return currentNode;
-  }
-
-  // returns the parent node of the node at the given path
-  getNodeParentByPath(path: string): any {
-    const parentPath = path.slice(0, path.lastIndexOf('/'));
-    return path ? this.getNodeByPath(parentPath) : undefined;
-  }
-
-  // returns the index or field of the node at the given path
-  getNodeIndexOrFieldByPath(path: string): number | string {
-    return path.slice(path.lastIndexOf('/') + 1);
   }
 }

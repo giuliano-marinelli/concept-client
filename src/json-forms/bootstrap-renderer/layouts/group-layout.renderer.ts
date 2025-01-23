@@ -9,8 +9,8 @@ import { LayoutRenderer } from './layout.renderer';
   selector: 'GroupLayoutRenderer',
   template: `
     <div class="card mx-1 mb-3" [style.display]="hidden ? 'none' : ''">
-      <div class="card-body px-2 py-1">
-        <label class="card-title">{{ label }}</label>
+      <div class="card-body px-2 pb-2 pt-1" [class.pt-3]="!label">
+        <label class="card-title ps-1 py-1" *ngIf="label">{{ label }}</label>
         <div *ngFor="let props of uischema | layoutChildrenRenderProps: schema : path; trackBy: trackElement">
           <jsonforms-outlet [renderProps]="props"></jsonforms-outlet>
         </div>

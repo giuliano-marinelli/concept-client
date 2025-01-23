@@ -27,6 +27,7 @@ import { DayJsDateAdapter } from '../utils/dayjs-date-adapter';
           (dateChange)="onChange($event)"
           [id]="id"
           [formControl]="form"
+          [readonly]="disabled"
           (focus)="focused = true"
           (focusout)="focused = false"
         />

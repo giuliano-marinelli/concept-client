@@ -1,9 +1,7 @@
 import {
-  AutocompleteControlRenderer,
   MasterListComponent,
   TableRenderer,
   TableRendererTester,
-  enumControlTester,
   masterDetailTester
 } from '@jsonforms/angular-material';
 import { RankedTester } from '@jsonforms/core';
@@ -24,6 +22,7 @@ import {
   TextAreaControlRenderer,
   TextAreaControlRendererTester
 } from './controls';
+import { EnumControlRenderer, EnumControlTester } from './controls/enum.renderer';
 import { TextControlRenderer, TextControlRendererTester } from './controls/text.renderer';
 import { ToggleControlRenderer, ToggleControlRendererTester } from './controls/toggle.renderer';
 import {
@@ -40,7 +39,7 @@ import { ArrayLayoutRenderer, ArrayLayoutRendererTester } from './layouts/array-
 import { CategorizationTabLayoutRenderer, CategorizationTester } from './layouts/categorization-layout.renderer';
 
 export * from './controls';
-// export * from './layouts';
+export * from './layouts';
 
 export const bootstrapRenderers: {
   tester: RankedTester;
@@ -54,8 +53,8 @@ export const bootstrapRenderers: {
   { tester: RangeControlRendererTester, renderer: RangeControlRenderer },
   { tester: DateControlRendererTester, renderer: DateControlRenderer },
   { tester: ToggleControlRendererTester, renderer: ToggleControlRenderer },
-  // { tester: enumControlTester, renderer: AutocompleteControlRenderer },
   { tester: ObjectControlRendererTester, renderer: ObjectControlRenderer },
+  { tester: EnumControlTester, renderer: EnumControlRenderer },
   // layouts
   { tester: VerticalLayoutTester, renderer: VerticalLayoutRenderer },
   { tester: HorizontalLayoutTester, renderer: HorizontalLayoutRenderer },

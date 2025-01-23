@@ -20,6 +20,7 @@ import merge from 'lodash/merge';
           [min]="min"
           [max]="max"
           [step]="multipleOf"
+          [readonly]="disabled"
           (input)="onChange($event)"
           (focus)="focused = true"
           (focusout)="focused = false"
