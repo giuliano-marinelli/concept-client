@@ -6,32 +6,23 @@ import { RankedTester, isMultiLineControl, rankWith } from '@jsonforms/core';
 @Component({
   selector: 'TextAreaControlRenderer',
   template: `
-    <div class="row w-100 ps-2" [style.display]="hidden ? 'none' : ''">
-      <label class="form-label col-form-label-sm col-auto">{{ label }}</label>
-      <div class="col-auto">
-        <textarea
-          class="form-control form-control-sm"
-          rows="3"
-          [id]="id"
-          [formControl]="form"
-          [readonly]="disabled"
-          (input)="onChange($event)"
-          (focus)="focused = true"
-          (focusout)="focused = false"
-        ></textarea>
-      </div>
+    <div class="form-floating mb-1" [style.display]="hidden ? 'none' : ''">
+      <textarea
+        class="form-control"
+        [id]="id"
+        [formControl]="form"
+        [class.is-invalid]="error"
+        [ngStyle]="{ height: '100px' }"
+        (input)="onChange($event)"
+      ></textarea>
+      <label [for]="id">{{ label }}</label>
+      <div *ngIf="error" class="invalid-feedback">{{ error }}</div>
     </div>
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TextAreaControlRenderer extends JsonFormsControl {
-  focused = false;
-
-  constructor(jsonformsService: JsonFormsAngularService) {
-    super(jsonformsService);
-  }
-
   override getEventValue = (event: any) => event.target.value || undefined;
 }
 export const TextAreaControlRendererTester: RankedTester = rankWith(2, isMultiLineControl);

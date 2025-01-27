@@ -19,7 +19,6 @@ import { LayoutRenderer } from './layout.renderer';
       .vertical-layout {
         display: flex;
         flex-direction: column;
-        gap: 16px;
       }
       .vertical-layout > div {
         flex: 1 1 auto;

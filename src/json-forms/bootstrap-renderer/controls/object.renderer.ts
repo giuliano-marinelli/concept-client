@@ -20,10 +20,7 @@ import startCase from 'lodash/startCase';
 @Component({
   selector: 'ObjectRenderer',
   template: `
-    <div class="ps-2" [style.display]="hidden ? 'none' : ''">
-      <label class="form-label form-label-sm">{{ label }}</label>
-    </div>
-    <div>
+    <div class="" [style.display]="hidden ? 'none' : ''">
       <jsonforms-outlet [uischema]="detailUiSchema" [schema]="scopedSchema" [path]="propsPath"></jsonforms-outlet>
     </div>
   `,
@@ -58,8 +55,8 @@ export class ObjectControlRenderer extends JsonFormsControlWithDetail {
     if (isEmpty(props.path)) {
       this.detailUiSchema.type = 'VerticalLayout';
     } else {
-      // const propLabel = props.path.split('.').pop();
-      // (this.detailUiSchema as GroupLayout).label = startCase(propLabel);
+      const propLabel = props.path.split('.').pop();
+      (this.detailUiSchema as GroupLayout).label = startCase(propLabel);
     }
 
     if (!this.isEnabled()) {

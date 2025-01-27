@@ -9,8 +9,8 @@ import { RankedTester } from '@jsonforms/core';
 import 'hammerjs';
 
 import {
-  BooleanControlRenderer,
-  BooleanControlTester,
+  CheckboxControlRenderer,
+  CheckboxControlTester,
   DateControlRenderer,
   DateControlRendererTester,
   NumberControlRenderer,
@@ -22,9 +22,10 @@ import {
   TextAreaControlRenderer,
   TextAreaControlRendererTester
 } from './controls';
-import { EnumControlRenderer, EnumControlTester } from './controls/enum.renderer';
+import { RadioControlRenderer, RadioControlTester } from './controls/radio.renderer';
+import { SelectControlRenderer, SelectControlTester } from './controls/select.renderer';
+import { SwitchControlRenderer, SwitchControlRendererTester } from './controls/switch.renderer';
 import { TextControlRenderer, TextControlRendererTester } from './controls/text.renderer';
-import { ToggleControlRenderer, ToggleControlRendererTester } from './controls/toggle.renderer';
 import {
   GroupLayoutRenderer,
   GroupLayoutTester,
@@ -46,15 +47,16 @@ export const bootstrapRenderers: {
   renderer: any;
 }[] = [
   // controls
-  { tester: BooleanControlTester, renderer: BooleanControlRenderer },
   { tester: TextControlRendererTester, renderer: TextControlRenderer },
   { tester: TextAreaControlRendererTester, renderer: TextAreaControlRenderer },
   { tester: NumberControlRendererTester, renderer: NumberControlRenderer },
   { tester: RangeControlRendererTester, renderer: RangeControlRenderer },
+  { tester: CheckboxControlTester, renderer: CheckboxControlRenderer },
+  { tester: SwitchControlRendererTester, renderer: SwitchControlRenderer },
+  { tester: RadioControlTester, renderer: RadioControlRenderer },
+  { tester: SelectControlTester, renderer: SelectControlRenderer },
   { tester: DateControlRendererTester, renderer: DateControlRenderer },
-  { tester: ToggleControlRendererTester, renderer: ToggleControlRenderer },
   { tester: ObjectControlRendererTester, renderer: ObjectControlRenderer },
-  { tester: EnumControlTester, renderer: EnumControlRenderer },
   // layouts
   { tester: VerticalLayoutTester, renderer: VerticalLayoutRenderer },
   { tester: HorizontalLayoutTester, renderer: HorizontalLayoutRenderer },

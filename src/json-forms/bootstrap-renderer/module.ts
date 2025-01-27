@@ -24,16 +24,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { JsonFormsModule } from '@jsonforms/angular';
 
 import {
-  BooleanControlRenderer,
+  CheckboxControlRenderer,
   DateControlRenderer,
-  EnumControlRenderer,
   NumberControlRenderer,
   ObjectControlRenderer,
+  RadioControlRenderer,
   RangeControlRenderer,
+  SwitchControlRenderer,
   TextAreaControlRenderer,
-  TextControlRenderer,
-  ToggleControlRenderer
+  TextControlRenderer
 } from './controls';
+import { SelectControlRenderer } from './controls/select.renderer';
 import {
   CategorizationTabLayoutRenderer,
   GroupLayoutRenderer,
@@ -69,15 +70,16 @@ import {
     MatBadgeModule
   ],
   declarations: [
-    BooleanControlRenderer,
     TextControlRenderer,
     TextAreaControlRenderer,
     NumberControlRenderer,
     RangeControlRenderer,
+    CheckboxControlRenderer,
+    SwitchControlRenderer,
+    RadioControlRenderer,
+    SelectControlRenderer,
     DateControlRenderer,
-    ToggleControlRenderer,
     ObjectControlRenderer,
-    EnumControlRenderer,
     VerticalLayoutRenderer,
     HorizontalLayoutRenderer,
     GroupLayoutRenderer,

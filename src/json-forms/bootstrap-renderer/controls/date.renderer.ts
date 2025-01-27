@@ -22,14 +22,11 @@ import { DayJsDateAdapter } from '../utils/dayjs-date-adapter';
       <label class="form-label col-form-label-sm col-auto">{{ label }}</label>
       <div class="col-auto">
         <input
-          type="datetime-local"
           class="form-control form-control-sm"
+          type="datetime-local"
           (dateChange)="onChange($event)"
           [id]="id"
           [formControl]="form"
-          [readonly]="disabled"
-          (focus)="focused = true"
-          (focusout)="focused = false"
         />
       </div>
     </div>
@@ -49,7 +46,6 @@ import { DayJsDateAdapter } from '../utils/dayjs-date-adapter';
   ]
 })
 export class DateControlRenderer extends JsonFormsControl {
-  focused = false;
   views: string[] = [];
   startView = '';
   panelClass = '';

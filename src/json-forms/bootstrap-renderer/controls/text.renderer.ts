@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
 import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
@@ -6,38 +6,24 @@ import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
 @Component({
   selector: 'TextControlRenderer',
   template: `
-    <div class="row w-100 ps-2" [style.display]="hidden ? 'none' : ''">
-      <label class="form-label col-form-label-sm col-auto">{{ label }}</label>
-      <div class="col">
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          [id]="id"
-          [formControl]="form"
-          [type]="getType()"
-          [readonly]="disabled"
-          (input)="onChange($event)"
-          (focus)="focused = true"
-          (focusout)="focused = false"
-        />
-      </div>
+    <div class="form-floating mb-1" [style.display]="hidden ? 'none' : ''">
+      <input
+        class="form-control"
+        type="text"
+        [id]="id"
+        [formControl]="form"
+        [type]="getType()"
+        [class.is-invalid]="error"
+        (input)="onChange($event)"
+      />
+      <label [for]="id">{{ label }}</label>
+      <div *ngIf="error" class="invalid-feedback">{{ error }}</div>
     </div>
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextControlRenderer extends JsonFormsControl implements OnInit {
-  focused = false;
-
-  constructor(jsonformsService: JsonFormsAngularService) {
-    super(jsonformsService);
-  }
-
-  override ngOnInit(): void {
-    super.ngOnInit();
-    console.log('Text Props', this.getOwnProps());
-  }
-
+export class TextControlRenderer extends JsonFormsControl {
   override getEventValue = (event: any) => event.target.value || undefined;
 
   getType(): string {

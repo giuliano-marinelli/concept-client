@@ -67,7 +67,7 @@ export class LanguageComponent implements OnInit {
             this.language = data.metaModels.set[0] ?? null;
             if (this.language) {
               this.titleService.setTitle(this.language.tag + '@' + this.language.version + ' · ' + this.language.name);
-              if (this.language && this.language.metaElements) this.editElement(this.language.metaElements[1]);
+              if (this.language && this.language.metaElements) this.editElement(this.language.metaElements[2]);
             } else {
               this.router.navigate(['not-found']);
             }

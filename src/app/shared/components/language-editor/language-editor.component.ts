@@ -2,12 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { GModelElementSchema } from '@eclipse-glsp/protocol';
-import { Layout } from '@jsonforms/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { MetaElement } from '../../entities/meta-element.entity';
 import { AModelConfig, GModelConfig, GModelContext, Global } from '../../global/global';
-import { read } from 'fs';
 import _ from 'lodash';
 
 import { AModelElementSchema, AModelRootSchema } from '../../../../dynamic-glsp/protocol/amodel';
@@ -61,14 +59,113 @@ export class LanguageEditorComponent implements OnInit {
         schema: {
           properties: {
             type: { type: 'string', readOnly: true },
-            text: { type: 'string' }
+            text: { type: 'string' },
+            test: {
+              type: 'object',
+              properties: {
+                text: { type: 'string' },
+                textarea: { type: 'string' },
+                number: { type: 'number' },
+                range: { type: 'number', minimum: 1, maximum: 5, default: 3, multipleOf: 1 },
+                checkbox: { type: 'boolean' },
+                switch: { type: 'boolean' },
+                select: { type: 'string', enum: ['option 1', 'option 2'] },
+                selectOneOf: {
+                  type: 'number',
+                  oneOf: [
+                    { const: 1, title: 'Algo 1' },
+                    { const: 2, title: 'Algo 2' }
+                  ]
+                },
+                radio: { type: 'string', enum: ['option 1', 'option 2'] },
+                radioOneOf: {
+                  type: 'number',
+                  oneOf: [
+                    { const: 1, title: 'Algo 1' },
+                    { const: 2, title: 'Algo 2' }
+                  ]
+                }
+              }
+            }
           }
         } as any,
         uiSchema: {
           type: 'VerticalLayout',
           elements: [
             { type: 'Control', scope: '#/properties/type' },
-            { type: 'Control', scope: '#/properties/text' }
+            { type: 'Control', scope: '#/properties/text' },
+            {
+              type: 'Group',
+              label: 'Test',
+              elements: [
+                { type: 'Control', scope: '#/properties/test/properties/text' },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/textarea',
+                  options: { multi: true }
+                },
+                { type: 'Control', scope: '#/properties/test/properties/number' },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/range',
+                  options: { slider: true }
+                },
+                { type: 'Control', scope: '#/properties/test/properties/checkbox' },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/switch',
+                  options: { toggle: true }
+                },
+                { type: 'Control', scope: '#/properties/test/properties/select' },
+                { type: 'Control', scope: '#/properties/test/properties/selectOneOf' },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/radio',
+                  options: { format: 'radio' }
+                },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/radioOneOf',
+                  options: { format: 'radio' }
+                }
+              ]
+            },
+            {
+              type: 'Group',
+              label: 'Test Disabled',
+              elements: [
+                { type: 'Control', scope: '#/properties/test/properties/text', options: { readonly: true } },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/textarea',
+                  options: { multi: true, readonly: true }
+                },
+                { type: 'Control', scope: '#/properties/test/properties/number', options: { readonly: true } },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/range',
+                  options: { slider: true, readonly: true }
+                },
+                { type: 'Control', scope: '#/properties/test/properties/checkbox', options: { readonly: true } },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/switch',
+                  options: { toggle: true, readonly: true }
+                },
+                { type: 'Control', scope: '#/properties/test/properties/select', options: { readonly: true } },
+                { type: 'Control', scope: '#/properties/test/properties/selectOneOf', options: { readonly: true } },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/radio',
+                  options: { format: 'radio', readonly: true }
+                },
+                {
+                  type: 'Control',
+                  scope: '#/properties/test/properties/radioOneOf',
+                  options: { format: 'radio', readonly: true }
+                }
+              ]
+            }
           ]
         } as any
       },
@@ -97,33 +194,12 @@ export class LanguageEditorComponent implements OnInit {
         schema: {
           properties: {
             type: { type: 'string', readOnly: true },
-            condition: {
-              type: 'object',
-              properties: {
-                eq: {
-                  type: 'object',
-                  properties: {
-                    left: { type: 'string' },
-                    right: { type: 'string' }
-                  }
-                }
-              }
-            }
+            condition: { type: 'string' }
           }
         } as any,
         uiSchema: {
           type: 'VerticalLayout',
-          elements: [
-            { type: 'Control', scope: '#/properties/type' },
-            {
-              type: 'Group',
-              label: 'Condition',
-              elements: [
-                { type: 'Control', scope: '#/properties/condition/properties/eq/properties/left' },
-                { type: 'Control', scope: '#/properties/condition/properties/eq/properties/right' }
-              ]
-            }
-          ]
+          elements: [{ type: 'Control', scope: '#/properties/type' }]
         } as any
       },
       iteration: {
