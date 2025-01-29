@@ -1,38 +1,6 @@
 import { FormControl } from '@angular/forms';
 
-import { IconName } from '@fortawesome/angular-fontawesome';
-import { JsonSchema, UISchemaElement } from '@jsonforms/core';
-
 import _ from 'lodash';
-
-export interface GModelElementConfig {
-  icon?: IconName;
-  schema?: JsonSchema;
-  uiSchema?: UISchemaElement;
-}
-
-export interface GModelNodeConfig extends GModelElementConfig {
-  children?: boolean;
-}
-
-export interface GModelStructureConfig extends GModelElementConfig {
-  fields?: string[];
-}
-
-export interface GModelConfig {
-  nodeIcon?: IconName;
-  nodes?: {
-    [key: string]: GModelNodeConfig;
-  };
-  structures?: {
-    [key: string]: GModelStructureConfig;
-  };
-}
-
-export interface AModelConfig {
-  schema?: JsonSchema;
-  uiSchema?: UISchemaElement;
-}
 
 export class Global {
   static createFormData(object: any): FormData {

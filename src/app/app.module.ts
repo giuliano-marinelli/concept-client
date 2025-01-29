@@ -56,7 +56,7 @@ import { InvalidFeedbackComponent } from './shared/components/invalid-feedback/i
 import { VerifiedMarkComponent } from './shared/components/verified-mark/verified-mark.component';
 import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
 import { LanguageEditorComponent } from './shared/components/language-editor/language-editor.component';
-import { GModelTreeComponent } from './shared/components/gmodel-tree/gmodel-tree.component';
+import { JsonModelTreeComponent } from './shared/components/gmodel-tree/json-model-tree.component';
 import { JsonFormsRendererComponent } from './shared/components/json-forms-renderer/json-forms-renderer.component';
 //components
 import { AppComponent } from './app.component';
@@ -94,7 +94,7 @@ import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/modul
     VerifiedMarkComponent,
     ModelEditorComponent,
     LanguageEditorComponent,
-    GModelTreeComponent,
+    JsonModelTreeComponent,
     JsonFormsRendererComponent,
     //components
     AppComponent,

@@ -1,26 +1,45 @@
+import { IconName } from '@fortawesome/angular-fontawesome';
+import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+
 import _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export class JsonModel<ModelType = any, ModelConfig = any> {
-  private jsonModel: ModelType;
-  private jsonModelSubject: BehaviorSubject<ModelType>;
+export interface JsonModelElementConfig {
+  icon?: IconName;
+  descriptor?: string;
+  children?: string;
+  fields?: string[];
+  schema?: JsonSchema;
+  uiSchema?: UISchemaElement;
+}
 
-  private jsonModelConfig: ModelConfig;
-  private jsonModelConfigSubject: BehaviorSubject<ModelConfig>;
+export interface JsonModelConfig {
+  defaultIcon?: IconName;
+  nodes?: {
+    [key: string]: JsonModelElementConfig;
+  };
+}
+
+export class JsonModel<ModelType = any> {
+  private model: ModelType;
+  private modelSubject: BehaviorSubject<ModelType>;
+
+  private config: JsonModelConfig;
+  private configSubject: BehaviorSubject<JsonModelConfig>;
 
   private selectedNodePath: string;
   private selectedNodePathSubject: BehaviorSubject<string>;
   private selectedNodeSubject: BehaviorSubject<any>;
   private selectedNodeConfigSubject: BehaviorSubject<any>;
 
-  constructor(jsonModel: ModelType, jsonModelConfig: ModelConfig) {
+  constructor(model: ModelType, config?: JsonModelConfig) {
     // initialize the model and its observable
-    this.jsonModel = jsonModel;
-    this.jsonModelSubject = new BehaviorSubject<ModelType>(this.jsonModel);
+    this.model = model;
+    this.modelSubject = new BehaviorSubject<ModelType>(this.model);
 
     // initialize the model config and its observable
-    this.jsonModelConfig = jsonModelConfig;
-    this.jsonModelConfigSubject = new BehaviorSubject<ModelConfig>(this.jsonModelConfig);
+    this.config = config || { defaultIcon: 'circle' };
+    this.configSubject = new BehaviorSubject<JsonModelConfig>(this.config);
 
     // initialize the selected node path and its observable
     this.selectedNodePath = '';
@@ -32,10 +51,7 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
     this.selectedNodeSubject = new BehaviorSubject<any>(selectedNode);
 
     // initialize the selected node config observable
-    this.selectedNodeConfigSubject = new BehaviorSubject<any>(
-      (this.jsonModelConfig as any).nodes?.[selectedNode.type] ||
-        (this.jsonModelConfig as any).structures?.[selectedNode.type]
-    );
+    this.selectedNodeConfigSubject = new BehaviorSubject<any>(this.config.nodes?.[selectedNode.type]);
 
     // select the root node
     this.selectNode('');
@@ -45,14 +61,14 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
    * Returns the JSON model observable for subscribe.
    */
   getModel(): Observable<ModelType> {
-    return this.jsonModelSubject.asObservable();
+    return this.modelSubject.asObservable();
   }
 
   /**
    * Returns the JSON model config observable for subscribe.
    */
-  getConfig(): Observable<ModelConfig> {
-    return this.jsonModelConfigSubject.asObservable();
+  getConfig(): Observable<JsonModelConfig> {
+    return this.configSubject.asObservable();
   }
 
   /**
@@ -92,7 +108,7 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
    */
   getNode(path: string): any {
     const pathArray: string[] = path.split('/').splice(1);
-    let currentNode = this.jsonModel;
+    let currentNode = this.model;
     if (!currentNode) return;
     for (const indexOrField of pathArray) {
       if (!isNaN(indexOrField as any)) {
@@ -133,23 +149,61 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
     const checkNode = (node: any, path: string) => {
       if (node && node[property]) paths.push(path);
       // if the node is a structure node, check its fields
-      if (this.checkNodeIsStructure(node)) {
-        const fields = (this.jsonModelConfig as any).structures?.[node.type]?.fields;
+      if (this.checkNodeCanHaveFields(node)) {
+        const fields = this.config.nodes?.[node.type]?.fields;
         if (fields) fields.forEach((field: string) => checkNode(node[field], `${path}/${field}`));
       }
       // if the node has children, check its children
       if (node?.children) node.children.forEach((child: any, index: number) => checkNode(child, `${path}/${index}`));
     };
-    checkNode(startNode || this.jsonModel, '');
+    checkNode(startNode || this.model, '');
     return paths;
   }
 
   /**
-   * Set the JSON model.
+   * Set the entire model to the given model.
    */
-  set(model: ModelType): void {
-    this.jsonModel = model;
-    this.jsonModelSubject.next(this.jsonModel);
+  setModel(model: ModelType): void {
+    this.model = model;
+    this.modelSubject.next(this.model);
+  }
+
+  /**
+   * Set the config to the given config.
+   */
+  setConfig(config: JsonModelConfig): void {
+    this.config = config;
+    this.configSubject.next(this.config);
+  }
+
+  /**
+   * Sets the node at the given path with the given node.
+   *
+   * If the path is empty, it will set the node as the root node.
+   *
+   * If update is false, it will avoid update the selected node and emit the updated model.
+   */
+  setNode(path: string, node: any, update: boolean = true): void {
+    // if the path is empty, set the node as the root node
+    if (!path) {
+      this.model = node;
+      return;
+    }
+
+    const parent = this.getNodeParent(path);
+    const indexOrField = this.getNodeIndexOrField(path);
+    if (parent) {
+      if (!isNaN(indexOrField as any)) {
+        parent.children[Number(indexOrField)] = node;
+      } else {
+        parent[indexOrField] = node;
+      }
+    }
+
+    if (update) {
+      // emit the updated model
+      this.modelSubject.next(this.model);
+    }
   }
 
   /**
@@ -172,10 +226,7 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
     this.selectedNodeSubject.next(selectedNode);
 
     // emit the selected node config
-    this.selectedNodeConfigSubject.next(
-      (this.jsonModelConfig as any).nodes?.[selectedNode.type] ||
-        (this.jsonModelConfig as any).structures?.[selectedNode.type]
-    );
+    this.selectedNodeConfigSubject.next(this.config.nodes?.[selectedNode.type]);
   }
 
   /**
@@ -216,7 +267,7 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
       this.updateSelectedNode();
 
       // emit the updated model
-      this.jsonModelSubject.next(this.jsonModel);
+      this.modelSubject.next(this.model);
     }
   }
 
@@ -241,7 +292,7 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
       this.updateSelectedNode();
 
       // emit the updated model
-      this.jsonModelSubject.next(this.jsonModel);
+      this.modelSubject.next(this.model);
     }
   }
 
@@ -283,37 +334,7 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
       this.updateSelectedNode();
 
       // emit the updated model
-      this.jsonModelSubject.next(this.jsonModel);
-    }
-  }
-
-  /**
-   * Sets the node at the given path with the given node.
-   *
-   * If the path is empty, it will set the node as the root node.
-   *
-   * If update is false, it will avoid update the selected node and emit the updated model.
-   */
-  setNode(path: string, node: any, update: boolean = true): void {
-    // if the path is empty, set the node as the root node
-    if (!path) {
-      this.jsonModel = node;
-      return;
-    }
-
-    const parent = this.getNodeParent(path);
-    const indexOrField = this.getNodeIndexOrField(path);
-    if (parent) {
-      if (!isNaN(indexOrField as any)) {
-        parent.children[Number(indexOrField)] = node;
-      } else {
-        parent[indexOrField] = node;
-      }
-    }
-
-    if (update) {
-      // emit the updated model
-      this.jsonModelSubject.next(this.jsonModel);
+      this.modelSubject.next(this.model);
     }
   }
 
@@ -342,15 +363,13 @@ export class JsonModel<ModelType = any, ModelConfig = any> {
    * If it's not explicitly set to false in the config, and it's not a structure node.
    */
   checkNodeCanHaveChildren(node: any): boolean {
-    return (
-      node && (this.jsonModelConfig as any).nodes?.[node.type]?.children !== false && !this.checkNodeIsStructure(node)
-    );
+    return node && this.config.nodes?.[node.type]?.children && !this.checkNodeCanHaveFields(node);
   }
 
   /**
    * Check if a node is a structure node by checking if it's defined in the structures config.
    */
-  checkNodeIsStructure(node: any): boolean {
-    return (this.jsonModelConfig as any).structures?.[node?.type] !== undefined;
+  checkNodeCanHaveFields(node: any): boolean {
+    return node && this.config.nodes?.[node.type]?.fields !== undefined;
   }
 }

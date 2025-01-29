@@ -2,27 +2,26 @@ import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@
 
 import { GModelElementSchema } from '@eclipse-glsp/protocol';
 
-import { GModelConfig } from '../../global/global';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
 
-import { JsonModel } from '../../global/json-model';
+import { JsonModel, JsonModelConfig } from '../../global/json-model';
 
 @Component({
-  selector: 'gmodel-tree',
-  templateUrl: './gmodel-tree.component.html',
-  styleUrl: './gmodel-tree.component.scss'
+  selector: 'json-model-tree',
+  templateUrl: './json-model-tree.component.html',
+  styleUrl: './json-model-tree.component.scss'
 })
-export class GModelTreeComponent implements OnInit {
+export class JsonModelTreeComponent implements OnInit {
   @ViewChildren('placeholder') placeholders?: QueryList<ElementRef>;
   @ViewChildren('nodeContainer') nodeContainers?: QueryList<ElementRef>;
 
-  @Input() gModel!: JsonModel<GModelElementSchema, GModelConfig>;
+  @Input() jsonModel!: JsonModel<GModelElementSchema>;
 
   model?: GModelElementSchema;
   modelSubscription?: Subscription;
 
-  config?: GModelConfig;
+  config?: JsonModelConfig;
   configSubscription?: Subscription;
 
   dragNode?: any;
@@ -30,23 +29,23 @@ export class GModelTreeComponent implements OnInit {
 
   ngOnInit(): void {
     // subscribe to the gModel changes
-    this.modelSubscription = this.gModel
+    this.modelSubscription = this.jsonModel
       .getModel()
       .subscribe((newGModel: GModelElementSchema) => (this.model = newGModel));
 
     // subscribe to the gModel config changes
-    this.configSubscription = this.gModel
+    this.configSubscription = this.jsonModel
       .getConfig()
-      .subscribe((newGModelConfig: GModelConfig) => (this.config = newGModelConfig));
+      .subscribe((newGModelConfig: JsonModelConfig) => (this.config = newGModelConfig));
   }
 
   onNodeClick(path: string, node: any): void {
-    if (node && !this.dragNodePath) this.gModel.selectNode(path);
+    if (node && !this.dragNodePath) this.jsonModel.selectNode(path);
   }
 
   onNodeDragStart(event: DragEvent, nodePath: string): void {
     // save a copy of the node being dragged and its path
-    this.dragNode = _.cloneDeep(this.gModel.getNode(nodePath));
+    this.dragNode = _.cloneDeep(this.jsonModel.getNode(nodePath));
     this.dragNodePath = nodePath;
 
     // set the drag effect to move
@@ -66,7 +65,7 @@ export class GModelTreeComponent implements OnInit {
 
   onNodeDragOver(event: DragEvent, nodePath: string, node: any): void {
     // prevent default to allow drop event
-    if (this.gModel.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
+    if (this.jsonModel.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
       event.preventDefault();
     }
   }
@@ -74,7 +73,7 @@ export class GModelTreeComponent implements OnInit {
   onNodeDragEnter(event: DragEvent, nodePath: string, node: any): void {
     event.preventDefault();
     // add dropzone class to indicate that the node can be dropped there
-    if (this.gModel.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
+    if (this.jsonModel.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
       const dropZone = event.target as HTMLElement;
       dropZone.classList.add('dropzone');
 
@@ -108,13 +107,13 @@ export class GModelTreeComponent implements OnInit {
 
   onNodeDrop(event: DragEvent, nodePath: string, node: any, dropOnParent: boolean = true): void {
     event.preventDefault();
-    if (this.dragNodePath && this.gModel.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
+    if (this.dragNodePath && this.jsonModel.checkNodeCanMoveToPath(this.dragNodePath, nodePath, node)) {
       // remove dropzone class when the node leaves the drop zone
       const dropZone = event.target as HTMLElement;
       dropZone.classList.remove('dropzone');
 
       // move the dragged node to the new path
-      this.gModel.moveNode(this.dragNodePath, nodePath, dropOnParent);
+      this.jsonModel.moveNode(this.dragNodePath, nodePath, dropOnParent);
     }
 
     // reset drag state

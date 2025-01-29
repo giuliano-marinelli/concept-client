@@ -84,7 +84,7 @@ export class LanguageComponent implements OnInit {
   }
 
   editElement(element: MetaElement): void {
-    const modalRef = this.modalService.open(LanguageEditorComponent, { size: 'xl', backdrop: 'static' });
+    const modalRef = this.modalService.open(LanguageEditorComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.element = element;
     modalRef.componentInstance.type = element.type;
   }
