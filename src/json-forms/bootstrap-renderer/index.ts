@@ -11,8 +11,6 @@ import 'hammerjs';
 import {
   CheckboxControlRenderer,
   CheckboxControlTester,
-  DateControlRenderer,
-  DateControlRendererTester,
   NumberControlRenderer,
   NumberControlRendererTester,
   ObjectControlRenderer,
@@ -53,9 +51,8 @@ export const bootstrapRenderers: {
   { tester: RangeControlRendererTester, renderer: RangeControlRenderer },
   { tester: CheckboxControlTester, renderer: CheckboxControlRenderer },
   { tester: SwitchControlRendererTester, renderer: SwitchControlRenderer },
-  { tester: RadioControlTester, renderer: RadioControlRenderer },
   { tester: SelectControlTester, renderer: SelectControlRenderer },
-  { tester: DateControlRendererTester, renderer: DateControlRenderer },
+  { tester: RadioControlTester, renderer: RadioControlRenderer },
   { tester: ObjectControlRendererTester, renderer: ObjectControlRenderer },
   // layouts
   { tester: VerticalLayoutTester, renderer: VerticalLayoutRenderer },

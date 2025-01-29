@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 
-import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
+import { JsonFormsControl } from '@jsonforms/angular';
 import { RankedTester, StatePropsOfControl, isEnumControl, isOneOfEnumControl, or, rankWith } from '@jsonforms/core';
 
 @Component({

@@ -23,8 +23,7 @@
         <div class="col-12 col-lg-4 col-xl-3 ps-lg-0">
           <h6 class="text-center py-2">Graphics Tree</h6>
           <div class="overflow-auto" style="height: 500px;">
-            <gmodel-tree [(gModel)]="gModelContext.gModel" [gModelConfig]="gModelContext.config!"
-              (selectedChange)="onSelectedGModelNodeChange($event)"></gmodel-tree>
+            <gmodel-tree [gModel]="gModel"></gmodel-tree>
           </div>
         </div>
         <div class="col col-xl-5">
@@ -33,8 +32,9 @@
               <div class="pb-2 px-2 px-xl-0">
                 <h6 class="text-center py-2">Node Inspector</h6>
                 <div class="overflow-auto" style="height: 300px;">
-                  <gmodel-editor [(gModel)]="gModelSelectedNode"
-                    [gModelConfig]="gModelContext.config?.nodes?.[gModelSelectedNode.type] || gModelContext.config?.structures?.[gModelSelectedNode.type]"></gmodel-editor>
+                  <json-forms-renderer #renderer *ngIf="gModelSelectedNode" [data]="gModelSelectedNode"
+                    [schema]="gModelSelectedNodeConfig.schema" [uiSchema]="gModelSelectedNodeConfig.uiSchema"
+                    (dataChange)="onGModelNodeChange($event)"></json-forms-renderer>
                 </div>
               </div>
             </div>
@@ -49,8 +49,7 @@
           <div class="bg-body-tertiary rounded-2 pb-2 px-2">
             <h6 class="text-center py-2">Abstract Model</h6>
             <div class="overflow-auto" style="height: 500px;">
-              <json-forms-renderer [data]="aModel" [schema]="aModelConfig.schema"
-                [uiSchema]="aModelConfig.uiSchema"></json-forms-renderer>
+
             </div>
           </div>
         </div>

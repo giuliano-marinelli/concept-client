@@ -25,7 +25,6 @@ import { JsonFormsModule } from '@jsonforms/angular';
 
 import {
   CheckboxControlRenderer,
-  DateControlRenderer,
   NumberControlRenderer,
   ObjectControlRenderer,
   RadioControlRenderer,
@@ -76,9 +75,8 @@ import {
     RangeControlRenderer,
     CheckboxControlRenderer,
     SwitchControlRenderer,
-    RadioControlRenderer,
     SelectControlRenderer,
-    DateControlRenderer,
+    RadioControlRenderer,
     ObjectControlRenderer,
     VerticalLayoutRenderer,
     HorizontalLayoutRenderer,

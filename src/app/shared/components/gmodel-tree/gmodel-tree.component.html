@@ -1,14 +1,12 @@
 <div class="tree-root text-nowrap">
-  <ng-container [ngTemplateOutlet]="treeNode"
-    [ngTemplateOutletContext]="{ node: gModelContext.gModel, expanded: true, path: '' }">
+  <ng-container [ngTemplateOutlet]="treeNode" [ngTemplateOutletContext]="{ node: model, expanded: true, path: '' }">
   </ng-container>
 </div>
 
 <ng-template #treeNode let-node="node" let-expanded="expanded" let-path="path">
   <ng-container *ngVar="{ expanded: expanded } as settings">
     <div class="node-placeholder-container" (dragleave)="onNodeDragLeave($event)">
-      <li #placeholder class="node-placeholder"
-        *ngIf="!gModelUtils.checkNodeIsStructure(gModelContext, gModelUtils.getNodeParentByPath(gModelContext, path))"
+      <li #placeholder class="node-placeholder" *ngIf="!gModel.checkNodeIsStructure(gModel.getNodeParent(path))"
         [attr.data-path]="path" (dragover)="onNodeDragOver($event, path, node)" (drop)="onNodeDrop($event, path, node)">
       </li>
       <ng-container [ngTemplateOutlet]="treeButton"
@@ -16,11 +14,11 @@
       </ng-container>
     </div>
     <ul class="node-children" [class.expanded]="settings.expanded">
-      <ng-container *ngIf="gModelConfig.structures?.[node.type]">
+      <ng-container *ngIf="config?.structures?.[node.type]">
         <li #nodeContainer class="node-container"
-          *ngFor="let field of gModelConfig.structures?.[node.type]?.fields; let i = index"
+          *ngFor="let field of config?.structures?.[node.type]?.fields; let i = index"
           [attr.data-path]="path + '/' + field" [class.mt-1]="i == 0"
-          [class.pb-1]="!node[field] || (!node[field].children?.length && !gModelUtils.checkNodeIsStructure(gModelContext, node[field]))">
+          [class.pb-1]="!node[field] || (!node[field].children?.length && !gModel.checkNodeIsStructure(node[field]))">
           <label class="ps-4 text-muted">{{ field }}:</label><br>
           <ng-container *ngIf="node[field]" [ngTemplateOutlet]="treeNode"
             [ngTemplateOutletContext]="{ node: node[field], expanded: expanded, path: path + '/' + field }">
@@ -30,10 +28,10 @@
           </ng-container>
         </li>
       </ng-container>
-      <ng-container *ngIf="!gModelConfig.structures?.[node.type]">
+      <ng-container *ngIf="!config?.structures?.[node.type]">
         <li #nodeContainer class="pt-1 node-container" *ngFor="let child of node.children; let i = index"
           [attr.data-path]="path + '/' + i" [class.mt-1]="i == 0"
-          [class.pb-1]="!child.children?.length && !gModelUtils.checkNodeIsStructure(gModelContext, child)">
+          [class.pb-1]="!child.children?.length && !gModel.checkNodeIsStructure(child)">
           <ng-container [ngTemplateOutlet]="treeNode"
             [ngTemplateOutletContext]="{ node: child, expanded: expanded, path: path + '/' + i }">
           </ng-container>
@@ -47,7 +45,7 @@
   <ng-container>
     <button class="btn btn-sm text-muted no-outline" (click)="settings.expanded = !settings.expanded">
       <fa-icon
-        [icon]="gModelUtils.checkNodeCanHaveChildren(gModelContext, node) || gModelUtils.checkNodeIsStructure(gModelContext, node) ? (settings.expanded ? 'caret-down' : 'caret-right') : 'minus'">
+        [icon]="gModel.checkNodeCanHaveChildren(node) || gModel.checkNodeIsStructure(node) ? (settings.expanded ? 'caret-down' : 'caret-right') : 'minus'">
       </fa-icon>
     </button>
     <button class="btn btn-sm btn-{{ node?._selected ? '' : 'outline-' }}secondary text-{{ node ? 'body' : 'muted' }}"
@@ -57,15 +55,14 @@
       (drop)="onNodeDrop($event, path, node, false)" (click)="onNodeClick(path, node)">
       <ng-container *ngIf="node">
         <fa-icon
-          [icon]="gModelConfig.structures?.[node.type]?.icon || gModelConfig.nodes?.[node.type]?.icon || gModelConfig.nodeIcon || 'circle'"></fa-icon>
+          [icon]="config?.structures?.[node.type]?.icon || config?.nodes?.[node.type]?.icon || config?.nodeIcon || 'circle'"></fa-icon>
         {{ node.type }}
       </ng-container>
       <ng-container *ngIf="!node">
         empty
       </ng-container>
     </button>
-    <button class="btn btn-sm p-1 ms-1 text-body no-outline"
-      *ngIf="gModelUtils.checkNodeCanHaveChildren(gModelContext, node)">
+    <button class="btn btn-sm p-1 ms-1 text-body no-outline" *ngIf="gModel.checkNodeCanHaveChildren(node)">
       <fa-icon [icon]="'plus'"></fa-icon>
     </button>
   </ng-container>

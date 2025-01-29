@@ -12,7 +12,7 @@ import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
         type="text"
         [id]="id"
         [formControl]="form"
-        [type]="getType()"
+        [type]="getTypeByFormat()"
         [class.is-invalid]="error"
         (input)="onChange($event)"
       />
@@ -24,24 +24,29 @@ import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TextControlRenderer extends JsonFormsControl {
-  override getEventValue = (event: any) => event.target.value || undefined;
+  basicFormats: string[] = ['text', 'email', 'date', 'time', 'url'];
+  extraFormats: { [format: string]: string } = {
+    'date-time': 'datetime-local',
+    duration: 'text',
+    uri: 'url',
+    'uri-reference': 'url',
+    'uri-template': 'url',
+    hostname: 'text',
+    ipv4: 'text',
+    ipv6: 'text',
+    uuid: 'text',
+    regex: 'text'
+  };
 
-  getType(): string {
-    if (this.uischema.options && this.uischema.options['format']) {
-      return this.uischema.options['format'];
-    }
-
-    if (this.scopedSchema && this.scopedSchema.format) {
-      switch (this.scopedSchema.format) {
-        case 'email':
-          return 'email';
-        case 'tel':
-          return 'tel';
-        default:
-          return 'text';
-      }
-    }
-    return 'text';
+  getTypeByFormat(): string {
+    const format = this.uischema?.options?.['format']
+      ? this.uischema.options['format']
+      : this.scopedSchema?.format ?? 'text';
+    return this.basicFormats.includes(format) ? format : this.extraFormats[format] ?? 'text';
   }
+
+  override getEventValue = (event: any) => {
+    return event.target.value;
+  };
 }
 export const TextControlRendererTester: RankedTester = rankWith(1, isStringControl);
