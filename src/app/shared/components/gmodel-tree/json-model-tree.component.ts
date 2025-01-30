@@ -43,6 +43,10 @@ export class JsonModelTreeComponent implements OnInit {
     this.jsonModel.addNode(path, type, false);
   }
 
+  onNodeRemove(path: string): void {
+    this.jsonModel.removeNode(path);
+  }
+
   onNodeClick(path: string, node: any): void {
     if (node && !this.dragNodePath) this.jsonModel.selectNode(path);
   }

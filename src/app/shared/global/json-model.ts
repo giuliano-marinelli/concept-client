@@ -408,4 +408,8 @@ export class JsonModel<ModelType = any> {
   checkNodeCanHaveFields(node: any): boolean {
     return node && this.config.nodes?.[node.type]?.fields !== undefined;
   }
+
+  checkNodeIsRoot(node: any): boolean {
+    return node === this.model;
+  }
 }

@@ -354,6 +354,10 @@ html[data-bs-theme='dark'] .dropdown-menu-arrow:after {
   position: absolute;
 }
 
+.dropdown-toggle-no-arrow.dropdown-toggle::after {
+  display: none;
+}
+
 // scrollbar styling
 ::-webkit-scrollbar {
   width: 2px;
