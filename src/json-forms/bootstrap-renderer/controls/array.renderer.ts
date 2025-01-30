@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { JsonFormsAbstractControl, JsonFormsAngularService } from '@jsonforms/angular';
 import {
@@ -18,7 +18,6 @@ import {
   getArrayTranslations,
   isObjectArrayControl,
   isObjectArrayWithNesting,
-  isPrimitiveArrayControl,
   mapDispatchToArrayControlProps,
   mapStateToArrayLayoutProps,
   or,
@@ -30,6 +29,38 @@ import {
 @Component({
   selector: 'app-array-layout-renderer',
   template: `
+    <div class="card mb-1" [style.display]="hidden ? 'none' : ''" [class.bg-body-secondary]="!this.isEnabled()">
+      <div class="card-body px-2 pb-1 pt-1" [class.pt-3]="!label">
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="card-title ps-1 text-muted small" *ngIf="label">{{ label }}</label>
+          <button class="btn btn-sm p-0 text-body no-outline" (click)="this.isEnabled() && add()">
+            <fa-icon [icon]="'plus'"></fa-icon>
+          </button>
+        </div>
+        <div
+          class="card mb-1"
+          [class.bg-body-secondary]="!this.isEnabled()"
+          *ngFor="let item of [].constructor(data); let idx = index; trackBy: trackByFn; last as last; first as first"
+        >
+          <div class="card-body px-2 pb-1 pt-1" [class.pt-3]="!label">
+            <div class="d-flex align-items-start">
+              <div class="flex-grow-1 small">
+                <jsonforms-outlet [renderProps]="getProps(idx)"></jsonforms-outlet>
+              </div>
+              <button class="btn btn-sm p-0 ps-2 text-body no-outline" (click)="this.isEnabled() && remove(idx)">
+                <fa-icon [icon]="'xmark'"></fa-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="noData">
+          <p class="text-muted small text-center">
+            This list is empty. Use <fa-icon [icon]="'plus'"></fa-icon> button for add items.
+          </p>
+        </div>
+      </div>
+    </div>
+
     <!-- <div [ngStyle]="{ display: hidden ? 'none' : '' }" class="array-layout">
       <div class="array-layout-toolbar">
         <h2 class="mat-h2 array-layout-title">{{ label }}</h2>
@@ -101,37 +132,10 @@ import {
       </div>
     </div> -->
   `,
-  styles: [
-    `
-      .array-layout {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-      .array-layout > * {
-        flex: 1 1 auto;
-      }
-      .array-layout-toolbar {
-        display: flex;
-        align-items: center;
-      }
-      .array-layout-title {
-        margin: 0;
-      }
-      .array-layout-toolbar > span {
-        flex: 1 1 auto;
-      }
-      .array-item {
-        padding: 16px;
-      }
-      ::ng-deep .error-message-tooltip {
-        white-space: pre-line;
-      }
-    `
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styles: [``],
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class ArrayLayoutRenderer extends JsonFormsAbstractControl<StatePropsOfArrayLayout> implements OnInit {
+export class ArrayControlRenderer extends JsonFormsAbstractControl<StatePropsOfArrayLayout> implements OnInit {
   noData!: boolean;
   translations: ArrayTranslations = {};
   addItem!: (path: string, value: any) => () => void;
@@ -165,8 +169,37 @@ export class ArrayLayoutRenderer extends JsonFormsAbstractControl<StatePropsOfAr
   up(index: number): void {
     this.moveItemUp(this.propsPath, index)();
   }
+
   down(index: number): void {
     this.moveItemDown(this.propsPath, index)();
+  }
+
+  getProps(index: number): OwnPropsOfRenderer {
+    const uischema = findUISchema(
+      this.uischemas,
+      this.scopedSchema,
+      this.uischema.scope,
+      this.propsPath,
+      undefined,
+      this.uischema,
+      this.rootSchema
+    );
+
+    if (this.isEnabled()) {
+      unsetReadonly(uischema);
+    } else {
+      setReadonly(uischema);
+    }
+
+    return {
+      schema: this.scopedSchema,
+      path: Paths.compose(this.propsPath, `${index}`),
+      uischema
+    };
+  }
+
+  trackByFn(index: number) {
+    return index;
   }
 
   override ngOnInit() {
@@ -185,35 +218,6 @@ export class ArrayLayoutRenderer extends JsonFormsAbstractControl<StatePropsOfAr
     this.uischemas = props.uischemas!;
     this.translations = props.translations;
   }
-
-  getProps(index: number): OwnPropsOfRenderer {
-    const uischema = findUISchema(
-      this.uischemas,
-      this.scopedSchema,
-      this.uischema.scope,
-      this.propsPath,
-      undefined,
-      this.uischema,
-      this.rootSchema
-    );
-    if (this.isEnabled()) {
-      unsetReadonly(uischema);
-    } else {
-      setReadonly(uischema);
-    }
-    return {
-      schema: this.scopedSchema,
-      path: Paths.compose(this.propsPath, `${index}`),
-      uischema
-    };
-  }
-
-  trackByFn(index: number) {
-    return index;
-  }
 }
 
-export const ArrayLayoutRendererTester: RankedTester = rankWith(
-  3,
-  or(isObjectArrayControl, isPrimitiveArrayControl, isObjectArrayWithNesting)
-);
+export const ArrayControlRendererTester: RankedTester = rankWith(2, or(isObjectArrayControl));

@@ -20,7 +20,7 @@ import { RankedTester, isMultiLineControl, rankWith } from '@jsonforms/core';
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class TextAreaControlRenderer extends JsonFormsControl {
   override getEventValue = (event: any) => event.target.value || undefined;

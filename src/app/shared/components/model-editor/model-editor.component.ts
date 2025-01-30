@@ -141,7 +141,7 @@ export class ModelEditorComponent implements AfterViewInit {
     const componentRef = this.viewContainerRef.createComponent(JsonFormsRendererComponent);
     componentRef.instance.data = elementModel;
     componentRef.instance.schema = elementAModel;
-    componentRef.instance.uiSchema = this.createJsonFormsUI(elementAModel);
+    // componentRef.instance.uiSchema = this.createJsonFormsUI(elementAModel);
     componentRef.instance.elementId = elementId;
 
     container.appendChild(componentRef.location.nativeElement);
@@ -156,43 +156,39 @@ export class ModelEditorComponent implements AfterViewInit {
   }
 
   createJsonFormsUI(elementAModel: AModelElementSchema): any {
-    const uiSchema: any = {};
-
-    if (elementAModel.type == 'string' || elementAModel.type == 'integer' || elementAModel.type == 'boolean') {
-      uiSchema.type = 'Control';
-    }
-
-    if (elementAModel.type == 'object') {
-      uiSchema.type = 'VerticalLayout';
-      uiSchema.elements = [];
-    }
-
-    if ((elementAModel as AModelObjectSchema).properties) {
-      // traverse the AModelRootSchema and create the corresponding UI schema
-      Object.keys((elementAModel as AModelObjectSchema).properties).forEach((propertyKey) => {
-        const property = (elementAModel as AModelObjectSchema).properties[propertyKey];
-        let arrayElements =
-          property.type == 'array' ? this.createJsonFormsUI((property as AModelArraySchema).items) : undefined;
-        if (arrayElements && arrayElements.elements) arrayElements = arrayElements.elements;
-        const uiElement = {
-          type: 'Control',
-          scope: `#/properties/${propertyKey}`,
-          label: property.label,
-          ...(property.type == 'array'
-            ? {
-                options: {
-                  detail: {
-                    type: 'VerticalLayout',
-                    elements: [...arrayElements]
-                  }
-                }
-              }
-            : {})
-        };
-        uiSchema.elements.push(uiElement);
-      });
-    }
-
-    return uiSchema;
+    // const uiSchema: any = {};
+    // if (elementAModel.type == 'string' || elementAModel.type == 'integer' || elementAModel.type == 'boolean') {
+    //   uiSchema.type = 'Control';
+    // }
+    // if (elementAModel.type == 'object') {
+    //   uiSchema.type = 'VerticalLayout';
+    //   uiSchema.elements = [];
+    // }
+    // if ((elementAModel as AModelObjectSchema).properties) {
+    //   // traverse the AModelRootSchema and create the corresponding UI schema
+    //   Object.keys((elementAModel as AModelObjectSchema).properties).forEach((propertyKey) => {
+    //     const property = (elementAModel as AModelObjectSchema).properties[propertyKey];
+    //     let arrayElements =
+    //       property.type == 'array' ? this.createJsonFormsUI((property as AModelArraySchema).items) : undefined;
+    //     if (arrayElements && arrayElements.elements) arrayElements = arrayElements.elements;
+    //     const uiElement = {
+    //       type: 'Control',
+    //       scope: `#/properties/${propertyKey}`,
+    //       label: property.label,
+    //       ...(property.type == 'array'
+    //         ? {
+    //             options: {
+    //               detail: {
+    //                 type: 'VerticalLayout',
+    //                 elements: [...arrayElements]
+    //               }
+    //             }
+    //           }
+    //         : {})
+    //     };
+    //     uiSchema.elements.push(uiElement);
+    //   });
+    // }
+    // return uiSchema;
   }
 }

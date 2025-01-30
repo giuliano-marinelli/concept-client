@@ -21,7 +21,7 @@ import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class TextControlRenderer extends JsonFormsControl {
   basicFormats: string[] = ['text', 'email', 'date', 'time', 'url'];

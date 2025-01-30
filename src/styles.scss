@@ -148,6 +148,7 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 
 /* For no outline when click button */
 .no-outline {
+  outline-style: none !important;
   outline: none !important;
   box-shadow: none !important;
 }
@@ -361,6 +362,7 @@ html[data-bs-theme='dark'] .dropdown-menu-arrow:after {
 // scrollbar styling
 ::-webkit-scrollbar {
   width: 2px;
+  height: 2px;
 }
 
 ::-webkit-scrollbar-track {

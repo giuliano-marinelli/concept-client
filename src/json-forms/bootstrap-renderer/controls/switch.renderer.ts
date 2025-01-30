@@ -25,7 +25,7 @@ import { CheckboxControlRenderer } from './checkbox.renderer';
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class SwitchControlRenderer extends CheckboxControlRenderer {}
 

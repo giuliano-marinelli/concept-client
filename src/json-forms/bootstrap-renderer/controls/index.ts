@@ -7,3 +7,4 @@ export * from './switch.renderer';
 export * from './radio.renderer';
 export * from './select.renderer';
 export * from './object.renderer';
+export * from './array.renderer';

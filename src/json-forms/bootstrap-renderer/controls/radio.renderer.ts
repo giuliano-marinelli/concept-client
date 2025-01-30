@@ -30,7 +30,7 @@ import { SelectControlRenderer } from './select.renderer';
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class RadioControlRenderer extends SelectControlRenderer {
   getOptionId = (option: any) => this.id + '-' + String(option.const).replace(/\s/g, '-');

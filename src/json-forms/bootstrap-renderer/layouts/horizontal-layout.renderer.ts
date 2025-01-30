@@ -8,26 +8,13 @@ import { LayoutRenderer } from './layout.renderer';
 @Component({
   selector: 'HorizontalLayoutRenderer',
   template: `
-    <div class="horizontal-layout" [style.display]="hidden ? 'none' : ''">
+    <div class="d-flex flex-row gap-2 pt-1" [style.display]="hidden ? 'none' : ''">
       <div *ngFor="let props of uischema | layoutChildrenRenderProps: schema : path; trackBy: trackElement">
         <jsonforms-outlet [renderProps]="props"></jsonforms-outlet>
       </div>
     </div>
   `,
-  styles: [
-    `
-      .horizontal-layout {
-        display: flex;
-        gap: 16px;
-        flex-flow: row wrap;
-        align-items: flex-start;
-        place-content: flex-start center;
-      }
-      .horizontal-layout > div {
-        flex: 1 1 auto;
-      }
-    `
-  ],
+  styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HorizontalLayoutRenderer extends LayoutRenderer<HorizontalLayout> {

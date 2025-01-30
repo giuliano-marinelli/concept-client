@@ -1,29 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { FaConfig, FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 import { JsonFormsModule } from '@jsonforms/angular';
 
 import {
+  ArrayControlRenderer,
   CheckboxControlRenderer,
   NumberControlRenderer,
   ObjectControlRenderer,
@@ -44,30 +30,7 @@ import {
 } from './layouts';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    JsonFormsModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatTabsModule,
-    MatSidenavModule,
-    MatListModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatBadgeModule
-  ],
+  imports: [CommonModule, JsonFormsModule, ReactiveFormsModule, FontAwesomeModule],
   declarations: [
     TextControlRenderer,
     TextAreaControlRenderer,
@@ -78,6 +41,7 @@ import {
     SelectControlRenderer,
     RadioControlRenderer,
     ObjectControlRenderer,
+    ArrayControlRenderer,
     VerticalLayoutRenderer,
     HorizontalLayoutRenderer,
     GroupLayoutRenderer,
@@ -85,27 +49,14 @@ import {
     LabelRenderer,
     LayoutChildrenRenderPropsPipe
   ],
-  exports: [
-    CommonModule,
-    JsonFormsModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
-    MatTabsModule,
-    MatSidenavModule,
-    MatListModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatAutocompleteModule
-  ],
+  exports: [CommonModule, JsonFormsModule, ReactiveFormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: []
 })
-export class JsonFormsBootstrapModule {}
+export class JsonFormsBootstrapModule {
+  constructor(fontawesomeLibrary: FaIconLibrary, fontawesomeConfig: FaConfig) {
+    fontawesomeLibrary.addIconPacks(far, fas, fab);
+    fontawesomeConfig.defaultPrefix = 'fas';
+    fontawesomeConfig.fixedWidth = true;
+  }
+}

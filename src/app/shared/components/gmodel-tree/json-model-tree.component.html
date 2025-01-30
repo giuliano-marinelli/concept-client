@@ -59,8 +59,9 @@
       (dragenter)="onNodeDragEnter($event, path, node)" (dragleave)="onNodeDragLeave($event)"
       (drop)="onNodeDrop($event, path, node, false)" (click)="onNodeClick(path, node)">
       <ng-container *ngIf="node">
-        <fa-icon [icon]="jsonModel.getNodeIcon(node)"></fa-icon>
-        {{ node.type }}<br>
+        <fa-icon [icon]="jsonModel.getNodeIcon(node)"></fa-icon> <span class="opacity-50"
+          *ngIf="jsonModel.getNodeKey(path)">
+          {{ jsonModel.getNodeKey(path) }}:</span> {{node.type }}<br>
         <span class="small opacity-50">
           {{ jsonModel.getNodeDescriptor(node) }}
         </span>
@@ -72,7 +73,7 @@
     <span class="ms-1">
       <div class="d-inline" ngbDropdown display="dynamic" placement="bottom-start" autoClose="true" container="body">
         <button class="btn btn-sm p-0 text-body no-outline dropdown-toggle-no-arrow"
-          *ngIf="jsonModel.checkNodeCanHaveChildren(node)" ngbDropdownToggle>
+          *ngIf="jsonModel.checkNodeCanHaveChildren(node) || !node" ngbDropdownToggle>
           <fa-icon [icon]="'plus'"></fa-icon>
         </button>
         <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
@@ -87,7 +88,7 @@
           </ng-container>
         </div>
       </div>
-      <button class="btn btn-sm p-0 text-body no-outline" *ngIf="!jsonModel.checkNodeIsRoot(node)"
+      <button class="btn btn-sm p-0 text-body no-outline" *ngIf="!jsonModel.checkNodeIsRoot(path)"
         [tp]="remove_node_confirm" [tpInteractive]="true" [tpData]="path" tpTrigger="click" tpPlacement="right">
         <fa-icon [icon]="'xmark'"></fa-icon>
       </button>

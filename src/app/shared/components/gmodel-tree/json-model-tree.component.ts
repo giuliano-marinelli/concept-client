@@ -16,9 +16,9 @@ export class JsonModelTreeComponent implements OnInit {
   @ViewChildren('placeholder') placeholders?: QueryList<ElementRef>;
   @ViewChildren('nodeContainer') nodeContainers?: QueryList<ElementRef>;
 
-  @Input() jsonModel!: JsonModel<GModelElementSchema>;
+  @Input() jsonModel!: JsonModel;
 
-  model?: GModelElementSchema;
+  model?: any;
   modelSubscription?: Subscription;
 
   config?: JsonModelConfig;
@@ -29,9 +29,7 @@ export class JsonModelTreeComponent implements OnInit {
 
   ngOnInit(): void {
     // subscribe to the gModel changes
-    this.modelSubscription = this.jsonModel
-      .getModel()
-      .subscribe((newGModel: GModelElementSchema) => (this.model = newGModel));
+    this.modelSubscription = this.jsonModel.getModel().subscribe((newModel: any) => (this.model = newModel));
 
     // subscribe to the gModel config changes
     this.configSubscription = this.jsonModel

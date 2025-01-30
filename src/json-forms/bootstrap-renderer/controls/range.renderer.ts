@@ -32,7 +32,7 @@ import { NumberControlRenderer } from './number.renderer';
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class RangeControlRenderer extends NumberControlRenderer {}
 

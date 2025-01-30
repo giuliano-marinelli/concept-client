@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
+import { JsonFormsControl } from '@jsonforms/angular';
 import { RankedTester, isBooleanControl, rankWith } from '@jsonforms/core';
 
 @Component({
@@ -23,7 +23,7 @@ import { RankedTester, isBooleanControl, rankWith } from '@jsonforms/core';
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class CheckboxControlRenderer extends JsonFormsControl {
   override getEventValue = (event: any) => event.target.checked;

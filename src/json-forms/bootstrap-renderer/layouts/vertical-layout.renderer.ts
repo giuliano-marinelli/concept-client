@@ -8,23 +8,13 @@ import { LayoutRenderer } from './layout.renderer';
 @Component({
   selector: 'VerticalLayoutRenderer',
   template: `
-    <div class="vertical-layout pt-1" [style.display]="hidden ? 'none' : ''">
+    <div class="d-flex flex-column pt-1" [style.display]="hidden ? 'none' : ''">
       <div *ngFor="let props of uischema | layoutChildrenRenderProps: schema : path; trackBy: trackElement">
         <jsonforms-outlet [renderProps]="props"></jsonforms-outlet>
       </div>
     </div>
   `,
-  styles: [
-    `
-      .vertical-layout {
-        display: flex;
-        flex-direction: column;
-      }
-      .vertical-layout > div {
-        flex: 1 1 auto;
-      }
-    `
-  ],
+  styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerticalLayoutRenderer extends LayoutRenderer<VerticalLayout> {

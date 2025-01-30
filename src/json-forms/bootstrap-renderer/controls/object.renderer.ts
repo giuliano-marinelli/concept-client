@@ -25,7 +25,7 @@ import startCase from 'lodash/startCase';
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class ObjectControlRenderer extends JsonFormsControlWithDetail {
   detailUiSchema!: UISchemaElement;

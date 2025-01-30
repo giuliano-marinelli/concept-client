@@ -8,6 +8,7 @@ export interface JsonModelElementConfig {
   icon?: IconName;
   descriptor?: string;
   children?: string;
+  childrenKey?: string;
   fields?: string[];
   default?: any;
   schema?: JsonSchema;
@@ -56,6 +57,9 @@ export class JsonModel<ModelType = any> {
 
     // select the root node
     this.selectNode('');
+
+    // update _schemas and _uiSchemas
+    this.updateSchemas();
   }
 
   /**
@@ -108,9 +112,14 @@ export class JsonModel<ModelType = any> {
    * const node = jsonModel.getNode('/0/1/then');
    */
   getNode(path: string): any {
-    const pathArray: string[] = path.split('/').splice(1);
     let currentNode = this.model;
     if (!currentNode) return;
+
+    // if the path is empty, return the root node
+    if (path === '') return currentNode;
+
+    // else traverse the path to find the node
+    const pathArray: string[] = path.split('/').splice(1);
     for (const indexOrField of pathArray) {
       if (!isNaN(indexOrField as any)) {
         currentNode = this.getNodeChildren(currentNode)?.[Number(indexOrField)]!;
@@ -125,14 +134,15 @@ export class JsonModel<ModelType = any> {
    * Returns the parent node of the node at the given path.
    */
   getNodeParent(path: string): any {
-    return this.getNode(this.getNodeParentPath(path));
+    const parentPath = this.getNodeParentPath(path);
+    return parentPath != undefined ? this.getNode(parentPath) : undefined;
   }
 
   /**
    * Returns the parent node path of the node at the given path.
    */
-  getNodeParentPath(path: string): string {
-    return path.slice(0, path.lastIndexOf('/'));
+  getNodeParentPath(path: string): string | undefined {
+    return path && typeof path === 'string' ? path.slice(0, path.lastIndexOf('/')) : undefined;
   }
 
   /**
@@ -149,7 +159,7 @@ export class JsonModel<ModelType = any> {
     const paths: string[] = [];
     const checkNode = (node: any, path: string) => {
       if (node && node[property]) paths.push(path);
-      // if the node is a structure node, check its fields
+      // if the node is can have fields check them
       if (this.checkNodeCanHaveFields(node)) {
         const fields = this.config.nodes?.[node.type]?.fields;
         if (fields) fields.forEach((field: string) => checkNode(node[field], `${path}/${field}`));
@@ -162,29 +172,82 @@ export class JsonModel<ModelType = any> {
     return paths;
   }
 
+  /**
+   * Returns the children of the given node.
+   *
+   * If the node can't have children, it returns undefined.
+   */
   getNodeChildren(node: any): any[] | undefined {
     if (!node || !this.checkNodeCanHaveChildren(node)) return undefined;
     return node[this.config.nodes?.[node.type]?.children!];
   }
 
+  /**
+   * Returns the children field of the given node if its defined.
+   */
   getNodeChildrenField(node: any): string | undefined {
     return this.config.nodes?.[node.type]?.children;
   }
 
-  getNodeTypes(): string[] {
-    return Object.keys(this.config.nodes || {});
-  }
-
+  /**
+   * Returns the icon of the given node.
+   */
   getNodeIcon(node: any): IconName {
     return this.config.nodes?.[node.type]?.icon || this.config.defaultIcon || 'circle';
   }
 
-  getNodeTypeIcon(type: string): IconName {
-    return this.config.nodes?.[type]?.icon || this.config.defaultIcon || 'circle';
-  }
-
+  /**
+   * Returns the descriptor of the given node.
+   */
   getNodeDescriptor(node: any): string {
     return node && this.config.nodes?.[node.type]?.descriptor ? node[this.config.nodes?.[node.type]?.descriptor!] : '';
+  }
+
+  /**
+   * Returns the key of the node at the given path.
+   *
+   * It checks if the parent node has a childrenKey property, then it return the value of key property of the node.
+   */
+  getNodeKey(path: string): string {
+    const parent = this.getNodeParent(path);
+    const node = this.getNode(path);
+    if (!parent || !node) return '';
+    const childrenKey = this.config.nodes?.[parent.type]?.childrenKey;
+    return childrenKey ? node[childrenKey] : '';
+  }
+
+  /**
+   * Returns the schema of the node at the given path.
+   *
+   * If the node is child of node with childrenKey property,
+   * it will have childrenKey value defined on parent as a property at the root of the schema.
+   */
+  getNodeSchema(node: any): JsonSchema {
+    return node._schema;
+  }
+
+  /**
+   * Returns the UI schema of the node at the given path.
+   *
+   * If the node is child of node with childrenKey property,
+   * it will have childrenKey value defined on parent as a element at the root of the UI schema (after the type).
+   */
+  getNodeUISchema(node: any): UISchemaElement {
+    return node._uiSchema;
+  }
+
+  /**
+   * Returns the node types defined in the config.
+   */
+  getNodeTypes(): string[] {
+    return Object.keys(this.config.nodes || {});
+  }
+
+  /**
+   * Returns the icon of the given node type.
+   */
+  getNodeTypeIcon(type: string): IconName {
+    return this.config.nodes?.[type]?.icon || this.config.defaultIcon || 'circle';
   }
 
   /**
@@ -214,16 +277,15 @@ export class JsonModel<ModelType = any> {
     // if the path is empty, set the node as the root node
     if (!path) {
       this.model = node;
-      return;
-    }
-
-    const parent = this.getNodeParent(path);
-    const indexOrField = this.getNodeIndexOrField(path);
-    if (parent) {
-      if (!isNaN(indexOrField as any)) {
-        this.getNodeChildren(parent)![Number(indexOrField)] = node;
-      } else {
-        parent[indexOrField] = node;
+    } else {
+      const parent = this.getNodeParent(path);
+      const indexOrField = this.getNodeIndexOrField(path);
+      if (parent) {
+        if (!isNaN(indexOrField as any)) {
+          this.getNodeChildren(parent)![Number(indexOrField)] = node;
+        } else {
+          parent[indexOrField] = node;
+        }
       }
     }
 
@@ -302,6 +364,9 @@ export class JsonModel<ModelType = any> {
       // update selected node
       this.updateSelectedNode();
 
+      // update schemas
+      this.updateSchemas();
+
       // emit the updated model
       this.modelSubject.next(this.model);
     }
@@ -323,9 +388,15 @@ export class JsonModel<ModelType = any> {
       }
     }
 
+    // if the removed node is the selected node, unselect it
+    if (path === this.selectedNodePath) this.selectNode('');
+
     if (update) {
       // update selected node
       this.updateSelectedNode();
+
+      // update schemas
+      this.updateSchemas();
 
       // emit the updated model
       this.modelSubject.next(this.model);
@@ -369,9 +440,94 @@ export class JsonModel<ModelType = any> {
       // update selected node
       this.updateSelectedNode();
 
+      // update schemas
+      this.updateSchemas();
+
       // emit the updated model
       this.modelSubject.next(this.model);
     }
+  }
+
+  /**
+   * It will traverse the model and update the schema and uiSchema of each node if needed.
+   *
+   * If the node is child of node with childrenKey property.
+   * This will add the childrenKey property to the schema and the childrenKey value as a element at the root of the UI schema.
+   *
+   * It will use _schema and _uiSchema properties to store the updated schema and uiSchema.
+   * That are the ones returned by getNodeSchema and getNodeUISchema.
+   */
+  updateSchemas(): void {
+    // check if the node at the path has childrenKey property
+    // and updates the _schema and _uiSchema properties of the children
+    // calls recursively for each child
+    const updateChildSchemas = (node: any) => {
+      // get the node childrenKey property
+      const childrenKey = this.config.nodes?.[node.type]?.childrenKey;
+
+      // update children's _schema and _uiSchema and call recursively
+      const children = this.getNodeChildren(node);
+      if (children) {
+        children.forEach((child: any) => {
+          updateSchemas(child, childrenKey);
+          updateChildSchemas(child);
+        });
+      }
+
+      // update fields's _schema and _uiSchema and call recursively
+      if (this.checkNodeCanHaveFields(node)) {
+        const fields = this.config.nodes?.[node.type]?.fields;
+        if (fields) {
+          fields.forEach((field: string) => {
+            const fieldNode = node[field];
+            if (fieldNode) {
+              updateSchemas(fieldNode);
+              updateChildSchemas(fieldNode);
+            }
+          });
+        }
+      }
+    };
+
+    const updateSchemas = (node: any, childrenKey?: string | undefined) => {
+      if (!node) return;
+
+      const schema = this.config.nodes?.[node.type]?.schema;
+      const uiSchema = this.config.nodes?.[node.type]?.uiSchema;
+
+      // if node don't have _schema and _uiSchema, add it
+      if (!node._schema) node._schema = _.cloneDeep(schema);
+      if (!node._uiSchema) node._uiSchema = _.cloneDeep(uiSchema);
+
+      // get the previous childrenKey cached on the node
+      const prevChildrenKey = node._childrenKey;
+
+      // if previous childrenKey is different from the current childrenKey
+      // update the _schema and _uiSchema
+      if (prevChildrenKey !== childrenKey) {
+        // restore the original schema, uiSchema and reset cached _childrenKey
+        node._schema = _.cloneDeep(schema);
+        node._uiSchema = _.cloneDeep(uiSchema);
+        node._childrenKey = undefined;
+
+        // if childrenKey is defined, add it to the _schema and _uiSchema and update the _childrenKey
+        if (childrenKey) {
+          // add the childrenKey property and element to the node _schema and _uiSchema
+          node._schema.properties = { ...(node._schema.properties ?? {}), [childrenKey]: { type: 'string' } };
+          node._schema.required = [...(node._schema.required ?? []), childrenKey];
+          node._uiSchema.elements.splice(1, 0, { type: 'Control', scope: `#/properties/${childrenKey}` });
+
+          // update the cached _childrenKey
+          node._childrenKey = childrenKey;
+        }
+      }
+    };
+
+    // update the root node _schema and _uiSchema
+    updateSchemas(this.model);
+
+    // start the update from the root node
+    updateChildSchemas(this.model);
   }
 
   /**
@@ -396,20 +552,23 @@ export class JsonModel<ModelType = any> {
   /**
    * Check if a node can have children.
    *
-   * If it's not explicitly set to false in the config, and it's not a structure node.
+   * If it's not explicitly set to false in the config, and it not have fields.
    */
   checkNodeCanHaveChildren(node: any): boolean {
     return node && this.config.nodes?.[node.type]?.children && !this.checkNodeCanHaveFields(node);
   }
 
   /**
-   * Check if a node is a structure node by checking if it's defined in the structures config.
+   * Check if a node can have fields by checking if such property is defined in the config.
    */
   checkNodeCanHaveFields(node: any): boolean {
     return node && this.config.nodes?.[node.type]?.fields !== undefined;
   }
 
-  checkNodeIsRoot(node: any): boolean {
-    return node === this.model;
+  /**
+   * Check if a node path is the root node.
+   */
+  checkNodeIsRoot(path: string): boolean {
+    return path === '';
   }
 }

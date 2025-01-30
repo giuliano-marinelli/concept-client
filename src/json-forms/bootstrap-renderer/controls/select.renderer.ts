@@ -17,7 +17,7 @@ import { RankedTester, StatePropsOfControl, isEnumControl, isOneOfEnumControl, o
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class SelectControlRenderer extends JsonFormsControl {
   options!: { const: string | number | boolean; title: string | number | boolean }[];

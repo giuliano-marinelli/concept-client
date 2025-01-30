@@ -23,7 +23,7 @@ import { RankedTester, StatePropsOfControl, isIntegerControl, isNumberControl, o
     </div>
   `,
   styles: [``],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class NumberControlRenderer extends JsonFormsControl {
   readonly MAXIMUM_FRACTIONAL_DIGITS = 20;

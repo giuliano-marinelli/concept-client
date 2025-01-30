@@ -18,9 +18,8 @@ export interface AModelElementSchema {
 }
 
 export interface AModelEnumSchema extends AModelElementSchema {
-  type: Type.STRING;
-  enum?: string[];
-  oneOf?: [{ const: string; title: string }];
+  type: Type.STRING | Type.INTEGER | Type.BOOLEAN;
+  enum?: [{ const: string | number | boolean; title: string }];
 }
 
 export interface AModelArraySchema extends AModelElementSchema {
@@ -30,9 +29,15 @@ export interface AModelArraySchema extends AModelElementSchema {
 
 export interface AModelObjectSchema extends AModelElementSchema {
   type: Type.OBJECT;
-  properties: {
-    [propertyName: string]: AModelElementSchema;
-  };
+  properties: (AModelPropertySchema | AModelEnumPropertySchema)[];
+}
+
+export interface AModelPropertySchema extends AModelElementSchema {
+  key: string;
+}
+
+export interface AModelEnumPropertySchema extends AModelEnumSchema {
+  key: string;
 }
 
 export interface AModelRootSchema extends AModelObjectSchema {}

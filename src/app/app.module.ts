@@ -153,7 +153,6 @@ import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/modul
     //directives
     TippyDirective,
     JsonFormsModule,
-    JsonFormsAngularMaterialModule,
     JsonFormsBootstrapModule
   ],
   providers: [

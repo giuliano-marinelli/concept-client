@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, effect } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { GModelElementSchema } from '@eclipse-glsp/protocol';
@@ -8,6 +8,7 @@ import { MetaElement } from '../../entities/meta-element.entity';
 import { Global } from '../../global/global';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
+import { array } from 'snabbdom';
 
 import { AModelElementSchema } from '../../../../dynamic-glsp/protocol/amodel';
 import { JsonModel, JsonModelConfig } from '../../global/json-model';
@@ -22,7 +23,6 @@ export class LanguageEditorComponent implements OnInit {
   @Input() type: 'NODE' | 'EDGE' = 'NODE';
 
   gModel!: JsonModel<GModelElementSchema>;
-  aModel!: JsonModel<AModelElementSchema>;
 
   gModelSelectedNodePath?: string;
   gModelSelectedNodePathSubscription?: Subscription;
@@ -32,6 +32,17 @@ export class LanguageEditorComponent implements OnInit {
 
   gModelSelectedNodeConfig?: any;
   gModelSelectedNodeConfigSubscription?: Subscription;
+
+  aModel!: JsonModel<AModelElementSchema>;
+
+  aModelSelectedNodePath?: string;
+  aModelSelectedNodePathSubscription?: Subscription;
+
+  aModelSelectedNode?: any;
+  aModelSelectedNodeSubscription?: Subscription;
+
+  aModelSelectedNodeConfig?: any;
+  aModelSelectedNodeConfigSubscription?: Subscription;
 
   elementLoading: boolean = true;
   submitLoading: boolean = false;
@@ -301,11 +312,167 @@ export class LanguageEditorComponent implements OnInit {
 
     // create an instance of JsonModel with the aModel and config
     // for manage the access and modification of the aModel
-    this.aModel = new JsonModel(_.cloneDeep(this.element.aModel) as AModelElementSchema);
+    this.aModel = new JsonModel(_.cloneDeep(this.element.aModel) as AModelElementSchema, {
+      defaultIcon: 'file',
+      nodes: {
+        object: {
+          icon: 'list',
+          descriptor: 'label',
+          children: 'properties',
+          childrenKey: 'key',
+          schema: {
+            properties: {
+              type: { type: 'string', readOnly: true },
+              label: { type: 'string' }
+            }
+          } as any,
+          uiSchema: {
+            type: 'VerticalLayout',
+            elements: [
+              { type: 'Control', scope: '#/properties/type' },
+              { type: 'Control', scope: '#/properties/label' }
+            ]
+          } as any
+        },
+        array: {
+          icon: 'bars',
+          descriptor: 'label',
+          fields: ['items'],
+          schema: {
+            properties: {
+              type: { type: 'string', readOnly: true },
+              label: { type: 'string' }
+            }
+          } as any,
+          uiSchema: {
+            type: 'VerticalLayout',
+            elements: [
+              { type: 'Control', scope: '#/properties/type' },
+              { type: 'Control', scope: '#/properties/label' }
+            ]
+          } as any
+        },
+        string: {
+          icon: 'font',
+          descriptor: 'label',
+          schema: {
+            properties: {
+              type: { type: 'string', readOnly: true },
+              label: { type: 'string' },
+              isEnum: { type: 'boolean' },
+              enum: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    title: { type: 'string' },
+                    const: { type: 'string' }
+                  }
+                }
+              }
+            }
+          } as any,
+          uiSchema: {
+            type: 'VerticalLayout',
+            elements: [
+              { type: 'Control', scope: '#/properties/type' },
+              { type: 'Control', scope: '#/properties/label' },
+              { type: 'Control', scope: '#/properties/isEnum' },
+              {
+                type: 'Control',
+                scope: '#/properties/enum',
+                options: {
+                  detail: {
+                    type: 'HorizontalLayout',
+                    elements: [
+                      {
+                        type: 'Control',
+                        scope: '#/properties/title'
+                      },
+                      {
+                        type: 'Control',
+                        scope: '#/properties/const',
+                        label: 'Value'
+                      }
+                    ]
+                  }
+                },
+                rule: {
+                  effect: 'SHOW',
+                  condition: {
+                    scope: '#/properties/isEnum',
+                    schema: {
+                      const: true
+                    },
+                    failWhenUndefined: true
+                  }
+                }
+              }
+            ]
+          } as any
+        },
+        integer: {
+          icon: 'hashtag',
+          descriptor: 'label',
+          schema: {
+            properties: {
+              type: { type: 'string', readOnly: true },
+              label: { type: 'string' }
+            }
+          } as any,
+          uiSchema: {
+            type: 'VerticalLayout',
+            elements: [
+              { type: 'Control', scope: '#/properties/type' },
+              { type: 'Control', scope: '#/properties/label' }
+            ]
+          } as any
+        },
+        boolean: {
+          icon: 'circle-half-stroke',
+          descriptor: 'label',
+          schema: {
+            properties: {
+              type: { type: 'string', readOnly: true },
+              label: { type: 'string' }
+            }
+          } as any,
+          uiSchema: {
+            type: 'VerticalLayout',
+            elements: [
+              { type: 'Control', scope: '#/properties/type' },
+              { type: 'Control', scope: '#/properties/label' }
+            ]
+          } as any
+        }
+      }
+    });
+
+    // subscribe to the aModel selected node path changes
+    this.aModelSelectedNodePathSubscription = this.aModel
+      .getSelectedNodePath()
+      .subscribe((newAModelSelectedNodePath: string) => (this.aModelSelectedNodePath = newAModelSelectedNodePath));
+
+    // subscribe to the aModel selected node changes
+    this.aModelSelectedNodeSubscription = this.aModel
+      .getSelectedNode()
+      .subscribe((newAModelSelectedNode: any) => (this.aModelSelectedNode = newAModelSelectedNode));
+
+    // subscribe to the aModel selected node config changes
+    this.aModelSelectedNodeConfigSubscription = this.aModel
+      .getSelectedNodeConfig()
+      .subscribe((newAModelSelectedNodeConfig: any) => (this.aModelSelectedNodeConfig = newAModelSelectedNodeConfig));
+
+    console.log(this.element.gModel);
+    console.log(this.element.aModel);
   }
 
   onGModelNodeChange(event: any): void {
     this.gModel.setNode(this.gModelSelectedNodePath!, event.newModel);
+  }
+
+  onAModelNodeChange(event: any): void {
+    this.aModel.setNode(this.aModelSelectedNodePath!, event.newModel);
   }
 
   updateElement(): void {
