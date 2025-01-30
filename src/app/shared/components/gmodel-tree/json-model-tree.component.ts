@@ -39,6 +39,10 @@ export class JsonModelTreeComponent implements OnInit {
       .subscribe((newGModelConfig: JsonModelConfig) => (this.config = newGModelConfig));
   }
 
+  onNodeAdd(path: string, type: string): void {
+    this.jsonModel.addNode(path, type, false);
+  }
+
   onNodeClick(path: string, node: any): void {
     if (node && !this.dragNodePath) this.jsonModel.selectNode(path);
   }

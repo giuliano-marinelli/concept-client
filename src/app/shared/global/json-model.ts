@@ -9,6 +9,7 @@ export interface JsonModelElementConfig {
   descriptor?: string;
   children?: string;
   fields?: string[];
+  default?: any;
   schema?: JsonSchema;
   uiSchema?: UISchemaElement;
 }
@@ -112,7 +113,7 @@ export class JsonModel<ModelType = any> {
     if (!currentNode) return;
     for (const indexOrField of pathArray) {
       if (!isNaN(indexOrField as any)) {
-        currentNode = (currentNode as any)?.children?.[Number(indexOrField)]!;
+        currentNode = this.getNodeChildren(currentNode)?.[Number(indexOrField)]!;
       } else {
         currentNode = (currentNode as any)?.[indexOrField];
       }
@@ -154,10 +155,36 @@ export class JsonModel<ModelType = any> {
         if (fields) fields.forEach((field: string) => checkNode(node[field], `${path}/${field}`));
       }
       // if the node has children, check its children
-      if (node?.children) node.children.forEach((child: any, index: number) => checkNode(child, `${path}/${index}`));
+      if (this.getNodeChildren(node))
+        this.getNodeChildren(node)!.forEach((child: any, index: number) => checkNode(child, `${path}/${index}`));
     };
     checkNode(startNode || this.model, '');
     return paths;
+  }
+
+  getNodeChildren(node: any): any[] | undefined {
+    if (!node || !this.checkNodeCanHaveChildren(node)) return undefined;
+    return node[this.config.nodes?.[node.type]?.children!];
+  }
+
+  getNodeChildrenField(node: any): string | undefined {
+    return this.config.nodes?.[node.type]?.children;
+  }
+
+  getNodeTypes(): string[] {
+    return Object.keys(this.config.nodes || {});
+  }
+
+  getNodeIcon(node: any): IconName {
+    return this.config.nodes?.[node.type]?.icon || this.config.defaultIcon || 'circle';
+  }
+
+  getNodeTypeIcon(type: string): IconName {
+    return this.config.nodes?.[type]?.icon || this.config.defaultIcon || 'circle';
+  }
+
+  getNodeDescriptor(node: any): string {
+    return node && this.config.nodes?.[node.type]?.descriptor ? node[this.config.nodes?.[node.type]?.descriptor!] : '';
   }
 
   /**
@@ -194,7 +221,7 @@ export class JsonModel<ModelType = any> {
     const indexOrField = this.getNodeIndexOrField(path);
     if (parent) {
       if (!isNaN(indexOrField as any)) {
-        parent.children[Number(indexOrField)] = node;
+        this.getNodeChildren(parent)![Number(indexOrField)] = node;
       } else {
         parent[indexOrField] = node;
       }
@@ -240,12 +267,19 @@ export class JsonModel<ModelType = any> {
   /**
    * Adds a node to the given path.
    *
+   * If the given node is a string, it will create a new node with the given type using default values if available in the config.
+   *
    * If asChild is true or the node at the path can't have children, it will add the node as a child of the parent of the node at the path.
    * Else it will add the node as child of the node at the path.
    *
    * If update is false, it will avoid update the selected node and emit the updated model.
    */
-  addNode(path: string, node: any, asChild: boolean = true, update: boolean = true): void {
+  addNode(path: string, node: any | string, asChild: boolean = true, update: boolean = true): void {
+    if (typeof node === 'string') {
+      const type = node;
+      const defaultValues = this.config.nodes?.[type]?.default;
+      node = { type, ...defaultValues };
+    }
     const toNode = this.getNode(path);
     const parent = this.getNodeParent(path);
     if (!toNode) {
@@ -253,12 +287,14 @@ export class JsonModel<ModelType = any> {
       parent[field] = node;
     } else {
       if (asChild || !this.checkNodeCanHaveChildren(toNode)) {
-        if (!parent.children) parent.children = [];
+        const childrenField = this.getNodeChildrenField(parent)!;
+        if (!this.getNodeChildren(parent)) parent[childrenField] = [];
         // add the node as children of parent at the position of the path
-        parent.children.splice(Number(this.getNodeIndexOrField(path)), 0, node);
+        parent[childrenField].splice(Number(this.getNodeIndexOrField(path)), 0, node);
       } else {
-        if (!toNode.children) toNode.children = [];
-        toNode.children.push(node);
+        const childrenField = this.getNodeChildrenField(toNode)!;
+        if (!this.getNodeChildren(toNode)) toNode[childrenField] = [];
+        toNode[childrenField].push(node);
       }
     }
 
@@ -281,7 +317,7 @@ export class JsonModel<ModelType = any> {
     const indexOrField = this.getNodeIndexOrField(path);
     if (parent) {
       if (!isNaN(indexOrField as any)) {
-        parent.children.splice(Number(indexOrField), 1);
+        this.getNodeChildren(parent)?.splice(Number(indexOrField), 1);
       } else {
         parent[indexOrField] = null;
       }

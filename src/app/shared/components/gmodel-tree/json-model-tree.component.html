@@ -18,7 +18,7 @@
         <li #nodeContainer class="node-container"
           *ngFor="let field of config?.nodes?.[node.type]?.fields; let i = index" [attr.data-path]="path + '/' + field"
           [class.mt-1]="i == 0"
-          [class.pb-1]="!node[field] || (!node[field].children?.length && !jsonModel.checkNodeCanHaveFields(node[field]))">
+          [class.pb-1]="!node[field] || (!jsonModel.getNodeChildren(node[field])?.length && !jsonModel.checkNodeCanHaveFields(node[field]))">
           <label class="ps-4 text-muted">{{ field }}:</label><br>
           <ng-container *ngIf="node[field]" [ngTemplateOutlet]="treeNode"
             [ngTemplateOutletContext]="{ node: node[field], expanded: expanded, path: path + '/' + field }">
@@ -29,9 +29,10 @@
         </li>
       </ng-container>
       <ng-container *ngIf="!config?.nodes?.[node.type]?.fields">
-        <li #nodeContainer class="pt-1 node-container" *ngFor="let child of node.children; let i = index"
-          [attr.data-path]="path + '/' + i" [class.mt-1]="i == 0"
-          [class.pb-1]="!child.children?.length && !jsonModel.checkNodeCanHaveFields(child)">
+        <li #nodeContainer class="pt-1 node-container"
+          *ngFor="let child of jsonModel.getNodeChildren(node); let i = index" [attr.data-path]="path + '/' + i"
+          [class.mt-1]="i == 0"
+          [class.pb-1]="!jsonModel.getNodeChildren(child)?.length && !jsonModel.checkNodeCanHaveFields(child)">
           <ng-container [ngTemplateOutlet]="treeNode"
             [ngTemplateOutletContext]="{ node: child, expanded: expanded, path: path + '/' + i }">
           </ng-container>
@@ -48,25 +49,42 @@
         [icon]="jsonModel.checkNodeCanHaveChildren(node) || jsonModel.checkNodeCanHaveFields(node) ? (settings.expanded ? 'caret-down' : 'caret-right') : 'minus'">
       </fa-icon>
     </button>
-    <button
-      class="btn btn-sm btn-{{ node?._selected ? '' : 'outline-' }}secondary text-{{ node ? 'body' : 'muted' }} text-start"
-      [attr.draggable]="node && path !== ''" (dragstart)="onNodeDragStart($event, path)"
+    <button class="btn btn-sm text-start" [ngClass]="{
+        'btn-secondary': node?._selected,
+        'btn-outline-secondary': !node?._selected,
+        'text-node': node && !node?._selected,
+        'text-empty-node': !node
+      }" [attr.draggable]="node && path !== ''" (dragstart)="onNodeDragStart($event, path)"
       (dragend)="onNodeDragEnd($event)" (dragover)="onNodeDragOver($event, path, node)"
       (dragenter)="onNodeDragEnter($event, path, node)" (dragleave)="onNodeDragLeave($event)"
       (drop)="onNodeDrop($event, path, node, false)" (click)="onNodeClick(path, node)">
       <ng-container *ngIf="node">
-        <fa-icon [icon]="config?.nodes?.[node.type]?.icon || config?.defaultIcon || 'circle'"></fa-icon>
+        <fa-icon [icon]="jsonModel.getNodeIcon(node)"></fa-icon>
         {{ node.type }}<br>
-        <span class="text-muted small">
-          {{ config?.nodes?.[node.type]?.descriptor ? node[config?.nodes?.[node.type]?.descriptor!] : '' }}
+        <span class="small opacity-50">
+          {{ jsonModel.getNodeDescriptor(node) }}
         </span>
       </ng-container>
       <ng-container *ngIf="!node">
         empty
       </ng-container>
     </button>
-    <button class="btn btn-sm p-1 ms-1 text-body no-outline" *ngIf="jsonModel.checkNodeCanHaveChildren(node)">
-      <fa-icon [icon]="'plus'"></fa-icon>
-    </button>
+    <div class="d-inline" ngbDropdown display="dynamic" placement="bottom-start" autoClose="true" container="body">
+      <button class="btn btn-sm p-1 ms-1 text-body no-outline" *ngIf="jsonModel.checkNodeCanHaveChildren(node)"
+        ngbDropdownToggle>
+        <fa-icon [icon]="'plus'"></fa-icon>
+      </button>
+      <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
+        <span class="d-block p-3 pt-0 pb-0 small text-muted">
+          Add node
+        </span>
+        <ng-container *ngFor="let type of jsonModel.getNodeTypes()">
+          <div class="dropdown-divider m-1"></div>
+          <a ngbDropdownItem class="small pe-pointer" (click)="onNodeAdd(path, type)">
+            <fa-icon [icon]="jsonModel.getNodeTypeIcon(type)"></fa-icon> {{ type }}
+          </a>
+        </ng-container>
+      </div>
+    </div>
   </ng-container>
 </ng-template>

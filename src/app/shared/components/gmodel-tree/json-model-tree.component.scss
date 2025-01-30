@@ -1,3 +1,6 @@
+//this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
+@import '../../../../assets/scss/variables.scss';
+
 .tree-root {
   list-style-type: none;
   width: fit-content;
@@ -53,4 +56,16 @@
   // background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid transparent;
   // border-radius: 5px;
+}
+
+.text-node:not(:hover) {
+  color: $body-color;
+}
+
+::ng-deep html[data-bs-theme='dark'] .text-node:not(:hover) {
+  color: $body-color-dark;
+}
+
+.text-empty-node:not(:hover) {
+  color: $secondary;
 }

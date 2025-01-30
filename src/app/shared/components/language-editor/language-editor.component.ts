@@ -71,6 +71,7 @@ export class LanguageEditorComponent implements OnInit {
             icon: 'circle',
             descriptor: 'layout',
             children: 'children',
+            default: { layout: 'vbox' },
             schema: {
               properties: {
                 type: { type: 'string', readOnly: true },
@@ -101,92 +102,93 @@ export class LanguageEditorComponent implements OnInit {
           label: {
             icon: 'tag',
             descriptor: 'text',
+            default: { text: 'Text' },
             schema: {
               properties: {
                 type: { type: 'string', readOnly: true },
-                text: { type: 'string' },
-                test: {
-                  type: 'object',
-                  properties: {
-                    text: { type: 'string' },
-                    email: { type: 'string', format: 'email' },
-                    url: { type: 'string', format: 'url' },
-                    date: { type: 'string', format: 'date' },
-                    time: { type: 'string', format: 'time' },
-                    datetime: { type: 'string', format: 'date-time' },
-                    duration: { type: 'string', format: 'duration' },
-                    textarea: { type: 'string' },
-                    number: { type: 'number', multipleOf: 0.1 },
-                    range: { type: 'number', minimum: 1, maximum: 5, default: 3, multipleOf: 1 },
-                    checkbox: { type: 'boolean' },
-                    switch: { type: 'boolean' },
-                    select: { type: 'string', enum: ['option 1', 'option 2'] },
-                    selectOneOf: {
-                      type: 'number',
-                      oneOf: [
-                        { const: 1, title: 'Algo 1' },
-                        { const: 2, title: 'Algo 2' }
-                      ]
-                    },
-                    radio: { type: 'string', enum: ['option 1', 'option 2'] },
-                    radioOneOf: {
-                      type: 'number',
-                      oneOf: [
-                        { const: 1, title: 'Algo 1' },
-                        { const: 2, title: 'Algo 2' }
-                      ]
-                    }
-                  }
-                }
+                text: { type: 'string' }
+                // test: {
+                //   type: 'object',
+                //   properties: {
+                //     text: { type: 'string' },
+                //     email: { type: 'string', format: 'email' },
+                //     url: { type: 'string', format: 'url' },
+                //     date: { type: 'string', format: 'date' },
+                //     time: { type: 'string', format: 'time' },
+                //     datetime: { type: 'string', format: 'date-time' },
+                //     duration: { type: 'string', format: 'duration' },
+                //     textarea: { type: 'string' },
+                //     number: { type: 'number', multipleOf: 0.1 },
+                //     range: { type: 'number', minimum: 1, maximum: 5, default: 3, multipleOf: 1 },
+                //     checkbox: { type: 'boolean' },
+                //     switch: { type: 'boolean' },
+                //     select: { type: 'string', enum: ['option 1', 'option 2'] },
+                //     selectOneOf: {
+                //       type: 'number',
+                //       oneOf: [
+                //         { const: 1, title: 'Algo 1' },
+                //         { const: 2, title: 'Algo 2' }
+                //       ]
+                //     },
+                //     radio: { type: 'string', enum: ['option 1', 'option 2'] },
+                //     radioOneOf: {
+                //       type: 'number',
+                //       oneOf: [
+                //         { const: 1, title: 'Algo 1' },
+                //         { const: 2, title: 'Algo 2' }
+                //       ]
+                //     }
+                //   }
+                // }
               }
             } as any,
             uiSchema: {
               type: 'VerticalLayout',
               elements: [
                 { type: 'Control', scope: '#/properties/type' },
-                { type: 'Control', scope: '#/properties/text' },
-                {
-                  type: 'Group',
-                  label: 'Test',
-                  elements: [
-                    { type: 'Control', scope: '#/properties/test/properties/text' },
-                    { type: 'Control', scope: '#/properties/test/properties/email' },
-                    { type: 'Control', scope: '#/properties/test/properties/url' },
-                    { type: 'Control', scope: '#/properties/test/properties/date' },
-                    { type: 'Control', scope: '#/properties/test/properties/time' },
-                    { type: 'Control', scope: '#/properties/test/properties/datetime' },
-                    { type: 'Control', scope: '#/properties/test/properties/duration' },
-                    {
-                      type: 'Control',
-                      scope: '#/properties/test/properties/textarea',
-                      options: { multi: true }
-                    },
-                    { type: 'Control', scope: '#/properties/test/properties/number' },
-                    {
-                      type: 'Control',
-                      scope: '#/properties/test/properties/range',
-                      options: { slider: true }
-                    },
-                    { type: 'Control', scope: '#/properties/test/properties/checkbox' },
-                    {
-                      type: 'Control',
-                      scope: '#/properties/test/properties/switch',
-                      options: { toggle: true }
-                    },
-                    { type: 'Control', scope: '#/properties/test/properties/select' },
-                    { type: 'Control', scope: '#/properties/test/properties/selectOneOf' },
-                    {
-                      type: 'Control',
-                      scope: '#/properties/test/properties/radio',
-                      options: { format: 'radio' }
-                    },
-                    {
-                      type: 'Control',
-                      scope: '#/properties/test/properties/radioOneOf',
-                      options: { format: 'radio' }
-                    }
-                  ]
-                }
+                { type: 'Control', scope: '#/properties/text' }
+                // {
+                //   type: 'Group',
+                //   label: 'Test',
+                //   elements: [
+                //     { type: 'Control', scope: '#/properties/test/properties/text' },
+                //     { type: 'Control', scope: '#/properties/test/properties/email' },
+                //     { type: 'Control', scope: '#/properties/test/properties/url' },
+                //     { type: 'Control', scope: '#/properties/test/properties/date' },
+                //     { type: 'Control', scope: '#/properties/test/properties/time' },
+                //     { type: 'Control', scope: '#/properties/test/properties/datetime' },
+                //     { type: 'Control', scope: '#/properties/test/properties/duration' },
+                //     {
+                //       type: 'Control',
+                //       scope: '#/properties/test/properties/textarea',
+                //       options: { multi: true }
+                //     },
+                //     { type: 'Control', scope: '#/properties/test/properties/number' },
+                //     {
+                //       type: 'Control',
+                //       scope: '#/properties/test/properties/range',
+                //       options: { slider: true }
+                //     },
+                //     { type: 'Control', scope: '#/properties/test/properties/checkbox' },
+                //     {
+                //       type: 'Control',
+                //       scope: '#/properties/test/properties/switch',
+                //       options: { toggle: true }
+                //     },
+                //     { type: 'Control', scope: '#/properties/test/properties/select' },
+                //     { type: 'Control', scope: '#/properties/test/properties/selectOneOf' },
+                //     {
+                //       type: 'Control',
+                //       scope: '#/properties/test/properties/radio',
+                //       options: { format: 'radio' }
+                //     },
+                //     {
+                //       type: 'Control',
+                //       scope: '#/properties/test/properties/radioOneOf',
+                //       options: { format: 'radio' }
+                //     }
+                //   ]
+                // }
                 // {
                 //   type: 'Group',
                 //   label: 'Test Disabled',
@@ -230,6 +232,7 @@ export class LanguageEditorComponent implements OnInit {
             icon: 'box-open',
             descriptor: 'layout',
             children: 'children',
+            default: { layout: 'vbox' },
             schema: {
               properties: {
                 type: { type: 'string', readOnly: true },
