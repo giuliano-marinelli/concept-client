@@ -324,6 +324,7 @@ export class JsonModel<ModelType = any> {
   updateSelectedNode(): void {
     const selectedPath: string = this.getNodePathsByProperty('_selected')[0];
     if (selectedPath) this.selectNode(selectedPath);
+    else this.selectNode('');
   }
 
   /**
@@ -387,9 +388,6 @@ export class JsonModel<ModelType = any> {
         parent[indexOrField] = null;
       }
     }
-
-    // if the removed node is the selected node, unselect it
-    if (path === this.selectedNodePath) this.selectNode('');
 
     if (update) {
       // update selected node
