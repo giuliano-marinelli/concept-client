@@ -553,7 +553,13 @@ export class JsonModel<ModelType = any> {
    * If it's not explicitly set to false in the config, and it not have fields.
    */
   checkNodeCanHaveChildren(node: any): boolean {
-    return node && this.config.nodes?.[node.type]?.children && !this.checkNodeCanHaveFields(node);
+    return (
+      node &&
+      this.config.nodes?.[node.type]?.children &&
+      (!node[this.config.nodes?.[node.type]?.children!] ||
+        Array.isArray(node[this.config.nodes?.[node.type]?.children!])) &&
+      !this.checkNodeCanHaveFields(node)
+    );
   }
 
   /**

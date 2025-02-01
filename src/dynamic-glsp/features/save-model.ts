@@ -1,4 +1,4 @@
-import { Action, GModelRoot, KeyListener, TYPES, matchesKeystroke } from '@eclipse-glsp/client';
+import { Action, GModelRoot, IDiagramOptions, KeyListener, TYPES, matchesKeystroke } from '@eclipse-glsp/client';
 
 import { SaveModelAction } from '../protocol/action/model-save';
 import { inject, injectable } from 'inversify';
@@ -10,7 +10,13 @@ export class SaveModelKeyboardListener extends KeyListener {
   @inject(TYPES.SvgExporter)
   protected svgExporter?: SvgExporter;
 
+  @inject(TYPES.IDiagramOptions)
+  protected diagramOptions!: IDiagramOptions;
+
   override keyDown(element: GModelRoot, event: KeyboardEvent): Action[] {
+    // if diagram options editMode is readonly, not allow to save model
+    if (this.diagramOptions.editMode === 'readonly') return [];
+
     if (matchesKeystroke(event, 'KeyS', 'ctrlCmd')) {
       return [SaveModelAction.create({ preview: this.svgExporter?.getSvg() })];
     }

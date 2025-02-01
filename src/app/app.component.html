@@ -47,7 +47,7 @@
           </li>
         </ul>
         <ul class="navbar-nav ms-md-auto">
-          <li class="nav-item border-top border-md-0" *ngIf="!auth.loading && auth.user?.role == 'ADMIN'">
+          <li class="nav-item border-top border-md-0" *ngIf="!auth.loading && auth.user?.role == 'admin'">
             <a class="nav-link" routerLink="/admin" routerLinkActive="active" (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'screwdriver-wrench'"></fa-icon> Admin
             </a>

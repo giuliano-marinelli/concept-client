@@ -11,7 +11,7 @@ import { CheckboxControlRenderer } from './checkbox.renderer';
     <div class="ps-1" [style.display]="hidden ? 'none' : ''">
       <div class="form-check form-switch">
         <input
-          class="form-check-input"
+          class="form-check-input pe-pointer"
           type="checkbox"
           role="switch"
           [id]="id"
@@ -20,7 +20,7 @@ import { CheckboxControlRenderer } from './checkbox.renderer';
           [class.is-invalid]="error"
           (change)="onChange($event)"
         />
-        <label class="form-check-label text-muted small" [for]="id">{{ label }}</label>
+        <label class="form-check-label text-muted small pe-pointer" [for]="id">{{ label }}</label>
         <div *ngIf="error" class="invalid-feedback">{{ error }}</div>
       </div>
     </div>

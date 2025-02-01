@@ -30,6 +30,10 @@
               <a class="nav-link text-center pe-pointer text-body" [class.active]="tabs.selected == 'amodel'"
                 (click)="tabs.selected = 'amodel'">Abstract</a>
             </li>
+            <li class="nav-item flex-fill">
+              <a class="nav-link text-center pe-pointer text-body" [class.active]="tabs.selected == 'data'"
+                (click)="tabs.selected = 'data'">Data</a>
+            </li>
           </ul>
           <div class="tab-content overflow-auto pt-1 border-start border-end" style="height: calc(100vh - 330px)">
             <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.selected == 'gmodel' }">
@@ -38,6 +42,11 @@
             <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.selected == 'amodel' }">
               <json-model-tree [jsonModel]="aModel"></json-model-tree>
             </div>
+            <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.selected == 'data' }">
+              <!-- <json-forms-renderer #data [data]="element.defaultModel" [schema]="aModel.schema" [uiSchema]="aModel"
+                (dataChange)="onDataChange($event)">
+              </json-forms-renderer> -->
+            </div>
           </div>
         </div>
         <div class="col col-lg-7">
@@ -45,7 +54,7 @@
             <div class="col-12 order-lg-last">
               <div class="pb-2 pb-lg-0">
                 <h6 class="text-center py-2">Node Inspector</h6>
-                <div class="overflow-auto" style="max-height: calc(100vh - 330px - 201px)">
+                <div class="overflow-auto" style="max-height: calc(100vh - 330px - 301px)">
                   <json-forms-renderer #renderer [class.d-none]="tabs.selected != 'gmodel' && gModelSelectedNode"
                     [data]="gModelSelectedNode" [schema]="gModel.getNodeSchema(gModelSelectedNode)"
                     [uiSchema]="gModel.getNodeUISchema(gModelSelectedNode)" (dataChange)="onGModelNodeChange($event)">
@@ -58,8 +67,9 @@
               </div>
             </div>
             <div class="col-12 my-0">
-              <div class="align-content-center text-center bg-secondary rounded-2" style="height: 200px;">
-                GLSP Visualization
+              <div class="align-content-center text-center bg-secondary rounded-2" style="height: 300px;">
+                <model-editor #showcase [showcaseMode]="true" [language]="showcaseLanguageElement"
+                  editMode="readonly"></model-editor>
               </div>
             </div>
           </div>

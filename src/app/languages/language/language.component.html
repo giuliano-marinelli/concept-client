@@ -21,9 +21,9 @@
       <h3>Nodes</h3>
       <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
         class="row mt-3" [class.loading]="languageLoading"
-        *ngIf="filter(language.metaElements, { type: 'NODE' })?.length">
+        *ngIf="filter(language.metaElements, { type: 'node' })?.length">
         <div ngxMasonryItem class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 masonry-item"
-          *ngFor="let node of language.metaElements | filter: { type: 'NODE' }">
+          *ngFor="let node of language.metaElements | filter: { type: 'node' }">
           <ng-container [ngTemplateOutlet]="elementCard"
             [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
           </ng-container>
@@ -32,9 +32,9 @@
       <h3>Edges</h3>
       <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
         class="row mt-3" [class.loading]="languageLoading"
-        *ngIf="filter(language.metaElements, { type: 'EDGE' })?.length">
+        *ngIf="filter(language.metaElements, { type: 'edge' })?.length">
         <div ngxMasonryItem class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 masonry-item"
-          *ngFor="let node of language.metaElements | filter: { type: 'EDGE' }">
+          *ngFor="let node of language.metaElements | filter: { type: 'edge' }">
           <ng-container [ngTemplateOutlet]="elementCard"
             [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
           </ng-container>
@@ -65,7 +65,7 @@
             <a class="btn p-0 text-body">
               <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
             </a>
-            <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'ADMIN'"
+            <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
               class="dropdown-menu shadow-sm" ngbDropdownMenu>
               <a ngbDropdownItem class="small pe-pointer" (click)="editElement(element)">
                 <fa-icon [icon]="'pencil'"></fa-icon> Edit

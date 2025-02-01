@@ -1,5 +1,6 @@
 import { GModelElementSchema } from '@eclipse-glsp/protocol';
 
+import { LanguageElementType } from '../../../dynamic-glsp/protocol/language';
 import { SelectionField, SelectionType } from 'apollo-dynamic';
 
 import { MetaModel } from './meta-model.entity';
@@ -13,7 +14,7 @@ export class MetaElement {
   @SelectionField(() => MetaModel)
   metaModel?: MetaModel;
   @SelectionField()
-  type?: string;
+  type?: LanguageElementType;
   @SelectionField()
   name?: string;
   @SelectionField()

@@ -5,6 +5,7 @@ import {
   GModelRoot,
   GNode,
   IActionDispatcher,
+  IDiagramOptions,
   IDiagramStartup,
   ISelectionListener,
   MaybePromise,
@@ -27,6 +28,9 @@ export class Inspector extends AbstractUIExtension implements ISelectionListener
 
   @inject(ExternalServices)
   protected services!: ExternalServices;
+
+  @inject(TYPES.IDiagramOptions)
+  protected diagramOptions!: IDiagramOptions;
 
   static readonly ID = 'inspector';
 
@@ -75,6 +79,9 @@ export class Inspector extends AbstractUIExtension implements ISelectionListener
   }
 
   selectionChanged(root: Readonly<GModelRoot>, selectedElements: string[], deselectedElements?: string[]): void {
+    // if diagram options editMode is readonly, do not show the inspector
+    if (this.diagramOptions.editMode === 'readonly') return;
+
     if (selectedElements.length === 1) {
       const selectedElement = this.getGModelElement(root, selectedElements[0]);
       if (selectedElement) this.setElement(selectedElement);

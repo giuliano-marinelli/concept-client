@@ -157,6 +157,10 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
   border-color: transparent !important;
 }
 
+.sprotty svg {
+  border: 0px !important;
+}
+
 /* For show cursor pointer when hover */
 .pe-pointer {
   cursor: pointer;

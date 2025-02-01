@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, NgZone, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, Input, NgZone, ViewContainerRef } from '@angular/core';
 
 import {
+  Action,
   BaseJsonrpcGLSPClient,
   ConnectionProvider,
   DiagramLoader,
@@ -14,14 +15,10 @@ import {
 
 import { DynamicGLSPWebSocketProvider } from '../../../../dynamic-glsp/connection/dynamic-websocket-provider';
 import { ExternalServices } from '../../../../dynamic-glsp/diagram/dynamic-external-services';
+import { Language, LanguageElement } from '../../../../dynamic-glsp/protocol/language';
 import { Container } from 'inversify';
 
-import {
-  AModelArraySchema,
-  AModelElementSchema,
-  AModelObjectSchema,
-  AModelRootSchema
-} from '../../../../dynamic-glsp/protocol/amodel';
+import { AModelElementSchema, AModelRootSchema } from '../../../../dynamic-glsp/protocol/amodel';
 
 import { JsonFormsRendererComponent } from '../json-forms-renderer/json-forms-renderer.component';
 
@@ -35,14 +32,18 @@ import { initializeDynamicDiagramContainer } from '../../../../dynamic-glsp/diag
   styleUrl: './model-editor.component.scss'
 })
 export class ModelEditorComponent implements AfterViewInit {
+  @Input() sourceUri: string = '';
+  @Input() language: string | Language | LanguageElement = '96cc12d7-41e0-4e06-b097-1d97a57da87b';
+  @Input() editMode: 'readonly' | 'editable' = 'editable';
+  @Input() showcaseMode: boolean = false; // only works with language element
+
   port: number = 3001;
 
   // id for the JSON RPC Client
   id: string = 'dynamic';
 
-  // parameters for set the language (diagramType) and the model (sourceUri)
+  // diagramType for the GLSP server (it's always dynamic)
   diagramType: string = 'dynamic';
-  sourceUri: string = 'dynamic';
 
   clientId: string = 'sprotty';
   webSocketUrl: string = `ws://127.0.0.1:${this.port}/${this.id}`;
@@ -62,6 +63,10 @@ export class ModelEditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.ngZone.runOutsideAngular(() => {
       let self = this;
+
+      // define services for language specification
+      this.services.language = this.language;
+      this.services.showcaseMode = this.showcaseMode;
 
       // define services for the inspector
       this.services.inspectorCreateElement = (
@@ -98,6 +103,7 @@ export class ModelEditorComponent implements AfterViewInit {
               clientId: self.clientId,
               diagramType: self.diagramType,
               sourceUri: self.sourceUri,
+              editMode: self.editMode,
               glspClientProvider: async () => self.glspClient
             },
             { baseDiv: 'sprotty' }
@@ -135,6 +141,14 @@ export class ModelEditorComponent implements AfterViewInit {
 
       this.wsProvider.listen({ onConnection: glspOnConnection, onReconnect: glspOnReconnect, logger: console });
     });
+  }
+
+  sendAction(action: Action): void {
+    this.services.actionDispatcher?.dispatch(action);
+  }
+
+  reloadLanguage(): void {
+    this.services.reloadLanguage?.();
   }
 
   createJsonForms(container: HTMLElement, elementId: string, elementAModel: AModelRootSchema, elementModel: any): void {

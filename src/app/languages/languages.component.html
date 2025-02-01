@@ -54,7 +54,7 @@
             <a class="btn p-0 text-body">
               <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
             </a>
-            <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'ADMIN'"
+            <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
               class="dropdown-menu shadow-sm" ngbDropdownMenu>
               <a ngbDropdownItem class="small pe-pointer"
                 routerLink="/language/{{ language.tag }}@{{ language.version }}">

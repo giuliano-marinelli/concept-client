@@ -15,23 +15,21 @@ import {
   STANDALONE_MODULE_CONFIG,
   TYPES,
   accessibilityModule,
-  bindAsService,
   bindOrRebind,
   configureDefaultModelElements,
   debugModule,
   edgeEditToolModule,
-  editLabelFeature,
   exportModule,
   gridModule,
   helperLineModule,
   initializeDiagramContainer,
+  keyboardToolPaletteModule,
   overrideModelElement,
   saveModule,
   toolPaletteModule
 } from '@eclipse-glsp/client';
 
 import { Inspector } from '../features/inspector';
-import { LoadLanguageSpecification } from '../features/load-language-specification';
 import { SvgExporter } from '../features/svg-exporter';
 import { Container, ContainerModule } from 'inversify';
 
@@ -42,9 +40,9 @@ import { SaveModelKeyboardListener } from '../features/save-model';
 export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
   const context = { bind, unbind, isBound, rebind };
 
-  // send the action for load the language specification before loading model
-  bind(LoadLanguageSpecification).toSelf().inSingletonScope();
-  bind(TYPES.IDiagramStartup).toService(LoadLanguageSpecification);
+  // configure utilities, actions and services that needs to be loaded previously to the model
+  bind(StartupConfiguration).toSelf().inSingletonScope();
+  bind(TYPES.IDiagramStartup).toService(StartupConfiguration);
 
   // configure the custom svg exporter to allow get svg from the GModel
   bind(TYPES.SvgExporter).to(SvgExporter).inSingletonScope();
@@ -52,10 +50,6 @@ export const dynamicDiagramModule = new ContainerModule((bind, unbind, isBound, 
   // configure the save model action with (Ctrl + S) shortcut
   bind(SaveModelKeyboardListener).toSelf().inSingletonScope();
   bind(TYPES.KeyListener).toService(SaveModelKeyboardListener);
-
-  // configure general utilities on startup
-  bind(StartupConfiguration).toSelf().inSingletonScope();
-  bind(TYPES.IDiagramStartup).toService(StartupConfiguration);
 
   // configure the inspector that allow to edit elements abstract properties
   bind(Inspector).toSelf().inSingletonScope();
@@ -106,8 +100,8 @@ export function initializeDynamicDiagramContainer(...containerConfiguration: Con
     edgeEditToolModule, // load bindings for debug mode (it can be enable with an option at command palette)
     debugModule,
     {
-      add: accessibilityModule,
-      remove: [toolPaletteModule, saveModule, exportModule]
+      add: accessibilityModule, // throws error when using editMode: READONLY
+      remove: [keyboardToolPaletteModule, toolPaletteModule, saveModule, exportModule]
     }
   );
 }

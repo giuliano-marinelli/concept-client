@@ -9,7 +9,7 @@ import { RankedTester, isBooleanControl, rankWith } from '@jsonforms/core';
     <div class="ps-1" [style.display]="hidden ? 'none' : ''">
       <div class="form-check">
         <input
-          class="form-check-input"
+          class="form-check-input pe-pointer"
           type="checkbox"
           [id]="id"
           [formControl]="form"
@@ -17,7 +17,7 @@ import { RankedTester, isBooleanControl, rankWith } from '@jsonforms/core';
           [class.is-invalid]="error"
           (change)="onChange($event)"
         />
-        <label class="form-check-label text-muted small" [for]="id">{{ label }}</label>
+        <label class="form-check-label text-muted small pe-pointer" [for]="id">{{ label }}</label>
         <div *ngIf="error" class="invalid-feedback">{{ error }}</div>
       </div>
     </div>

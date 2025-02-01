@@ -1,17 +1,20 @@
-import { Component, Input, OnInit, effect } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { GModelElementSchema } from '@eclipse-glsp/protocol';
+import { CenterAction, GModelElementSchema, RequestModelAction } from '@eclipse-glsp/protocol';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+import { LanguageElement, LanguageElementType } from '../../../../dynamic-glsp/protocol/language';
 import { MetaElement } from '../../entities/meta-element.entity';
 import { Global } from '../../global/global';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
-import { array } from 'snabbdom';
 
 import { AModelElementSchema } from '../../../../dynamic-glsp/protocol/amodel';
+import { RefreshModelOperation } from '../../../../dynamic-glsp/protocol/operation/refresh-model';
 import { JsonModel, JsonModelConfig } from '../../global/json-model';
+
+import { ModelEditorComponent } from '../model-editor/model-editor.component';
 
 @Component({
   selector: 'language-editor',
@@ -19,10 +22,15 @@ import { JsonModel, JsonModelConfig } from '../../global/json-model';
   styleUrl: './language-editor.component.scss'
 })
 export class LanguageEditorComponent implements OnInit {
+  @ViewChild('showcase') showcase!: ModelEditorComponent;
+
   @Input() element!: MetaElement;
-  @Input() type: 'NODE' | 'EDGE' = 'NODE';
+  @Input() type: LanguageElementType = LanguageElementType.NODE;
 
   gModel!: JsonModel<GModelElementSchema>;
+
+  _gModel!: GModelElementSchema;
+  _gModelSubscription?: Subscription;
 
   gModelSelectedNodePath?: string;
   gModelSelectedNodePathSubscription?: Subscription;
@@ -35,6 +43,9 @@ export class LanguageEditorComponent implements OnInit {
 
   aModel!: JsonModel<AModelElementSchema>;
 
+  _aModel!: AModelElementSchema;
+  _aModelSubscription?: Subscription;
+
   aModelSelectedNodePath?: string;
   aModelSelectedNodePathSubscription?: Subscription;
 
@@ -43,6 +54,8 @@ export class LanguageEditorComponent implements OnInit {
 
   aModelSelectedNodeConfig?: any;
   aModelSelectedNodeConfigSubscription?: Subscription;
+
+  showcaseLanguageElement!: LanguageElement;
 
   elementLoading: boolean = true;
   submitLoading: boolean = false;
@@ -295,6 +308,12 @@ export class LanguageEditorComponent implements OnInit {
       } as JsonModelConfig
     );
 
+    // subscribe to the gModel changes
+    this._gModelSubscription = this.gModel.getModel().subscribe((newGModel: GModelElementSchema) => {
+      this._gModel = newGModel;
+      this.updateShowcase();
+    });
+
     // subscribe to the gModel selected node path changes
     this.gModelSelectedNodePathSubscription = this.gModel
       .getSelectedNodePath()
@@ -377,7 +396,7 @@ export class LanguageEditorComponent implements OnInit {
             elements: [
               { type: 'Control', scope: '#/properties/type' },
               { type: 'Control', scope: '#/properties/label' },
-              { type: 'Control', scope: '#/properties/isEnum' },
+              { type: 'Control', scope: '#/properties/isEnum', options: { toggle: true } },
               {
                 type: 'Control',
                 scope: '#/properties/enum',
@@ -448,6 +467,12 @@ export class LanguageEditorComponent implements OnInit {
       }
     });
 
+    // subscribe to the aModel changes
+    this._aModelSubscription = this.aModel.getModel().subscribe((newAModel: AModelElementSchema) => {
+      this._aModel = newAModel;
+      this.updateShowcase();
+    });
+
     // subscribe to the aModel selected node path changes
     this.aModelSelectedNodePathSubscription = this.aModel
       .getSelectedNodePath()
@@ -473,6 +498,27 @@ export class LanguageEditorComponent implements OnInit {
 
   onAModelNodeChange(event: any): void {
     this.aModel.setNode(this.aModelSelectedNodePath!, event.newModel);
+  }
+
+  updateShowcase(): void {
+    this.showcaseLanguageElement = {
+      type: this.type,
+      name: this.element.tag ?? 'showcase',
+      label: this.name.value ?? 'showcase',
+      gModel: this._gModel,
+      aModel: this._aModel,
+      default: this.element.defaultModel
+    };
+
+    // send action for reload the language of the showcase
+    this.showcase?.reloadLanguage();
+
+    // send action for request the model of the showcase
+    // this allow to update the showcase element render
+    this.showcase?.sendAction(RefreshModelOperation.create());
+
+    // send action for center the showcase element
+    this.showcase?.sendAction(CenterAction.create(['showcase_element']));
   }
 
   updateElement(): void {
