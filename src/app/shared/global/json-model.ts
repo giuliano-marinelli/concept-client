@@ -4,6 +4,10 @@ import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { AModelToJSONForms } from './amodel-to-json-forms';
+
+import { AModelElementSchema } from '../../../dynamic-glsp/protocol/amodel';
+
 export interface JsonModelElementConfig {
   icon?: IconName;
   descriptor?: string;
@@ -11,8 +15,7 @@ export interface JsonModelElementConfig {
   childrenKey?: string;
   fields?: string[];
   default?: any;
-  schema?: JsonSchema;
-  uiSchema?: UISchemaElement;
+  aModel?: AModelElementSchema;
 }
 
 export interface JsonModelConfig {
@@ -490,8 +493,7 @@ export class JsonModel<ModelType = any> {
     const updateSchemas = (node: any, childrenKey?: string | undefined) => {
       if (!node) return;
 
-      const schema = this.config.nodes?.[node.type]?.schema;
-      const uiSchema = this.config.nodes?.[node.type]?.uiSchema;
+      const { schema, uiSchema } = AModelToJSONForms(this.config.nodes?.[node.type]?.aModel!);
 
       // if node don't have _schema and _uiSchema, add it
       if (!node._schema) node._schema = _.cloneDeep(schema);
@@ -517,6 +519,9 @@ export class JsonModel<ModelType = any> {
 
           // update the cached _childrenKey
           node._childrenKey = childrenKey;
+        } else {
+          // remove childrenKey property from node data
+          delete node[prevChildrenKey];
         }
       }
     };

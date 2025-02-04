@@ -32,7 +32,6 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { NgxMasonryModule } from 'ngx-masonry';
 import { AngularResizeEventModule } from 'angular-resize-event-package';
 import { JsonFormsAngularService, JsonFormsModule } from '@jsonforms/angular';
-import { JsonFormsAngularMaterialModule } from '@jsonforms/angular-material';
 //environment
 import { environment } from '../environments/environment';
 //icons
@@ -57,7 +56,6 @@ import { VerifiedMarkComponent } from './shared/components/verified-mark/verifie
 import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
 import { LanguageEditorComponent } from './shared/components/language-editor/language-editor.component';
 import { JsonModelTreeComponent } from './shared/components/gmodel-tree/json-model-tree.component';
-import { JsonFormsRendererComponent } from './shared/components/json-forms-renderer/json-forms-renderer.component';
 //components
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -95,7 +93,6 @@ import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/modul
     ModelEditorComponent,
     LanguageEditorComponent,
     JsonModelTreeComponent,
-    JsonFormsRendererComponent,
     //components
     AppComponent,
     NotFoundComponent,

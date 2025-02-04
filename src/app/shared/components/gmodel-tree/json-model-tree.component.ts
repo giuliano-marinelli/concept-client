@@ -1,6 +1,4 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
-
-import { GModelElementSchema } from '@eclipse-glsp/protocol';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
@@ -17,6 +15,8 @@ export class JsonModelTreeComponent implements OnInit {
   @ViewChildren('nodeContainer') nodeContainers?: QueryList<ElementRef>;
 
   @Input() jsonModel!: JsonModel;
+
+  @Output() nodeSelected = new EventEmitter<string>();
 
   model?: any;
   modelSubscription?: Subscription;
@@ -46,7 +46,10 @@ export class JsonModelTreeComponent implements OnInit {
   }
 
   onNodeClick(path: string, node: any): void {
-    if (node && !this.dragNodePath) this.jsonModel.selectNode(path);
+    if (node && !this.dragNodePath) {
+      this.jsonModel.selectNode(path);
+      this.nodeSelected.emit(path);
+    }
   }
 
   onNodeDragStart(event: DragEvent, nodePath: string): void {

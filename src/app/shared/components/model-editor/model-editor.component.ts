@@ -10,17 +10,19 @@ import {
   GLSPClient,
   MessageAction,
   StatusAction,
+  accessibilityModule,
   createDiagramOptionsModule
 } from '@eclipse-glsp/client';
+import { JsonForms } from '@jsonforms/angular';
 
 import { DynamicGLSPWebSocketProvider } from '../../../../dynamic-glsp/connection/dynamic-websocket-provider';
 import { ExternalServices } from '../../../../dynamic-glsp/diagram/dynamic-external-services';
 import { Language, LanguageElement } from '../../../../dynamic-glsp/protocol/language';
+import { bootstrapRenderers } from '../../../../json-forms/bootstrap-renderer';
+import { AModelToJSONForms } from '../../global/amodel-to-json-forms';
 import { Container } from 'inversify';
 
 import { AModelElementSchema, AModelRootSchema } from '../../../../dynamic-glsp/protocol/amodel';
-
-import { JsonFormsRendererComponent } from '../json-forms-renderer/json-forms-renderer.component';
 
 import { AuthService } from '../../../services/auth.service';
 
@@ -108,6 +110,7 @@ export class ModelEditorComponent implements AfterViewInit {
             },
             { baseDiv: 'sprotty' }
           ),
+          self.editMode === 'editable' ? accessibilityModule : {},
           externalServicesModule
         );
 
@@ -147,62 +150,33 @@ export class ModelEditorComponent implements AfterViewInit {
     this.services.actionDispatcher?.dispatch(action);
   }
 
-  reloadLanguage(): void {
+  reloadLanguage(language?: string | Language | LanguageElement): void {
+    if (language) {
+      this.language = language;
+      this.services.language = language;
+    }
     this.services.reloadLanguage?.();
   }
 
   createJsonForms(container: HTMLElement, elementId: string, elementAModel: AModelRootSchema, elementModel: any): void {
-    const componentRef = this.viewContainerRef.createComponent(JsonFormsRendererComponent);
+    const componentRef = this.viewContainerRef.createComponent(JsonForms);
+    componentRef.instance.renderers = [...bootstrapRenderers];
     componentRef.instance.data = elementModel;
-    componentRef.instance.schema = elementAModel;
-    // componentRef.instance.uiSchema = this.createJsonFormsUI(elementAModel);
-    componentRef.instance.elementId = elementId;
+
+    // generate json forms schema and ui schema from the aModel
+    const { schema, uiSchema } = AModelToJSONForms(elementAModel as AModelElementSchema);
+
+    componentRef.instance.schema = schema;
+    componentRef.instance.uischema = uiSchema;
 
     container.appendChild(componentRef.location.nativeElement);
 
     // to avoid firing the change event before the component is initialized
     setTimeout(() => {
-      componentRef.instance.dataChange.subscribe((event: { elementId: string; newModel: any }) => {
+      componentRef.instance.dataChange.subscribe((event: any) => {
         // send the new model to the GLSP external services so it can be used by the inspector
-        this.services.inspectorElementChanged?.(event.elementId, event.newModel);
+        this.services.inspectorElementChanged?.(elementId, event);
       });
     }, 0);
-  }
-
-  createJsonFormsUI(elementAModel: AModelElementSchema): any {
-    // const uiSchema: any = {};
-    // if (elementAModel.type == 'string' || elementAModel.type == 'integer' || elementAModel.type == 'boolean') {
-    //   uiSchema.type = 'Control';
-    // }
-    // if (elementAModel.type == 'object') {
-    //   uiSchema.type = 'VerticalLayout';
-    //   uiSchema.elements = [];
-    // }
-    // if ((elementAModel as AModelObjectSchema).properties) {
-    //   // traverse the AModelRootSchema and create the corresponding UI schema
-    //   Object.keys((elementAModel as AModelObjectSchema).properties).forEach((propertyKey) => {
-    //     const property = (elementAModel as AModelObjectSchema).properties[propertyKey];
-    //     let arrayElements =
-    //       property.type == 'array' ? this.createJsonFormsUI((property as AModelArraySchema).items) : undefined;
-    //     if (arrayElements && arrayElements.elements) arrayElements = arrayElements.elements;
-    //     const uiElement = {
-    //       type: 'Control',
-    //       scope: `#/properties/${propertyKey}`,
-    //       label: property.label,
-    //       ...(property.type == 'array'
-    //         ? {
-    //             options: {
-    //               detail: {
-    //                 type: 'VerticalLayout',
-    //                 elements: [...arrayElements]
-    //               }
-    //             }
-    //           }
-    //         : {})
-    //     };
-    //     uiSchema.elements.push(uiElement);
-    //   });
-    // }
-    // return uiSchema;
   }
 }

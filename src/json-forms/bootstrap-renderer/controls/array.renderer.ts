@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { JsonFormsAbstractControl, JsonFormsAngularService } from '@jsonforms/angular';
 import {
@@ -16,8 +16,9 @@ import {
   defaultJsonFormsI18nState,
   findUISchema,
   getArrayTranslations,
-  isObjectArrayControl,
+  isObjectArray,
   isObjectArrayWithNesting,
+  isPrimitiveArrayControl,
   mapDispatchToArrayControlProps,
   mapStateToArrayLayoutProps,
   or,
@@ -30,9 +31,9 @@ import {
   selector: 'app-array-layout-renderer',
   template: `
     <div class="card mb-1" [style.display]="hidden ? 'none' : ''" [class.bg-body-secondary]="!this.isEnabled()">
-      <div class="card-body px-2 pb-1 pt-1" [class.pt-3]="!label">
-        <div class="d-flex justify-content-between align-items-center">
-          <label class="card-title ps-1 text-muted small" *ngIf="label">{{ label }}</label>
+      <div class="card-body px-2 pb-1 pt-1">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="card-title ps-1 mb-0 text-muted small">{{ label }}</label>
           <button class="btn btn-sm p-0 text-body no-outline" (click)="this.isEnabled() && add()">
             <fa-icon [icon]="'plus'"></fa-icon>
           </button>
@@ -42,8 +43,24 @@ import {
           [class.bg-body-secondary]="!this.isEnabled()"
           *ngFor="let item of [].constructor(data); let idx = index; trackBy: trackByFn; last as last; first as first"
         >
-          <div class="card-body px-2 pb-1 pt-1" [class.pt-3]="!label">
+          <div class="card-body px-2 pb-1 pt-2">
             <div class="d-flex align-items-start">
+              <div class="d-flex flex-column align-items-center">
+                <button
+                  class="btn btn-sm p-0 pe-2 text-body no-outline"
+                  (click)="this.isEnabled() && up(idx)"
+                  [disabled]="first"
+                >
+                  <fa-icon [icon]="'arrow-up'"></fa-icon>
+                </button>
+                <button
+                  class="btn btn-sm p-0 pe-2 text-body no-outline"
+                  (click)="this.isEnabled() && down(idx)"
+                  [disabled]="last"
+                >
+                  <fa-icon [icon]="'arrow-down'"></fa-icon>
+                </button>
+              </div>
               <div class="flex-grow-1 small">
                 <jsonforms-outlet [renderProps]="getProps(idx)"></jsonforms-outlet>
               </div>
@@ -60,77 +77,6 @@ import {
         </div>
       </div>
     </div>
-
-    <!-- <div [ngStyle]="{ display: hidden ? 'none' : '' }" class="array-layout">
-      <div class="array-layout-toolbar">
-        <h2 class="mat-h2 array-layout-title">{{ label }}</h2>
-        <span></span>
-        <mat-icon
-          *ngIf="this.error?.length"
-          color="warn"
-          matBadge="{{ this.error.split('').length }}"
-          matBadgeColor="warn"
-          matTooltip="{{ this.error }}"
-          matTooltipClass="error-message-tooltip"
-        >
-          error_outline
-        </mat-icon>
-        <span></span>
-        <button
-          mat-button
-          matTooltip="{{ translations.addTooltip }}"
-          [disabled]="!isEnabled()"
-          (click)="add()"
-          attr.aria-label="{{ translations.addAriaLabel }}"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <p *ngIf="noData">{{ translations.noDataMessage }}</p>
-      <div *ngFor="let item of [].constructor(data); let idx = index; trackBy: trackByFn; last as last; first as first">
-        <mat-card class="array-item" appearance="outlined">
-          <mat-card-content>
-            <jsonforms-outlet [renderProps]="getProps(idx)"></jsonforms-outlet>
-          </mat-card-content>
-          <mat-card-actions *ngIf="isEnabled()">
-            <button
-              *ngIf="uischema?.options?.showSortButtons"
-              class="item-up"
-              mat-button
-              [disabled]="first"
-              (click)="up(idx)"
-              attr.aria-label="{{ translations.upAriaLabel }}"
-              matTooltip="{{ translations.up }}"
-              matTooltipPosition="right"
-            >
-              <mat-icon>arrow_upward</mat-icon>
-            </button>
-            <button
-              *ngIf="uischema?.options?.showSortButtons"
-              class="item-down"
-              mat-button
-              [disabled]="last"
-              (click)="down(idx)"
-              attr.aria-label="{{ translations.downAriaLabel }}"
-              matTooltip="{{ translations.down }}"
-              matTooltipPosition="right"
-            >
-              <mat-icon>arrow_downward</mat-icon>
-            </button>
-            <button
-              mat-button
-              color="warn"
-              (click)="remove(idx)"
-              attr.aria-label="{{ translations.removeAriaLabel }}"
-              matTooltip="{{ translations.removeTooltip }}"
-              matTooltipPosition="right"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </div> -->
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.Default
@@ -191,6 +137,15 @@ export class ArrayControlRenderer extends JsonFormsAbstractControl<StatePropsOfA
       setReadonly(uischema);
     }
 
+    console.log(
+      'getProps',
+      index,
+      this.scopedSchema,
+      this.propsPath,
+      Paths.compose(this.propsPath, `${index}`),
+      uischema
+    );
+
     return {
       schema: this.scopedSchema,
       path: Paths.compose(this.propsPath, `${index}`),
@@ -220,4 +175,7 @@ export class ArrayControlRenderer extends JsonFormsAbstractControl<StatePropsOfA
   }
 }
 
-export const ArrayControlRendererTester: RankedTester = rankWith(2, or(isObjectArrayControl));
+export const ArrayControlRendererTester: RankedTester = rankWith(
+  2,
+  or(isObjectArray, isObjectArrayWithNesting, isPrimitiveArrayControl)
+);

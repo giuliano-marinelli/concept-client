@@ -18,6 +18,4 @@ export interface ExternalServices {
   showcaseMode?: boolean;
   actionDispatcher?: IActionDispatcher;
   reloadLanguage?: () => void;
-  requestModel?: () => void;
-  centerElements?: (elementIds: string[], options?: { animate?: boolean; retainZoom?: boolean }) => void;
 }

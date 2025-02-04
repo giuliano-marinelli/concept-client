@@ -13,13 +13,16 @@ export enum EnumStyle {
 
 export interface AModelElementSchema {
   type: Type;
+  key?: string;
   label?: string;
   default?: any;
+  readOnly?: boolean;
+  rule?: any;
 }
 
 export interface AModelEnumSchema extends AModelElementSchema {
   type: Type.STRING | Type.INTEGER | Type.BOOLEAN;
-  enum?: [{ const: string | number | boolean; title: string }];
+  enum?: [{ const: string | number | boolean; title: string }] | string[] | number[] | boolean[];
 }
 
 export interface AModelArraySchema extends AModelElementSchema {
@@ -29,15 +32,7 @@ export interface AModelArraySchema extends AModelElementSchema {
 
 export interface AModelObjectSchema extends AModelElementSchema {
   type: Type.OBJECT;
-  properties: (AModelPropertySchema | AModelEnumPropertySchema)[];
-}
-
-export interface AModelPropertySchema extends AModelElementSchema {
-  key: string;
-}
-
-export interface AModelEnumPropertySchema extends AModelEnumSchema {
-  key: string;
+  properties: AModelElementSchema[];
 }
 
 export interface AModelRootSchema extends AModelObjectSchema {}

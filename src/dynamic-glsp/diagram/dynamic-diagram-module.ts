@@ -100,8 +100,8 @@ export function initializeDynamicDiagramContainer(...containerConfiguration: Con
     edgeEditToolModule, // load bindings for debug mode (it can be enable with an option at command palette)
     debugModule,
     {
-      add: accessibilityModule, // throws error when using editMode: READONLY
-      remove: [keyboardToolPaletteModule, toolPaletteModule, saveModule, exportModule]
+      // add: accessibilityModule, // throws error when using editMode: READONLY (it need to be added on containerConfiguration)
+      remove: [toolPaletteModule, saveModule, exportModule]
     }
   );
 }

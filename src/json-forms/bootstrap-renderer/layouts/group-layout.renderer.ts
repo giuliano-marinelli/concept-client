@@ -9,7 +9,7 @@ import { LayoutRenderer } from './layout.renderer';
   selector: 'GroupLayoutRenderer',
   template: `
     <div class="card mb-1" [style.display]="hidden ? 'none' : ''">
-      <div class="card-body px-2 pb-1 pt-1" [class.pt-3]="!label">
+      <div class="card-body px-2 pb-1 pt-{{ label ? 1 : 2 }}">
         <label class="card-title ps-1 text-muted small" *ngIf="label">{{ label }}</label>
         <div *ngFor="let props of uischema | layoutChildrenRenderProps: schema : path; trackBy: trackElement">
           <jsonforms-outlet [renderProps]="props"></jsonforms-outlet>
@@ -17,19 +17,7 @@ import { LayoutRenderer } from './layout.renderer';
       </div>
     </div>
   `,
-  styles: [
-    `
-      .group-layout {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding: 16px;
-      }
-      .group-layout > div {
-        flex: 1 1 auto;
-      }
-    `
-  ],
+  styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupLayoutRenderer extends LayoutRenderer<GroupLayout> {

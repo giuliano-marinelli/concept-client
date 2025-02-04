@@ -1,11 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { CenterAction, GModelElementSchema, RequestModelAction } from '@eclipse-glsp/protocol';
+import { CenterAction, GModelElementSchema } from '@eclipse-glsp/protocol';
+import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageElement, LanguageElementType } from '../../../../dynamic-glsp/protocol/language';
+import { bootstrapRenderers } from '../../../../json-forms/bootstrap-renderer';
 import { MetaElement } from '../../entities/meta-element.entity';
+import { AModelToJSONForms } from '../../global/amodel-to-json-forms';
 import { Global } from '../../global/global';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
@@ -26,6 +29,8 @@ export class LanguageEditorComponent implements OnInit {
 
   @Input() element!: MetaElement;
   @Input() type: LanguageElementType = LanguageElementType.NODE;
+
+  jsonFormsRenderers = [...bootstrapRenderers];
 
   gModel!: JsonModel<GModelElementSchema>;
 
@@ -55,6 +60,9 @@ export class LanguageEditorComponent implements OnInit {
   aModelSelectedNodeConfig?: any;
   aModelSelectedNodeConfigSubscription?: Subscription;
 
+  aModelJsonSchema!: JsonSchema;
+  aModelUISchema!: UISchemaElement;
+
   showcaseLanguageElement!: LanguageElement;
 
   elementLoading: boolean = true;
@@ -71,6 +79,8 @@ export class LanguageEditorComponent implements OnInit {
     Validators.pattern('[a-zA-Z0-9\\s]*')
   ]);
 
+  defaultModel: any;
+
   constructor(
     public activeModal: NgbActiveModal,
     public formBuilder: FormBuilder
@@ -84,6 +94,9 @@ export class LanguageEditorComponent implements OnInit {
     this.elementForm.patchValue(this.element);
     this.elementLoading = false;
 
+    // set the default model
+    this.defaultModel = _.cloneDeep(this.element.defaultModel);
+
     // create an instance of JsonModel with the gModel and config
     // for manage the access and modification of the gModel
     this.gModel = new JsonModel(
@@ -96,41 +109,31 @@ export class LanguageEditorComponent implements OnInit {
             descriptor: 'layout',
             children: 'children',
             default: { layout: 'vbox' },
-            schema: {
-              properties: {
-                type: { type: 'string', readOnly: true },
-                layout: { type: 'string', enum: ['vbox', 'hbox'] }
-              }
-            } as any,
-            uiSchema: {
-              type: 'VerticalLayout',
-              elements: [
-                { type: 'Control', scope: '#/properties/type' },
-                { type: 'Control', scope: '#/properties/layout' }
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'layout', type: 'string', enum: ['vbox', 'hbox'] }
               ]
-            } as any
+            }
           },
           edge: {
             icon: 'arrows-left-right',
             children: 'children',
-            schema: {
-              properties: {
-                type: { type: 'string', readOnly: true }
-              }
-            } as any,
-            uiSchema: {
-              type: 'VerticalLayout',
-              elements: [{ type: 'Control', scope: '#/properties/type' }]
-            } as any
+            aModel: {
+              type: 'object',
+              properties: [{ key: 'type', type: 'string', readOnly: true }]
+            }
           },
           label: {
             icon: 'tag',
             descriptor: 'text',
             default: { text: 'Text' },
-            schema: {
-              properties: {
-                type: { type: 'string', readOnly: true },
-                text: { type: 'string' }
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'text', type: 'string' }
                 // test: {
                 //   type: 'object',
                 //   properties: {
@@ -164,145 +167,44 @@ export class LanguageEditorComponent implements OnInit {
                 //     }
                 //   }
                 // }
-              }
-            } as any,
-            uiSchema: {
-              type: 'VerticalLayout',
-              elements: [
-                { type: 'Control', scope: '#/properties/type' },
-                { type: 'Control', scope: '#/properties/text' }
-                // {
-                //   type: 'Group',
-                //   label: 'Test',
-                //   elements: [
-                //     { type: 'Control', scope: '#/properties/test/properties/text' },
-                //     { type: 'Control', scope: '#/properties/test/properties/email' },
-                //     { type: 'Control', scope: '#/properties/test/properties/url' },
-                //     { type: 'Control', scope: '#/properties/test/properties/date' },
-                //     { type: 'Control', scope: '#/properties/test/properties/time' },
-                //     { type: 'Control', scope: '#/properties/test/properties/datetime' },
-                //     { type: 'Control', scope: '#/properties/test/properties/duration' },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/textarea',
-                //       options: { multi: true }
-                //     },
-                //     { type: 'Control', scope: '#/properties/test/properties/number' },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/range',
-                //       options: { slider: true }
-                //     },
-                //     { type: 'Control', scope: '#/properties/test/properties/checkbox' },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/switch',
-                //       options: { toggle: true }
-                //     },
-                //     { type: 'Control', scope: '#/properties/test/properties/select' },
-                //     { type: 'Control', scope: '#/properties/test/properties/selectOneOf' },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/radio',
-                //       options: { format: 'radio' }
-                //     },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/radioOneOf',
-                //       options: { format: 'radio' }
-                //     }
-                //   ]
-                // }
-                // {
-                //   type: 'Group',
-                //   label: 'Test Disabled',
-                //   elements: [
-                //     { type: 'Control', scope: '#/properties/test/properties/text', options: { readonly: true } },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/textarea',
-                //       options: { multi: true, readonly: true }
-                //     },
-                //     { type: 'Control', scope: '#/properties/test/properties/number', options: { readonly: true } },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/range',
-                //       options: { slider: true, readonly: true }
-                //     },
-                //     { type: 'Control', scope: '#/properties/test/properties/checkbox', options: { readonly: true } },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/switch',
-                //       options: { toggle: true, readonly: true }
-                //     },
-                //     { type: 'Control', scope: '#/properties/test/properties/select', options: { readonly: true } },
-                //     { type: 'Control', scope: '#/properties/test/properties/selectOneOf', options: { readonly: true } },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/radio',
-                //       options: { format: 'radio', readonly: true }
-                //     },
-                //     {
-                //       type: 'Control',
-                //       scope: '#/properties/test/properties/radioOneOf',
-                //       options: { format: 'radio', readonly: true }
-                //     }
-                //   ]
-                // }
               ]
-            } as any
+            }
           },
           comp: {
             icon: 'box-open',
             descriptor: 'layout',
             children: 'children',
             default: { layout: 'vbox' },
-            schema: {
-              properties: {
-                type: { type: 'string', readOnly: true },
-                layout: { type: 'string', enum: ['vbox', 'hbox'] }
-              }
-            } as any,
-            uiSchema: {
-              type: 'VerticalLayout',
-              elements: [
-                { type: 'Control', scope: '#/properties/type' },
-                { type: 'Control', scope: '#/properties/layout' }
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'layout', type: 'string', enum: ['vbox', 'hbox'] }
               ]
-            } as any
+            }
           },
           decision: {
             icon: 'arrows-turn-to-dots',
             fields: ['then', 'else'],
-            schema: {
-              properties: {
-                type: { type: 'string', readOnly: true },
-                condition: { type: 'string' }
-              }
-            } as any,
-            uiSchema: {
-              type: 'VerticalLayout',
-              elements: [{ type: 'Control', scope: '#/properties/type' }]
-            } as any
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'condition', type: 'string' }
+              ]
+            }
           },
           iteration: {
             icon: 'arrows-rotate',
             fields: ['template'],
-            schema: {
-              properties: {
-                type: { type: 'string', readOnly: true },
-                iterable: { type: 'string' },
-                iterand: { type: 'string' }
-              }
-            } as any,
-            uiSchema: {
-              type: 'VerticalLayout',
-              elements: [
-                { type: 'Control', scope: '#/properties/type' },
-                { type: 'Control', scope: '#/properties/iterable' },
-                { type: 'Control', scope: '#/properties/iterand' }
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'iterable', type: 'string' },
+                { key: 'iterand', type: 'string' }
               ]
-            } as any
+            }
           }
         }
       } as JsonModelConfig
@@ -331,145 +233,107 @@ export class LanguageEditorComponent implements OnInit {
 
     // create an instance of JsonModel with the aModel and config
     // for manage the access and modification of the aModel
-    this.aModel = new JsonModel(_.cloneDeep(this.element.aModel) as AModelElementSchema, {
-      defaultIcon: 'file',
-      nodes: {
-        object: {
-          icon: 'list',
-          descriptor: 'label',
-          children: 'properties',
-          childrenKey: 'key',
-          schema: {
-            properties: {
-              type: { type: 'string', readOnly: true },
-              label: { type: 'string' }
+    this.aModel = new JsonModel(
+      _.cloneDeep(this.element.aModel) as AModelElementSchema,
+      {
+        defaultIcon: 'file',
+        nodes: {
+          object: {
+            icon: 'list',
+            descriptor: 'label',
+            children: 'properties',
+            childrenKey: 'key',
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'label', type: 'string' }
+              ]
             }
-          } as any,
-          uiSchema: {
-            type: 'VerticalLayout',
-            elements: [
-              { type: 'Control', scope: '#/properties/type' },
-              { type: 'Control', scope: '#/properties/label' }
-            ]
-          } as any
-        },
-        array: {
-          icon: 'bars',
-          descriptor: 'label',
-          fields: ['items'],
-          schema: {
-            properties: {
-              type: { type: 'string', readOnly: true },
-              label: { type: 'string' }
+          },
+          array: {
+            icon: 'bars',
+            descriptor: 'label',
+            fields: ['items'],
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'label', type: 'string' }
+              ]
             }
-          } as any,
-          uiSchema: {
-            type: 'VerticalLayout',
-            elements: [
-              { type: 'Control', scope: '#/properties/type' },
-              { type: 'Control', scope: '#/properties/label' }
-            ]
-          } as any
-        },
-        string: {
-          icon: 'font',
-          descriptor: 'label',
-          schema: {
-            properties: {
-              type: { type: 'string', readOnly: true },
-              label: { type: 'string' },
-              isEnum: { type: 'boolean' },
-              enum: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    title: { type: 'string' },
-                    const: { type: 'string' }
-                  }
-                }
-              }
-            }
-          } as any,
-          uiSchema: {
-            type: 'VerticalLayout',
-            elements: [
-              { type: 'Control', scope: '#/properties/type' },
-              { type: 'Control', scope: '#/properties/label' },
-              { type: 'Control', scope: '#/properties/isEnum', options: { toggle: true } },
-              {
-                type: 'Control',
-                scope: '#/properties/enum',
-                options: {
-                  detail: {
-                    type: 'HorizontalLayout',
-                    elements: [
-                      {
-                        type: 'Control',
-                        scope: '#/properties/title'
-                      },
-                      {
-                        type: 'Control',
-                        scope: '#/properties/const',
-                        label: 'Value'
-                      }
+          },
+          string: {
+            icon: 'font',
+            descriptor: 'label',
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'label', type: 'string' },
+                { key: 'isEnum', type: 'boolean' },
+                {
+                  key: 'enum',
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: [
+                      { key: 'title', type: 'string' },
+                      { key: 'const', type: 'string', label: 'Value' }
                     ]
-                  }
-                },
-                rule: {
-                  effect: 'SHOW',
-                  condition: {
-                    scope: '#/properties/isEnum',
-                    schema: {
-                      const: true
-                    },
-                    failWhenUndefined: true
+                  },
+                  rule: {
+                    effect: 'SHOW',
+                    condition: {
+                      scope: '#/properties/isEnum',
+                      schema: {
+                        const: true
+                      },
+                      failWhenUndefined: true
+                    }
                   }
                 }
-              }
-            ]
-          } as any
-        },
-        integer: {
-          icon: 'hashtag',
-          descriptor: 'label',
-          schema: {
-            properties: {
-              type: { type: 'string', readOnly: true },
-              label: { type: 'string' }
+              ]
             }
-          } as any,
-          uiSchema: {
-            type: 'VerticalLayout',
-            elements: [
-              { type: 'Control', scope: '#/properties/type' },
-              { type: 'Control', scope: '#/properties/label' }
-            ]
-          } as any
-        },
-        boolean: {
-          icon: 'circle-half-stroke',
-          descriptor: 'label',
-          schema: {
-            properties: {
-              type: { type: 'string', readOnly: true },
-              label: { type: 'string' }
+          },
+          integer: {
+            icon: 'hashtag',
+            descriptor: 'label',
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'label', type: 'string' }
+              ]
             }
-          } as any,
-          uiSchema: {
-            type: 'VerticalLayout',
-            elements: [
-              { type: 'Control', scope: '#/properties/type' },
-              { type: 'Control', scope: '#/properties/label' }
-            ]
-          } as any
+          },
+          boolean: {
+            icon: 'circle-half-stroke',
+            descriptor: 'label',
+            aModel: {
+              type: 'object',
+              properties: [
+                { key: 'type', type: 'string', readOnly: true },
+                { key: 'label', type: 'string' }
+              ]
+            }
+          }
         }
-      }
-    });
+      } as JsonModelConfig
+    );
 
     // subscribe to the aModel changes
     this._aModelSubscription = this.aModel.getModel().subscribe((newAModel: AModelElementSchema) => {
       this._aModel = newAModel;
+
+      // generate the JSON Forms schema and UI schema from the aModel
+      // for use in the default data editor
+      const { schema, uiSchema } = AModelToJSONForms(this._aModel);
+      this.aModelJsonSchema = schema;
+      this.aModelUISchema = uiSchema;
+
+      console.log('new aModel', this._aModel, this.aModelJsonSchema, this.aModelUISchema);
+
       this.updateShowcase();
     });
 
@@ -487,17 +351,19 @@ export class LanguageEditorComponent implements OnInit {
     this.aModelSelectedNodeConfigSubscription = this.aModel
       .getSelectedNodeConfig()
       .subscribe((newAModelSelectedNodeConfig: any) => (this.aModelSelectedNodeConfig = newAModelSelectedNodeConfig));
-
-    console.log(this.element.gModel);
-    console.log(this.element.aModel);
   }
 
   onGModelNodeChange(event: any): void {
-    this.gModel.setNode(this.gModelSelectedNodePath!, event.newModel);
+    this.gModel.setNode(this.gModelSelectedNodePath!, event);
   }
 
   onAModelNodeChange(event: any): void {
-    this.aModel.setNode(this.aModelSelectedNodePath!, event.newModel);
+    this.aModel.setNode(this.aModelSelectedNodePath!, event);
+  }
+
+  onDefaultModelChange(event: any): void {
+    this.defaultModel = event;
+    this.updateShowcase();
   }
 
   updateShowcase(): void {
@@ -507,18 +373,18 @@ export class LanguageEditorComponent implements OnInit {
       label: this.name.value ?? 'showcase',
       gModel: this._gModel,
       aModel: this._aModel,
-      default: this.element.defaultModel
+      default: this.defaultModel
     };
 
     // send action for reload the language of the showcase
-    this.showcase?.reloadLanguage();
+    this.showcase?.reloadLanguage(this.showcaseLanguageElement);
 
     // send action for request the model of the showcase
     // this allow to update the showcase element render
     this.showcase?.sendAction(RefreshModelOperation.create());
 
     // send action for center the showcase element
-    this.showcase?.sendAction(CenterAction.create(['showcase_element']));
+    this.showcase?.sendAction(CenterAction.create(['showcase_element', 'source', 'target']));
   }
 
   updateElement(): void {

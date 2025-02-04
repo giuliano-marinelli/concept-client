@@ -45,6 +45,13 @@ export class StartupConfiguration implements IDiagramStartup {
     await this.sendLoadLanguageSpecificationAction();
   }
 
+  async postModelInitialization(): Promise<void> {
+    // if showcase mode is true, center the diagram
+    if (this.services.showcaseMode) {
+      await this.actionDispatcher?.dispatch(CenterAction.create(['showcase_element', 'source', 'target']));
+    }
+  }
+
   private async sendLoadLanguageSpecificationAction() {
     const loadLanguageSpecificationAction = LoadLanguageSpecificationAction.create(this.services.language!, {
       showcaseMode: this.services.showcaseMode
