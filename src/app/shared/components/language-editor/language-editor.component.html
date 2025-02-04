@@ -13,7 +13,7 @@
         </label>
         <div class="col">
           <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name" autocomplete="off"
-            [ngClass]="setValid(name)" />
+            [ngClass]="setValid(name, true)" />
           <invalid-feedback [control]="name" name="Name"
             [messages]="{ pattern: 'Name can only have characters and numbers' }"></invalid-feedback>
         </div>
@@ -31,7 +31,7 @@
                 (click)="tabs.left_selected = 'amodel'">Abstract</a>
             </li>
           </ul>
-          <div class="tab-content overflow-auto pt-1 border-start border-end" style="height: calc(100vh - 330px)">
+          <div class="tab-content overflow-auto pt-1 border-start border-end" style="height: calc(100vh - 350px)">
             <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.left_selected == 'gmodel' }">
               <json-model-tree [jsonModel]="gModel"
                 (nodeSelected)="tabs.right_selected = 'inspector'"></json-model-tree>
@@ -58,7 +58,7 @@
                   </li>
                 </ul>
                 <div class="tab-content overflow-auto pt-2 border-start border-end overflow-auto px-2"
-                  style="height: calc(100vh - 330px - 258px)">
+                  style="height: calc(100vh - 350px - 258px)">
                   <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.right_selected == 'inspector' }">
                     <jsonforms *ngIf="gModelSelectedNode"
                       [class.d-none]="tabs.left_selected != 'gmodel' && gModelSelectedNode" [data]="gModelSelectedNode"

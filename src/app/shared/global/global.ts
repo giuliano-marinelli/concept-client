@@ -51,10 +51,10 @@ export class Global {
     return new File([u8arr], filename, { type: mime });
   }
 
-  static setValid(control: FormControl): object {
+  static setValid(control: FormControl, onlyInvalid: boolean = false): object {
     return {
       'is-invalid': !control.pending && control.dirty && !control.valid,
-      'is-valid': !control.pending && control.dirty && control.valid,
+      'is-valid': !control.pending && control.dirty && control.valid && !onlyInvalid,
       'is-pending': control.pending
     };
   }

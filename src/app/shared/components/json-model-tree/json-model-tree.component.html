@@ -89,7 +89,7 @@
           </ng-container>
         </div>
       </div>
-      <button class="btn btn-sm p-0 text-body no-outline" *ngIf="!jsonModel.checkNodeIsRoot(path)"
+      <button class="btn btn-sm p-0 text-body no-outline" *ngIf="node && !jsonModel.checkNodeIsRoot(path)"
         [tp]="remove_node_confirm" [tpInteractive]="true" [tpData]="path" tpTrigger="click" tpPlacement="right">
         <fa-icon [icon]="'xmark'"></fa-icon>
       </button>

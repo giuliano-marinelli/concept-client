@@ -10,7 +10,7 @@ import { AModelElementSchema } from '../../../dynamic-glsp/protocol/amodel';
 
 export interface JsonModelElementConfig {
   icon?: IconName;
-  descriptor?: string;
+  descriptor?: string | ((node: any) => string);
   children?: string;
   childrenKey?: string;
   fields?: string[];
@@ -203,7 +203,15 @@ export class JsonModel<ModelType = any> {
    * Returns the descriptor of the given node.
    */
   getNodeDescriptor(node: any): string {
-    return node && this.config.nodes?.[node.type]?.descriptor ? node[this.config.nodes?.[node.type]?.descriptor!] : '';
+    // if the node or the node descriptor is not defined, return empty string
+    if (!node || !this.config.nodes?.[node.type]?.descriptor) return '';
+
+    // if node descriptor is function, call it with the node
+    if (typeof this.config.nodes?.[node.type]?.descriptor === 'function') {
+      return (this.config.nodes?.[node.type]?.descriptor as (node: any) => string)(node);
+    } else {
+      return node[this.config.nodes?.[node.type]?.descriptor as string];
+    }
   }
 
   /**

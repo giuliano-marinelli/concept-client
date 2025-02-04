@@ -199,6 +199,7 @@ export class LanguageEditorComponent implements OnInit, OnDestroy {
           },
           iteration: {
             icon: 'arrows-rotate',
+            descriptor: (node: any) => (node.iterable ?? '·') + ' -> ' + (node.iterand ?? '·'),
             fields: ['template'],
             aModel: {
               type: 'object',
