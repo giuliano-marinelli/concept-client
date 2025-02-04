@@ -44,6 +44,8 @@
     "@ngneat/overview": "^6.0.0",
     "@popperjs/core": "^2.11.8",
     "@vscode/codicons": "^0.0.36",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "angular-resize-event-package": "^3.5.0",
     "apollo-angular": "^7.2.1",
     "apollo-dynamic": "^1.0.4",

@@ -1,4 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
@@ -10,7 +20,7 @@ import { JsonModel, JsonModelConfig } from '../../global/json-model';
   templateUrl: './json-model-tree.component.html',
   styleUrl: './json-model-tree.component.scss'
 })
-export class JsonModelTreeComponent implements OnInit {
+export class JsonModelTreeComponent implements OnInit, OnDestroy {
   @ViewChildren('placeholder') placeholders?: QueryList<ElementRef>;
   @ViewChildren('nodeContainer') nodeContainers?: QueryList<ElementRef>;
 
@@ -35,6 +45,12 @@ export class JsonModelTreeComponent implements OnInit {
     this.configSubscription = this.jsonModel
       .getConfig()
       .subscribe((newGModelConfig: JsonModelConfig) => (this.config = newGModelConfig));
+  }
+
+  ngOnDestroy(): void {
+    // unsubscribe from the model and config subscriptions
+    this.modelSubscription?.unsubscribe();
+    this.configSubscription?.unsubscribe();
   }
 
   onNodeAdd(path: string, type: string): void {

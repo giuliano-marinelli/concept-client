@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { CenterAction, GModelElementSchema } from '@eclipse-glsp/protocol';
@@ -9,8 +9,10 @@ import { LanguageElement, LanguageElementType } from '../../../../dynamic-glsp/p
 import { RefreshModelOperation } from '../../../../dynamic-glsp/protocol/operation/model-refresh';
 import { bootstrapRenderers } from '../../../../json-forms/bootstrap-renderer';
 import { MetaElement } from '../../entities/meta-element.entity';
+import { ajvOptions } from '../../global/ajv-validator';
 import { AModelToJSONForms } from '../../global/amodel-to-json-forms';
 import { Global } from '../../global/global';
+import { Ajv } from 'ajv';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
 
@@ -24,13 +26,14 @@ import { ModelEditorComponent } from '../model-editor/model-editor.component';
   templateUrl: './language-editor.component.html',
   styleUrl: './language-editor.component.scss'
 })
-export class LanguageEditorComponent implements OnInit {
+export class LanguageEditorComponent implements OnInit, OnDestroy {
   @ViewChild('showcase') showcase!: ModelEditorComponent;
 
   @Input() element!: MetaElement;
   @Input() type: LanguageElementType = LanguageElementType.NODE;
 
   jsonFormsRenderers = [...bootstrapRenderers];
+  ajv = new Ajv(ajvOptions);
 
   gModel!: JsonModel<GModelElementSchema>;
 
@@ -332,7 +335,8 @@ export class LanguageEditorComponent implements OnInit {
       this.aModelJsonSchema = schema;
       this.aModelUISchema = uiSchema;
 
-      console.log('new aModel', this._aModel, this.aModelJsonSchema, this.aModelUISchema);
+      // validate the default model with the schema for apply validations and filter the unused data
+      this.ajv.validate(schema, this.defaultModel);
 
       this.updateShowcase();
     });
@@ -351,6 +355,18 @@ export class LanguageEditorComponent implements OnInit {
     this.aModelSelectedNodeConfigSubscription = this.aModel
       .getSelectedNodeConfig()
       .subscribe((newAModelSelectedNodeConfig: any) => (this.aModelSelectedNodeConfig = newAModelSelectedNodeConfig));
+  }
+
+  ngOnDestroy(): void {
+    this._gModelSubscription?.unsubscribe();
+    this.gModelSelectedNodePathSubscription?.unsubscribe();
+    this.gModelSelectedNodeSubscription?.unsubscribe();
+    this.gModelSelectedNodeConfigSubscription?.unsubscribe();
+
+    this._aModelSubscription?.unsubscribe();
+    this.aModelSelectedNodePathSubscription?.unsubscribe();
+    this.aModelSelectedNodeSubscription?.unsubscribe();
+    this.aModelSelectedNodeConfigSubscription?.unsubscribe();
   }
 
   onGModelNodeChange(event: any): void {

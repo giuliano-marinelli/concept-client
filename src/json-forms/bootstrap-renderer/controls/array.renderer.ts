@@ -137,15 +137,6 @@ export class ArrayControlRenderer extends JsonFormsAbstractControl<StatePropsOfA
       setReadonly(uischema);
     }
 
-    console.log(
-      'getProps',
-      index,
-      this.scopedSchema,
-      this.propsPath,
-      Paths.compose(this.propsPath, `${index}`),
-      uischema
-    );
-
     return {
       schema: this.scopedSchema,
       path: Paths.compose(this.propsPath, `${index}`),
