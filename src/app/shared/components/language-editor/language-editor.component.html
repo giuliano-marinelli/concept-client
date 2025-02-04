@@ -1,24 +1,43 @@
 <div class="modal-content" *ngIf="element">
-  <div class="modal-header">
-    <h5 class="modal-title">
-      <fa-icon [icon]="'palette'"></fa-icon> Edit {{ element.type }}
-    </h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <form [class.loading]="elementLoading" [formGroup]="elementForm" (ngSubmit)="updateElement()">
-      <div class="row">
-        <label class="col-auto col-form-label">
-          Name
-        </label>
-        <div class="col">
-          <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name" autocomplete="off"
-            [ngClass]="setValid(name, true)" />
-          <invalid-feedback [control]="name" name="Name"
-            [messages]="{ pattern: 'Name can only have characters and numbers' }"></invalid-feedback>
+  <form [class.loading]="elementLoading" [formGroup]="elementForm">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <fa-icon [icon]="'palette'"></fa-icon> Edit {{ capitalizeFirstLetter(element.type) }}
+      </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-lg-6">
+          <div class="row">
+            <label class="col-auto col-form-label">
+              Name
+            </label>
+            <div class="col">
+              <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name"
+                autocomplete="off" [ngClass]="setValid(name, true)" />
+              <invalid-feedback [control]="name" name="Name"
+                [messages]="{ pattern: 'Name only can have characters and numbers' }"></invalid-feedback>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="row">
+            <label class="col-auto col-form-label">
+              Tag
+            </label>
+            <div class="col">
+              <div class="input-spinner">
+                <input class="form-control bg-dark-subtle" type="text" name="tag" formControlName="tag"
+                  autocomplete="off" [ngClass]="setValid(tag, true)" />
+                <fa-icon *ngIf="tag.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
+                <invalid-feedback [control]="tag" name="Tag"
+                  [messages]="{ pattern: 'Tag only can have lower case alphanumeric' }"></invalid-feedback>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="w-100 mb-3"></div>
       <div class="row" *ngVar="{ left_selected: 'gmodel', right_selected: 'inspector' } as tabs">
         <div class="col-12 col-lg-5 pe-lg-0 ps-lg-2">
           <ul class="nav nav-tabs">
@@ -33,11 +52,11 @@
           </ul>
           <div class="tab-content overflow-auto pt-1 border-start border-end" style="height: calc(100vh - 350px)">
             <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.left_selected == 'gmodel' }">
-              <json-model-tree [jsonModel]="gModel"
+              <json-model-tree [jsonModel]="gModelTree"
                 (nodeSelected)="tabs.right_selected = 'inspector'"></json-model-tree>
             </div>
             <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.left_selected == 'amodel' }">
-              <json-model-tree [jsonModel]="aModel"
+              <json-model-tree [jsonModel]="aModelTree"
                 (nodeSelected)="tabs.right_selected = 'inspector'"></json-model-tree>
             </div>
           </div>
@@ -62,14 +81,14 @@
                   <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.right_selected == 'inspector' }">
                     <jsonforms *ngIf="gModelSelectedNode"
                       [class.d-none]="tabs.left_selected != 'gmodel' && gModelSelectedNode" [data]="gModelSelectedNode"
-                      [schema]="gModel.getNodeSchema(gModelSelectedNode)"
-                      [uischema]="gModel.getNodeUISchema(gModelSelectedNode)" [renderers]="jsonFormsRenderers"
+                      [schema]="gModelTree.getNodeSchema(gModelSelectedNode)"
+                      [uischema]="gModelTree.getNodeUISchema(gModelSelectedNode)" [renderers]="jsonFormsRenderers"
                       (dataChange)="onGModelNodeChange($event)">
                     </jsonforms>
                     <jsonforms *ngIf="aModelSelectedNode"
                       [class.d-none]="tabs.left_selected != 'amodel' && aModelSelectedNode" [data]="aModelSelectedNode"
-                      [schema]="aModel.getNodeSchema(aModelSelectedNode)"
-                      [uischema]="aModel.getNodeUISchema(aModelSelectedNode)" [renderers]="jsonFormsRenderers"
+                      [schema]="aModelTree.getNodeSchema(aModelSelectedNode)"
+                      [uischema]="aModelTree.getNodeUISchema(aModelSelectedNode)" [renderers]="jsonFormsRenderers"
                       (dataChange)="onAModelNodeChange($event)">
                     </jsonforms>
                   </div>
@@ -91,10 +110,14 @@
           </div>
         </div>
       </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" ngbAutofocus class="btn btn-default"
-      (click)="activeModal.dismiss('Close click')">Close</button>
-  </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" ngbAutofocus class="btn btn-default"
+        (click)="activeModal.dismiss('Close click')">Close</button>
+      <button type="button" class="btn btn-success" [disabled]="!elementForm.valid || submitLoading"
+        (click)="updateElement()">
+        Save <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
+      </button>
+    </div>
+  </form>
 </div>

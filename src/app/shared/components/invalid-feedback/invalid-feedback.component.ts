@@ -32,6 +32,8 @@ export class InvalidFeedbackComponent {
         return 'Username is already taken, please try another one';
       case 'emailExists':
         return 'Email is already taken, please try another one';
+      case 'tagExists':
+        return 'Tag is already taken, please try another one';
       case 'equalTo':
         return `${this.name} must match ${this.control?.errors?.['equalTo']?.controlName}.`;
       case 'pattern':

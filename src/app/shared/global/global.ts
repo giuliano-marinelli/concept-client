@@ -100,4 +100,8 @@ export class Global {
   static compareById(a: any, b: any): boolean {
     return a.id === b.id;
   }
+
+  static capitalizeFirstLetter(value: string): string {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
 }

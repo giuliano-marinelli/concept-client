@@ -1,6 +1,7 @@
 import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { CheckEmailAddressExists } from '../entities/email.entity';
+import { CheckMetaElementTagExists, CheckMetaModelTagExists } from '../entities/meta-model.entity';
 import { CheckUserUsernameExists } from '../entities/user.entity';
 import { isEmail } from 'class-validator';
 import { map } from 'rxjs';
@@ -35,6 +36,44 @@ export class ExtraValidators {
           return data?.checkEmailAddressExists ? { emailExists: true } : null;
         })
       );
+    };
+  }
+
+  /**
+   * @description
+   * Validator that requires the control's value to be a valid tag that does not exist in the database.
+   * @returns An error map with the `tagExists` property
+   * if the validation check fails, otherwise `null`.
+   */
+  static metaModelTagExists(checkMetaModelTagExists: CheckMetaModelTagExists, metaModel: string): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      return checkMetaModelTagExists.fetch({ metaModel: metaModel, tag: control.value }).pipe(
+        map(({ data }) => {
+          return data?.checkMetaModelTagExists ? { tagExists: true } : null;
+        })
+      );
+    };
+  }
+
+  /**
+   * @description
+   * Validator that requires the control's value to be a valid tag that does not exist in the database.
+   * @returns An error map with the `tagExists` property
+   * if the validation check fails, otherwise `null`.
+   */
+  static metaElementTagExists(
+    checkMetaElementTagExists: CheckMetaElementTagExists,
+    metaModel: string,
+    metaElement: string
+  ): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      return checkMetaElementTagExists
+        .fetch({ metaModel: metaModel, metaElement: metaElement, tag: control.value })
+        .pipe(
+          map(({ data }) => {
+            return data?.checkMetaElementTagExists ? { tagExists: true } : null;
+          })
+        );
     };
   }
 

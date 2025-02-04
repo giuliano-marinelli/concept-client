@@ -67,7 +67,7 @@ export class LanguageComponent implements OnInit {
             this.language = data.metaModels.set[0] ?? null;
             if (this.language) {
               this.titleService.setTitle(this.language.tag + '@' + this.language.version + ' · ' + this.language.name);
-              if (this.language && this.language.metaElements) this.editElement(this.language.metaElements[2]);
+              // if (this.language && this.language.metaElements) this.editElement(this.language.metaElements[2]);
             } else {
               this.router.navigate(['not-found']);
             }
@@ -85,7 +85,12 @@ export class LanguageComponent implements OnInit {
 
   editElement(element: MetaElement): void {
     const modalRef = this.modalService.open(LanguageEditorComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.language = this.language;
     modalRef.componentInstance.element = element;
     modalRef.componentInstance.type = element.type;
+
+    modalRef.dismissed.subscribe(() => {
+      this.getLanguage();
+    });
   }
 }

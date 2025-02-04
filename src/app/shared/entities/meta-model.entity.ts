@@ -89,8 +89,17 @@ export class DeleteMetaModel extends Mutation<{ deleteMetaModel: string }> {
 @Injectable({ providedIn: 'root' })
 export class CheckMetaModelTagExists extends Query<{ checkMetaModelTagExists: boolean }> {
   override document = gql`
-    query CheckMetaModelTagExists($tag: String!) {
-      checkMetaModelTagExists(tag: $tag)
+    query CheckMetaModelTagExists($metaModel: UUID!, $tag: String!) {
+      checkMetaModelTagExists(metaModel: $metaModel, tag: $tag)
+    }
+  `;
+}
+
+@Injectable({ providedIn: 'root' })
+export class CheckMetaElementTagExists extends Query<{ checkMetaElementTagExists: boolean }> {
+  override document = gql`
+    query CheckMetaElementTagExists($metaModel: UUID!, $metaElement: UUID!, $tag: String!) {
+      checkMetaElementTagExists(metaModel: $metaModel, metaElement: $metaElement, tag: $tag)
     }
   `;
 }
