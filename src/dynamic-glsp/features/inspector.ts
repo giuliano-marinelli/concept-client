@@ -13,7 +13,7 @@ import {
 } from '@eclipse-glsp/client';
 
 import { ExternalServices } from '../diagram/dynamic-external-services';
-import { ModelChangeOperation } from '../protocol/operation/model-change';
+import { ChangeModelOperation } from '../protocol/operation/model-change';
 import { inject, injectable } from 'inversify';
 
 export const IInspector = Symbol('IInspector');
@@ -68,7 +68,7 @@ export class Inspector extends AbstractUIExtension implements ISelectionListener
   protected initializeContents(containerElement: HTMLElement): void {
     this.services.inspectorElementChanged = async (elementId: string, newModel: any) => {
       console.log('Model Changed', elementId, newModel);
-      const modelChangeOperation = ModelChangeOperation.create({ elementId, newModel });
+      const modelChangeOperation = ChangeModelOperation.create({ elementId, newModel });
       await this.actionDispatcher.dispatch(modelChangeOperation);
     };
     this.setNoSelection();

@@ -6,6 +6,7 @@ import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LanguageElement, LanguageElementType } from '../../../../dynamic-glsp/protocol/language';
+import { RefreshModelOperation } from '../../../../dynamic-glsp/protocol/operation/model-refresh';
 import { bootstrapRenderers } from '../../../../json-forms/bootstrap-renderer';
 import { MetaElement } from '../../entities/meta-element.entity';
 import { AModelToJSONForms } from '../../global/amodel-to-json-forms';
@@ -14,7 +15,6 @@ import _ from 'lodash';
 import { Subscription } from 'rxjs';
 
 import { AModelElementSchema } from '../../../../dynamic-glsp/protocol/amodel';
-import { RefreshModelOperation } from '../../../../dynamic-glsp/protocol/operation/refresh-model';
 import { JsonModel, JsonModelConfig } from '../../global/json-model';
 
 import { ModelEditorComponent } from '../model-editor/model-editor.component';
