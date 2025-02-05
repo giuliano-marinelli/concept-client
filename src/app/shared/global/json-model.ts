@@ -28,6 +28,7 @@ export interface JsonModelConfig {
 export class JsonModel<ModelType = any> {
   private model: ModelType;
   private modelSubject: BehaviorSubject<ModelType>;
+  private clearModelSubject: BehaviorSubject<ModelType>;
 
   private config: JsonModelConfig;
   private configSubject: BehaviorSubject<JsonModelConfig>;
@@ -38,13 +39,14 @@ export class JsonModel<ModelType = any> {
   private selectedNodeConfigSubject: BehaviorSubject<any>;
 
   constructor(model: ModelType, config?: JsonModelConfig) {
-    // initialize the model and its observable
-    this.model = model;
-    this.modelSubject = new BehaviorSubject<ModelType>(this.model);
-
     // initialize the model config and its observable
     this.config = config || { defaultIcon: 'circle' };
     this.configSubject = new BehaviorSubject<JsonModelConfig>(this.config);
+
+    // initialize the model and its observable
+    this.model = model;
+    this.modelSubject = new BehaviorSubject<ModelType>(this.model);
+    this.clearModelSubject = new BehaviorSubject<ModelType>(this.clearModel());
 
     // initialize the selected node path and its observable
     this.selectedNodePath = '';
@@ -70,6 +72,18 @@ export class JsonModel<ModelType = any> {
    */
   getModel(): Observable<ModelType> {
     return this.modelSubject.asObservable();
+  }
+
+  /**
+   * Returns the cleared JSON model observable for subscribe.
+   *
+   * Returns a clear model where nodes hidden properties used for control are removed.
+   * This is useful when the model is going to be saved or sent to the server.
+   *
+   * It removes the _selected, _remove, _schema, _uiSchema and _childrenKey properties.
+   */
+  getClearModel(): Observable<ModelType> {
+    return this.clearModelSubject.asObservable();
   }
 
   /**
@@ -262,11 +276,47 @@ export class JsonModel<ModelType = any> {
   }
 
   /**
+   * Returns a clear model where nodes hidden properties used for control are removed.
+   * This is useful when the model is going to be saved or sent to the server.
+   *
+   * It removes the _selected, _remove, _schema, _uiSchema and _childrenKey properties.
+   */
+  clearModel(): ModelType {
+    const clearNode = (node: any) => {
+      if (!node) return;
+
+      // remove hidden properties
+      delete node._selected;
+      delete node._remove;
+      delete node._schema;
+      delete node._uiSchema;
+      delete node._childrenKey;
+
+      // clear children
+      if (this.checkNodeCanHaveChildren(node)) {
+        const children = this.getNodeChildren(node);
+        if (children) children.forEach((child: any) => clearNode(child));
+      }
+
+      // clear fields
+      if (this.checkNodeCanHaveFields(node)) {
+        const fields = this.config.nodes?.[node.type]?.fields;
+        if (fields) fields.forEach((field: string) => clearNode(node[field]));
+      }
+    };
+
+    const model = _.cloneDeep(this.model);
+    clearNode(model);
+    return model;
+  }
+
+  /**
    * Set the entire model to the given model.
    */
   setModel(model: ModelType): void {
     this.model = model;
     this.modelSubject.next(this.model);
+    this.clearModelSubject.next(this.clearModel());
   }
 
   /**
@@ -303,6 +353,7 @@ export class JsonModel<ModelType = any> {
     if (update) {
       // emit the updated model
       this.modelSubject.next(this.model);
+      this.clearModelSubject.next(this.clearModel());
     }
   }
 
@@ -381,6 +432,7 @@ export class JsonModel<ModelType = any> {
 
       // emit the updated model
       this.modelSubject.next(this.model);
+      this.clearModelSubject.next(this.clearModel());
     }
   }
 
@@ -409,6 +461,7 @@ export class JsonModel<ModelType = any> {
 
       // emit the updated model
       this.modelSubject.next(this.model);
+      this.clearModelSubject.next(this.clearModel());
     }
   }
 
@@ -454,6 +507,7 @@ export class JsonModel<ModelType = any> {
 
       // emit the updated model
       this.modelSubject.next(this.model);
+      this.clearModelSubject.next(this.clearModel());
     }
   }
 

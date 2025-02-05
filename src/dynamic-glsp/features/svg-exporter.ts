@@ -48,8 +48,6 @@ export class SvgExporter extends GLSPSvgExporter {
     // position the content of the svg element at the top left corner
     svgContent.setAttribute('transform', `scale(1) translate(${4 - bbox.x},${4 - bbox.y})`);
 
-    console.log('bbox', bbox);
-
     svgElement.setAttribute('width', `${bbox.width + 8}`);
     svgElement.setAttribute('height', `${bbox.height + 8}`);
 

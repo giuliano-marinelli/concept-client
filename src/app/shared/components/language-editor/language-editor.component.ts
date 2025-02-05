@@ -235,7 +235,7 @@ export class LanguageEditorComponent implements OnInit, OnDestroy {
     } as JsonModelConfig);
 
     // subscribe to the gModel changes
-    this.gModelSubscription = this.gModelTree.getModel().subscribe((newGModel: GModelElementSchema) => {
+    this.gModelSubscription = this.gModelTree.getClearModel().subscribe((newGModel: GModelElementSchema) => {
       this.gModel = newGModel;
       this.updateShowcase();
     });
@@ -348,7 +348,7 @@ export class LanguageEditorComponent implements OnInit, OnDestroy {
     } as JsonModelConfig);
 
     // subscribe to the aModel changes
-    this.aModelSubscription = this.aModelTree.getModel().subscribe((newAModel: AModelElementSchema) => {
+    this.aModelSubscription = this.aModelTree.getClearModel().subscribe((newAModel: AModelElementSchema) => {
       this.aModel = newAModel;
 
       // generate the JSON Forms schema and UI schema from the aModel
