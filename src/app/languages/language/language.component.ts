@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -37,6 +37,7 @@ export class LanguageComponent implements OnInit {
     public titleService: Title,
     public modalService: NgbModal,
     public changeDetector: ChangeDetectorRef,
+    public sanitizer: DomSanitizer,
     private _findMetaModels: FindMetaModels
   ) {
     this.route.params.subscribe((params) => {
@@ -92,5 +93,9 @@ export class LanguageComponent implements OnInit {
     modalRef.dismissed.subscribe(() => {
       this.getLanguage();
     });
+  }
+
+  sanitizeSVG(svg: string): any {
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 }

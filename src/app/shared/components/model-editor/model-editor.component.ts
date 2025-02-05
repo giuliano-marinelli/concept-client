@@ -146,16 +146,20 @@ export class ModelEditorComponent implements AfterViewInit {
     });
   }
 
-  sendAction(action: Action): void {
-    this.services.actionDispatcher?.dispatch(action);
+  async sendAction(action: Action): Promise<void> {
+    await this.services.actionDispatcher?.dispatch(action);
   }
 
-  reloadLanguage(language?: string | Language | LanguageElement): void {
+  async reloadLanguage(language?: string | Language | LanguageElement): Promise<void> {
     if (language) {
       this.language = language;
       this.services.language = language;
     }
-    this.services.reloadLanguage?.();
+    await this.services.reloadLanguage?.();
+  }
+
+  getSVG(): string {
+    return this.services.getSVG?.() || '';
   }
 
   createJsonForms(container: HTMLElement, elementId: string, elementAModel: AModelRootSchema, elementModel: any): void {

@@ -17,5 +17,6 @@ export interface ExternalServices {
   language?: string | Language | LanguageElement;
   showcaseMode?: boolean;
   actionDispatcher?: IActionDispatcher;
-  reloadLanguage?: () => void;
+  reloadLanguage?: () => Promise<void>;
+  getSVG?: () => string;
 }

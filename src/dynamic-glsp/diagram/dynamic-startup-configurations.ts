@@ -1,12 +1,6 @@
-import {
-  CenterAction,
-  GridManager,
-  IActionDispatcher,
-  IDiagramStartup,
-  RequestModelAction,
-  TYPES
-} from '@eclipse-glsp/client';
+import { CenterAction, GridManager, IActionDispatcher, IDiagramStartup, TYPES } from '@eclipse-glsp/client';
 
+import { SvgExporter } from '../features/svg-exporter';
 import {
   LoadLanguageSpecificationAction,
   ReadyLanguageSpecificationAction
@@ -21,6 +15,9 @@ export class StartupConfiguration implements IDiagramStartup {
 
   @inject(TYPES.IActionDispatcher)
   protected readonly actionDispatcher!: IActionDispatcher;
+
+  @inject(TYPES.SvgExporter)
+  protected svgExporter?: SvgExporter;
 
   @inject(GridManager)
   @optional()
@@ -39,6 +36,11 @@ export class StartupConfiguration implements IDiagramStartup {
     // define reload language function for use with external services
     this.services.reloadLanguage = async () => {
       await this.sendLoadLanguageSpecificationAction();
+    };
+
+    // define get svg function for use with external services
+    this.services.getSVG = () => {
+      return this.svgExporter?.getSvg() ?? '';
     };
 
     // load the language specification for the first time

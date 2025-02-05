@@ -406,7 +406,7 @@ export class LanguageEditorComponent implements OnInit, OnDestroy {
     this.updateShowcase();
   }
 
-  updateShowcase(): void {
+  async updateShowcase(): Promise<void> {
     this.showcaseLanguageElement = {
       type: this.type,
       name: this.element.tag ?? 'showcase',
@@ -417,27 +417,29 @@ export class LanguageEditorComponent implements OnInit, OnDestroy {
     };
 
     // send action for reload the language of the showcase
-    this.showcase?.reloadLanguage(this.showcaseLanguageElement);
+    await this.showcase?.reloadLanguage(this.showcaseLanguageElement);
 
     // send action for request the model of the showcase
     // this allow to update the showcase element render
-    this.showcase?.sendAction(RefreshModelOperation.create());
+    await this.showcase?.sendAction(RefreshModelOperation.create());
 
     // send action for center the showcase element
-    this.showcase?.sendAction(CenterAction.create(['showcase_element', 'source', 'target']));
+    await this.showcase?.sendAction(CenterAction.create(['showcase_element', 'source', 'target']));
   }
 
-  updateElement(): void {
+  async updateElement(): Promise<void> {
+    this.submitLoading = true;
     this.elementForm.markAllAsTouched();
+    await this.updateShowcase();
     if (this.elementForm.valid) {
-      this.submitLoading = true;
       this._updateMetaElement
         .mutate({
           metaElementUpdateInput: Object.assign(this.elementForm.value, {
             type: this.type,
             gModel: this.gModel,
             aModel: this.aModel,
-            defaultModel: this.defaultModel
+            defaultModel: this.defaultModel,
+            preview: this.showcase?.getSVG()
           })
         })
         .subscribe({
@@ -465,6 +467,7 @@ export class LanguageEditorComponent implements OnInit, OnDestroy {
         onlyOne: true,
         displayMode: 'replace'
       });
+      this.submitLoading = false;
     }
   }
 }

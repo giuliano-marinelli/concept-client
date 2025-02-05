@@ -17,29 +17,33 @@
       <span *ngIf="language.description">{{ language.description }}</span>
       <span *ngIf="!language.description" class="text-muted fst-italic">No description</span>
     </div>
-    <div class="py-3">
-      <h3>Nodes</h3>
-      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
-        class="row mt-3" [class.loading]="languageLoading"
-        *ngIf="filter(language.metaElements, { type: 'node' })?.length">
-        <div ngxMasonryItem class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 masonry-item"
-          *ngFor="let node of language.metaElements | filter: { type: 'node' }">
-          <ng-container [ngTemplateOutlet]="elementCard"
-            [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
-          </ng-container>
-        </div>
-      </ngx-masonry>
-      <h3>Edges</h3>
-      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
-        class="row mt-3" [class.loading]="languageLoading"
-        *ngIf="filter(language.metaElements, { type: 'edge' })?.length">
-        <div ngxMasonryItem class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 masonry-item"
-          *ngFor="let node of language.metaElements | filter: { type: 'edge' }">
-          <ng-container [ngTemplateOutlet]="elementCard"
-            [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
-          </ng-container>
-        </div>
-      </ngx-masonry>
+    <div class="py-3 row">
+      <div class="col-12 col-md-6">
+        <h3>Nodes</h3>
+        <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
+          class="row mt-3" [class.loading]="languageLoading"
+          *ngIf="filter(language.metaElements, { type: 'node' })?.length">
+          <div ngxMasonryItem class="col-12 col-lg-6 mb-4 masonry-item"
+            *ngFor="let node of language.metaElements | filter: { type: 'node' }">
+            <ng-container [ngTemplateOutlet]="elementCard"
+              [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
+            </ng-container>
+          </div>
+        </ngx-masonry>
+      </div>
+      <div class="col-12 col-md-6">
+        <h3>Edges</h3>
+        <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
+          class="row mt-3" [class.loading]="languageLoading"
+          *ngIf="filter(language.metaElements, { type: 'edge' })?.length">
+          <div ngxMasonryItem class="col-12 col-lg-6 mb-4 masonry-item"
+            *ngFor="let node of language.metaElements | filter: { type: 'edge' }">
+            <ng-container [ngTemplateOutlet]="elementCard"
+              [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
+            </ng-container>
+          </div>
+        </ngx-masonry>
+      </div>
     </div>
   </div>
 </div>
@@ -52,10 +56,10 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <div class="d-flex flex-row pb-1">
+        <div class="d-flex flex-row">
           <div class="flex-shrink-0">
-            <img class="me-3 img-thumbnail rounded-circle element-img" [src]="element.preview"
-              onerror="this.src='assets/images/default-element.png'" />
+            <div class="sprotty pe-3" [innerHTML]="sanitizeSVG(element.preview)" style="max-width: 200px;">
+            </div>
           </div>
           <div class="flex-fill d-flex flex-column text-break">
             <span class="small" *ngIf="element.name">{{ element.name }}</span>
@@ -81,40 +85,6 @@
                 <ng-container [ngTemplateOutlet]="elementMini" [ngTemplateOutletContext]="{ element: element }">
                 </ng-container>
               </ng-template>
-            </div>
-          </div>
-        </div>
-        <div class="mt-1 small" *ngVar="{ gModelCollapsed: true } as gModelSettings">
-          <a [ngClass]="element.gModel ? 'pe-pointer dropdown-toggle text-body' : ''"
-            (click)="element.gModel ? gModelCollapse.toggle() : null"
-            [attr.aria-expanded]="!gModelSettings.gModelCollapsed">
-            <b>Graphical Structure</b>
-            <span *ngIf="!element.gModel" class="text-muted">&nbsp;empty</span>
-          </a>
-          <div #gModelCollapse="ngbCollapse" [(ngbCollapse)]="gModelSettings.gModelCollapsed">
-            <div class="card">
-              <div class="card-body p-2">
-                <pre class="m-0" style="max-height: 200px;">
-                  {{ JSON.stringify(element.gModel, null, 1) }}
-                </pre>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-1 small" *ngVar="{ aModelCollapsed: true } as aModelSettings">
-          <a [ngClass]="element.aModel ? 'pe-pointer dropdown-toggle text-body' : ''"
-            (click)="element.aModel ? aModelCollapse.toggle() : null"
-            [attr.aria-expanded]="!aModelSettings.aModelCollapsed">
-            <b>Abstract Structure</b>
-            <span *ngIf="!element.aModel" class="text-muted">&nbsp;empty</span>
-          </a>
-          <div #aModelCollapse="ngbCollapse" [(ngbCollapse)]="aModelSettings.aModelCollapsed">
-            <div class="card">
-              <div class="card-body p-2">
-                <pre class="m-0" style="max-height: 200px;">
-                  {{ JSON.stringify(element.aModel, null, 1) }}
-                </pre>
-              </div>
             </div>
           </div>
         </div>

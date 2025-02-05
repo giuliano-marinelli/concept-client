@@ -1,4 +1,4 @@
-import { GLSPSvgExporter, GModelRoot } from '@eclipse-glsp/client';
+import { GLSPSvgExporter } from '@eclipse-glsp/client';
 
 export class SvgExporter extends GLSPSvgExporter {
   getSvg(): string | undefined {
@@ -7,39 +7,55 @@ export class SvgExporter extends GLSPSvgExporter {
       return;
     }
 
-    let svgElement = this.createSvgElement();
-
-    console.log('svgElement', svgElement);
-
     const serializer = new XMLSerializer();
+    return serializer.serializeToString(this.createSvgElement());
+  }
 
-    return serializer.serializeToString(svgElement);
+  protected findBaseSvgElement(): SVGSVGElement | null {
+    const div = document.getElementById(this.options.baseDiv);
+    return div && div.querySelector('svg');
   }
 
   protected createSvgElement(): SVGSVGElement {
-    const svgElement = this.findSvgElement() as SVGSVGElement;
+    // get the base svg element
+    const svgBase = this.findBaseSvgElement() as SVGSVGElement;
 
-    const serializer = new XMLSerializer();
-    const svgCopy = serializer.serializeToString(svgElement);
+    // copy svg base into a temporal div
+    const div = document.createElement('div');
+    div.innerHTML = svgBase.outerHTML;
 
-    const iframe: HTMLIFrameElement = document.createElement('iframe');
-    document.body.appendChild(iframe);
+    // get the svg element from the div
+    const svgElement = div.querySelector('svg') as SVGSVGElement;
 
-    if (!iframe.contentWindow) throw new Error('IFrame has no contentWindow');
+    // find all elements inside the svg element that have selected class and remove that class from them
+    const selectedElements = svgElement.querySelectorAll('.selected');
+    selectedElements.forEach((element) => element.classList.remove('selected'));
 
-    const docCopy = iframe.contentWindow.document;
-    docCopy.open();
-    docCopy.write(svgCopy);
-    docCopy.close();
+    // remove inline styles of the svg element
+    svgElement.removeAttribute('style');
 
-    const svgElementNew = docCopy.querySelector('svg')!;
-    svgElementNew.removeAttribute('opacity');
-    svgElementNew.style.width = '100%';
-    svgElementNew.style.height = '100%';
-    svgElementNew.getElementsByTagName('g')[0].setAttribute('transform', 'scale(1) translate(0,0)');
+    // remove opacity attribute
+    svgElement.removeAttribute('opacity');
 
-    document.body.removeChild(iframe);
+    // get the content of the svg element
+    const svgContent = svgElement.getElementsByTagName('g')[0];
 
-    return svgElementNew;
+    // update the width and height of the svg element to fit the content
+    // using svgBase content to get the bounding box
+    const svgBaseContent = svgBase.getElementsByTagName('g')[0];
+    const bbox = svgBaseContent.getBBox();
+
+    // position the content of the svg element at the top left corner
+    svgContent.setAttribute('transform', `scale(1) translate(${4 - bbox.x},${4 - bbox.y})`);
+
+    console.log('bbox', bbox);
+
+    svgElement.setAttribute('width', `${bbox.width + 8}`);
+    svgElement.setAttribute('height', `${bbox.height + 8}`);
+
+    // remove the temporal div
+    div.remove();
+
+    return svgElement;
   }
 }
