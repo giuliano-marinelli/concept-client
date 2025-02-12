@@ -49,7 +49,7 @@
         [icon]="jsonModel.checkNodeCanHaveChildren(node) || jsonModel.checkNodeCanHaveFields(node) ? (settings.expanded ? 'caret-down' : 'caret-right') : 'minus'">
       </fa-icon>
     </button>
-    <button class="btn btn-sm text-start" [ngClass]="{
+    <button class="btn btn-sm text-start overflow-hidden" style="max-width: 160px; text-overflow: ellipsis;" [ngClass]="{
         'btn-secondary': node?._selected,
         'btn-outline-secondary': !node?._selected,
         'text-node': node && !node?._selected,

@@ -1,6 +1,12 @@
 import { AfterViewInit, Component, Input, NgZone, ViewContainerRef } from '@angular/core';
 
 import {
+  DynamicGLSPWebSocketProvider,
+  ExternalServices,
+  initializeDynamicDiagramContainer
+} from '@dynamic-glsp/client';
+import { AModelElementSchema, AModelRootSchema, Language, LanguageElement } from '@dynamic-glsp/protocol';
+import {
   Action,
   BaseJsonrpcGLSPClient,
   ConnectionProvider,
@@ -15,18 +21,11 @@ import {
 } from '@eclipse-glsp/client';
 import { JsonForms } from '@jsonforms/angular';
 
-import { DynamicGLSPWebSocketProvider } from '../../../../dynamic-glsp/connection/dynamic-websocket-provider';
-import { ExternalServices } from '../../../../dynamic-glsp/diagram/dynamic-external-services';
-import { Language, LanguageElement } from '../../../../dynamic-glsp/protocol/language';
 import { bootstrapRenderers } from '../../../../json-forms/bootstrap-renderer';
 import { AModelToJSONForms } from '../../global/amodel-to-json-forms';
 import { Container } from 'inversify';
 
-import { AModelElementSchema, AModelRootSchema } from '../../../../dynamic-glsp/protocol/amodel';
-
 import { AuthService } from '../../../services/auth.service';
-
-import { initializeDynamicDiagramContainer } from '../../../../dynamic-glsp/diagram/dynamic-diagram-module';
 
 @Component({
   selector: 'model-editor',

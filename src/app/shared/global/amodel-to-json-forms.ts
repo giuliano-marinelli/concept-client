@@ -1,11 +1,5 @@
+import { AModelArraySchema, AModelElementSchema, AModelEnumSchema, AModelObjectSchema } from '@dynamic-glsp/protocol';
 import { JsonSchema, Labelable, Layout, Scoped, UISchemaElement } from '@jsonforms/core';
-
-import {
-  AModelArraySchema,
-  AModelElementSchema,
-  AModelEnumSchema,
-  AModelObjectSchema
-} from '../../../dynamic-glsp/protocol/amodel';
 
 export function AModelToJSONForms(
   aModel: AModelElementSchema,

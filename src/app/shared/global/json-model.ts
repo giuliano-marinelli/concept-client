@@ -1,3 +1,4 @@
+import { AModelElementSchema } from '@dynamic-glsp/protocol';
 import { IconName } from '@fortawesome/angular-fontawesome';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 
@@ -5,8 +6,6 @@ import _ from 'lodash';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AModelToJSONForms } from './amodel-to-json-forms';
-
-import { AModelElementSchema } from '../../../dynamic-glsp/protocol/amodel';
 
 export interface JsonModelElementConfig {
   icon?: IconName;

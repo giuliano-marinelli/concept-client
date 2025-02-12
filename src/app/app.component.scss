@@ -150,12 +150,3 @@
 .container-full {
   max-width: 100% !important;
 }
-
-::ng-deep .cdk-describedby-message-container,
-::ng-deep .cdk-overlay-container {
-  position: fixed;
-}
-
-::ng-deep .sprotty-hidden {
-  position: fixed;
-}

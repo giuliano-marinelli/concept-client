@@ -136,7 +136,8 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import '@eclipse-glsp/client/css/toast.css';
 @import '@eclipse-glsp/client/css/tool-palette.css';
 
-/* Importing Dynamic GLSP files */
+/* Importing Dynamic GLSP files and customized version */
+@import '@dynamic-glsp/client/css/dynamic-glsp.css';
 @import 'assets/scss/dynamic-glsp.scss';
 
 /* Adds animations to the masonry layout component items */

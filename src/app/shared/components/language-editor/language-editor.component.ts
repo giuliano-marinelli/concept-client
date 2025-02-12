@@ -1,12 +1,16 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
+import {
+  AModelElementSchema,
+  LanguageElement,
+  LanguageElementType,
+  RefreshModelOperation
+} from '@dynamic-glsp/protocol';
 import { CenterAction, GModelElementSchema } from '@eclipse-glsp/protocol';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { LanguageElement, LanguageElementType } from '../../../../dynamic-glsp/protocol/language';
-import { RefreshModelOperation } from '../../../../dynamic-glsp/protocol/operation/model-refresh';
 import { bootstrapRenderers } from '../../../../json-forms/bootstrap-renderer';
 import { MetaElement } from '../../entities/meta-element.entity';
 import { CheckMetaElementTagExists, MetaModel, UpdateMetaElement } from '../../entities/meta-model.entity';
@@ -18,7 +22,6 @@ import { Ajv } from 'ajv';
 import _ from 'lodash';
 import { Subscription } from 'rxjs';
 
-import { AModelElementSchema } from '../../../../dynamic-glsp/protocol/amodel';
 import { JsonModel, JsonModelConfig } from '../../global/json-model';
 
 import { ModelEditorComponent } from '../model-editor/model-editor.component';

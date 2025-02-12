@@ -1,11 +1,9 @@
+import { AModelRootSchema, LanguageElementType } from '@dynamic-glsp/protocol';
 import { GModelElementSchema } from '@eclipse-glsp/protocol';
 
-import { LanguageElementType } from '../../../dynamic-glsp/protocol/language';
 import { SelectionField, SelectionType } from 'apollo-dynamic';
 
 import { MetaModel } from './meta-model.entity';
-
-import { AModelRootSchema } from '../../../dynamic-glsp/protocol/amodel';
 
 @SelectionType('MetaElement')
 export class MetaElement {
