@@ -46,10 +46,10 @@ importers:
         specifier: ^5.2.0
         version: 5.2.0(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))
       '@dynamic-glsp/client':
-        specifier: ^1.0.0
+        specifier: ^1.0.1
         version: link:../../@dynamic-glsp/client
       '@dynamic-glsp/protocol':
-        specifier: ^1.0.0
+        specifier: ^1.0.1
         version: link:../../@dynamic-glsp/protocol
       '@eclipse-glsp/client':
         specifier: ^2.3.0
@@ -132,9 +132,6 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
-      concept-client:
-        specifier: 'file:'
-        version: file:(@angular/localize@18.2.13(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(typescript@5.5.4))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1180,27 +1177,6 @@ packages:
   '@discoveryjs/json-ext@0.6.1':
     resolution: {integrity: sha512-boghen8F0Q8D+0/Q1/1r6DUEieUJ8w2a1gIknExMSHBsJFOr2+0KUfHiVYBvucPwl3+RU5PFBK833FjFCh3BhA==}
     engines: {node: '>=14.17.0'}
-
-  '@dynamic-glsp/client@1.0.0':
-    resolution: {integrity: sha512-9RI5dNB7GDgWXFQ41+YslPX44xd2j6382V8YENGeP2zLHToqiv3O6U9xrb+eJu9EVibMY9wR1mLq0yCojb6ABw==}
-    version: 1.0.0
-    peerDependencies:
-      '@dynamic-glsp/protocol': '>=1.0.0'
-      '@eclipse-glsp/client': '>=2.3.0'
-      '@eclipse-glsp/protocol': '>=2.3.0'
-      inversify: '>=6.2.2'
-
-  '@dynamic-glsp/protocol@1.0.0':
-    resolution: {integrity: sha512-UntUrII3FFZdhsAnF4zSZszh30gaffuGtt5zBEBl3lpbIjMDWobxj4c4FrHa4eEMcVzlewushUKE2DRVVQbYXQ==}
-    peerDependencies:
-      '@eclipse-glsp/protocol': '>=2.3.0'
-      '@eclipse-glsp/server': '>=2.3.0'
-
-  '@dynamic-glsp/protocol@file:../../@dynamic-glsp/protocol':
-    resolution: {directory: ../../@dynamic-glsp/protocol, type: directory}
-    peerDependencies:
-      '@eclipse-glsp/protocol': '>=2.3.0'
-      '@eclipse-glsp/server': '>=2.3.0'
 
   '@eclipse-glsp/client@2.3.0':
     resolution: {integrity: sha512-YIHN5ySSu14S4g/vUOuCKexk/0OdB1Y3lyN7KrRLyppPnSjwX7n9VnkWfImzBfgWrUBAST97m1uTIA3e4yT2og==}
@@ -2678,9 +2654,6 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
-  'concept-client@file:':
-    resolution: {directory: '', type: directory}
-
   concurrently@9.1.2:
     resolution: {integrity: sha512-H9MWcoPsYddwbOGM6difjVwVZHl63nwMEwDJG/L7VGtuaJhb12h2caPG2tVPWs7emuYix252iGfqOyrz1GczTQ==}
     engines: {node: '>=18'}
@@ -3588,8 +3561,8 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jackspeak@4.0.2:
-    resolution: {integrity: sha512-bZsjR/iRjl1Nk1UkjGpAzLNfQtzuijhn2g+pbZb98HQ1Gk8vM9hfbxeMBP+M2/UUdwj0RqGG3mlvk2MsAqwvEw==}
+  jackspeak@4.0.3:
+    resolution: {integrity: sha512-oSwM7q8PTHQWuZAlp995iPpPJ4Vkl7qT0ZRD+9duL9j2oBy6KcTfyxc8mEuHJYC+z/kbps80aJLkaNzTOrf/kw==}
     engines: {node: 20 || >=22}
 
   jasmine-core@4.6.1:
@@ -6491,24 +6464,6 @@ snapshots:
 
   '@discoveryjs/json-ext@0.6.1': {}
 
-  '@dynamic-glsp/client@1.0.0(@dynamic-glsp/protocol@file:../../@dynamic-glsp/protocol(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))))(@eclipse-glsp/client@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2))(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(inversify@6.2.2(reflect-metadata@0.2.2))':
-    dependencies:
-      '@dynamic-glsp/protocol': file:../../@dynamic-glsp/protocol(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))
-      '@eclipse-glsp/client': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@eclipse-glsp/protocol': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))
-      '@vscode/codicons': 0.0.36
-      inversify: 6.2.2(reflect-metadata@0.2.2)
-
-  '@dynamic-glsp/protocol@1.0.0(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))':
-    dependencies:
-      '@eclipse-glsp/protocol': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))
-      '@eclipse-glsp/server': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))
-
-  '@dynamic-glsp/protocol@file:../../@dynamic-glsp/protocol(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))':
-    dependencies:
-      '@eclipse-glsp/protocol': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))
-      '@eclipse-glsp/server': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))
-
   '@eclipse-glsp/client@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
     dependencies:
       '@eclipse-glsp/sprotty': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
@@ -7955,81 +7910,6 @@ snapshots:
 
   concat-map@0.0.1: {}
 
-  concept-client@file:(@angular/localize@18.2.13(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(typescript@5.5.4))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))):
-    dependencies:
-      '@angular/animations': 18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      '@angular/cdk': 18.2.14(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1)
-      '@angular/common': 18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1)
-      '@angular/compiler': 18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      '@angular/core': 18.2.13(rxjs@7.8.1)(zone.js@0.14.10)
-      '@angular/forms': 18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(rxjs@7.8.1)
-      '@angular/material': 18.2.14(83e8786ff0db8e428d6ca70551765ce7)
-      '@angular/platform-browser': 18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      '@angular/platform-browser-dynamic': 18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))
-      '@angular/router': 18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(rxjs@7.8.1)
-      '@apollo/client': 3.12.11(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0)
-      '@auth0/angular-jwt': 5.2.0(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))
-      '@dynamic-glsp/client': 1.0.0(@dynamic-glsp/protocol@file:../../@dynamic-glsp/protocol(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))))(@eclipse-glsp/client@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2))(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(inversify@6.2.2(reflect-metadata@0.2.2))
-      '@dynamic-glsp/protocol': 1.0.0(@eclipse-glsp/protocol@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))(@eclipse-glsp/server@2.3.0(inversify@6.2.2(reflect-metadata@0.2.2)))
-      '@eclipse-glsp/client': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@eclipse-glsp/protocol': 2.3.0(inversify@6.2.2(reflect-metadata@0.2.2))
-      '@fortawesome/angular-fontawesome': 0.15.0(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      '@fortawesome/fontawesome-free': 6.7.2
-      '@fortawesome/fontawesome-svg-core': 6.7.2
-      '@fortawesome/free-brands-svg-icons': 6.7.2
-      '@fortawesome/free-regular-svg-icons': 6.7.2
-      '@fortawesome/free-solid-svg-icons': 6.7.2
-      '@joint/core': 4.1.3
-      '@jsonforms/angular': 3.5.1(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/forms@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(rxjs@7.8.1))(@jsonforms/core@3.5.1)(rxjs@7.8.1)
-      '@jsonforms/angular-material': 3.5.1(b0c7fb21c4e1a0be6444d3202c2758e3)
-      '@jsonforms/core': 3.5.1
-      '@narik/custom-validators': 12.0.0(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/forms@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(rxjs@7.8.1))
-      '@ng-bootstrap/ng-bootstrap': 17.0.1(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/forms@18.2.13(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@angular/platform-browser@18.2.13(@angular/animations@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(rxjs@7.8.1))(@angular/localize@18.2.13(@angular/compiler-cli@18.2.13(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10)))(typescript@5.5.4))(@angular/compiler@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))))(@popperjs/core@2.11.8)(rxjs@7.8.1)
-      '@ngneat/helipopper': 9.2.1(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      '@ngneat/input-mask': 6.1.0(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(inputmask@5.0.9)
-      '@ngneat/overview': 6.1.1(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      '@popperjs/core': 2.11.8
-      '@vscode/codicons': 0.0.36
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
-      angular-resize-event-package: 3.6.0(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      apollo-angular: 7.2.1(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@apollo/client@3.12.11(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0))(graphql@16.10.0)(rxjs@7.8.1)
-      apollo-dynamic: 1.0.4(graphql@16.10.0)
-      apollo-dynamic-angular: 1.0.3(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@apollo/client@3.12.11(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0))(apollo-angular@7.2.1(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(@apollo/client@3.12.11(graphql-ws@5.16.2(graphql@16.10.0))(graphql@16.10.0))(graphql@16.10.0)(rxjs@7.8.1))(apollo-dynamic@1.0.4(graphql@16.10.0))(graphql@16.10.0)(rxjs@7.8.1)
-      bootstrap: 5.3.3(@popperjs/core@2.11.8)
-      class-validator: 0.14.1
-      dayjs: 1.11.13
-      extract-files: 12.0.0
-      graphql: 16.10.0
-      graphql-ws: 5.16.2(graphql@16.10.0)
-      hammerjs: 2.0.8
-      inputmask: 5.0.9
-      inversify: 6.2.2(reflect-metadata@0.2.2)
-      izitoast: 1.4.0
-      jquery: 3.7.1
-      lodash: 4.17.21
-      masonry-layout: 4.2.2
-      moment: 2.30.1
-      ng-otp-input: 2.0.6(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      ngx-image-compress: 15.1.6(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      ngx-image-cropper: 7.2.1(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))
-      ngx-masonry: 14.0.1(@angular/common@18.2.13(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(rxjs@7.8.1))(@angular/core@18.2.13(rxjs@7.8.1)(zone.js@0.14.10))(masonry-layout@4.2.2)
-      ngx-moment: 6.0.2(moment@2.30.1)
-      reflect-metadata: 0.2.2
-      rxjs: 7.8.1
-      snabbdom: 3.6.2
-      sprotty: 1.4.0(reflect-metadata@0.2.2)
-      tslib: 2.8.1
-      uuid: 9.0.1
-      zone.js: 0.14.10
-    transitivePeerDependencies:
-      - '@angular/localize'
-      - '@eclipse-glsp/server'
-      - '@types/react'
-      - react
-      - react-dom
-      - subscriptions-transport-ws
-
   concurrently@9.1.2:
     dependencies:
       chalk: 4.1.2
@@ -8635,7 +8515,7 @@ snapshots:
   glob@11.0.1:
     dependencies:
       foreground-child: 3.3.0
-      jackspeak: 4.0.2
+      jackspeak: 4.0.3
       minimatch: 10.0.1
       minipass: 7.1.2
       package-json-from-dist: 1.0.1
@@ -8987,7 +8867,7 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jackspeak@4.0.2:
+  jackspeak@4.0.3:
     dependencies:
       '@isaacs/cliui': 8.0.2
 

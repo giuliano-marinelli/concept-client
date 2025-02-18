@@ -1,0 +1,32 @@
+<div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
+  <img class="img-thumbnail rounded-circle pe-pointer picture-view" [src]="control.value" #picture_view
+    (error)="pictureView.nativeElement.src = defaultImage" ngbDropdownToggle [ngClass]="viewClass" />
+  <input [hidden]="true" type="file" accept="image/*" [formTarget]="fileControl"
+    (change)="onChangePicture($event, crop_picture)" #pictureInputFile>
+  <div class="dropdown-menu shadow" ngbDropdownMenu>
+    <a ngbDropdownItem class="small pe-pointer" (click)="pictureInputFile.click()">
+      <fa-icon [icon]="uploadIcon"></fa-icon> {{ uploadLabel}}
+    </a>
+    <a ngbDropdownItem class="small pe-pointer" (click)="control.setValue(''); fileControl.setValue(null)">
+      <fa-icon [icon]="removeIcon"></fa-icon> {{ removeLabel }}
+    </a>
+  </div>
+</div>
+
+<ng-template #crop_picture let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title small">{{ cropLabel }}</h4>
+    <button type="button" class="btn-close no-outline small" aria-label="Close"
+      (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <image-cropper #image_cropper output="base64" [imageChangedEvent]="pictureChange" [maintainAspectRatio]="true"
+      [aspectRatio]="1 / 1" format="png" (imageCropped)="onCroppedPicture($event)" [roundCropper]="true"
+      [autoCrop]="false"></image-cropper>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success w-100" (click)="image_cropper.crop(); modal.close('Save click')">
+      {{ saveLabel }}
+    </button>
+  </div>
+</ng-template>

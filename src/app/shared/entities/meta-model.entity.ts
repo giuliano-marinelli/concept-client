@@ -69,8 +69,8 @@ export class CreateMetaModel extends DynamicMutation<{ createMetaModel: MetaMode
 @Injectable({ providedIn: 'root' })
 export class UpdateMetaModel extends DynamicMutation<{ updateMetaModel: MetaModel }> {
   override document = gql`
-    mutation UpdateMetaModel($metaModelUpdateInput: MetaModelUpdateInput!, $avatarFile: Upload) {
-      updateMetaModel(metaModelUpdateInput: $metaModelUpdateInput, avatarFile: $avatarFile) {
+    mutation UpdateMetaModel($metaModelUpdateInput: MetaModelUpdateInput!, $logoFile: Upload) {
+      updateMetaModel(metaModelUpdateInput: $metaModelUpdateInput, logoFile: $logoFile) {
         MetaModel
       }
     }
@@ -82,24 +82,6 @@ export class DeleteMetaModel extends Mutation<{ deleteMetaModel: string }> {
   override document = gql`
     mutation DeleteMetaModel($id: UUID!, $password: String!) {
       deleteMetaModel(id: $id, password: $password)
-    }
-  `;
-}
-
-@Injectable({ providedIn: 'root' })
-export class CheckMetaModelTagExists extends Query<{ checkMetaModelTagExists: boolean }> {
-  override document = gql`
-    query CheckMetaModelTagExists($metaModel: UUID!, $tag: String!) {
-      checkMetaModelTagExists(metaModel: $metaModel, tag: $tag)
-    }
-  `;
-}
-
-@Injectable({ providedIn: 'root' })
-export class CheckMetaElementTagExists extends Query<{ checkMetaElementTagExists: boolean }> {
-  override document = gql`
-    query CheckMetaElementTagExists($metaModel: UUID!, $metaElement: UUID!, $tag: String!) {
-      checkMetaElementTagExists(metaModel: $metaModel, metaElement: $metaElement, tag: $tag)
     }
   `;
 }
@@ -122,6 +104,33 @@ export class UpdateMetaElement extends DynamicMutation<{ updateMetaElement: Meta
       updateMetaElement(metaElementUpdateInput: $metaElementUpdateInput) {
         MetaElement
       }
+    }
+  `;
+}
+
+@Injectable({ providedIn: 'root' })
+export class DeleteMetaElement extends Mutation<{ deleteMetaElement: string }> {
+  override document = gql`
+    mutation DeleteMetaElement($id: UUID!) {
+      deleteMetaElement(id: $id)
+    }
+  `;
+}
+
+@Injectable({ providedIn: 'root' })
+export class CheckMetaModelTagExists extends Query<{ checkMetaModelTagExists: boolean }> {
+  override document = gql`
+    query CheckMetaModelTagExists($tag: String!, $metaModel: UUID) {
+      checkMetaModelTagExists(tag: $tag, metaModel: $metaModel)
+    }
+  `;
+}
+
+@Injectable({ providedIn: 'root' })
+export class CheckMetaElementTagExists extends Query<{ checkMetaElementTagExists: boolean }> {
+  override document = gql`
+    query CheckMetaElementTagExists($tag: String!, $metaModel: UUID!, $metaElement: UUID) {
+      checkMetaElementTagExists(tag: $tag, metaModel: $metaModel, metaElement: $metaElement)
     }
   `;
 }

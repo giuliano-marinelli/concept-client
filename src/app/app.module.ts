@@ -54,7 +54,7 @@ import { SearchComponent } from './shared/components/search/search.component';
 import { InvalidFeedbackComponent } from './shared/components/invalid-feedback/invalid-feedback.component';
 import { VerifiedMarkComponent } from './shared/components/verified-mark/verified-mark.component';
 import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
-import { LanguageEditorComponent } from './shared/components/language-editor/language-editor.component';
+import { LanguageElementEditorComponent } from './shared/components/language-element-editor/language-element-editor.component';
 import { JsonModelTreeComponent } from './shared/components/json-model-tree/json-model-tree.component';
 //components
 import { AppComponent } from './app.component';
@@ -75,6 +75,8 @@ import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
 import { ModelsComponent } from './models/models.component';
 import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/module';
+import { LanguageEditorComponent } from './shared/components/language-editor/language-editor.component';
+import { PictureInputComponent } from './shared/components/picture-input/picture-input.component';
 
 @NgModule({
   declarations: [
@@ -88,10 +90,12 @@ import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/modul
     ConfirmComponent,
     LeaveGuardWarningComponent,
     SearchComponent,
+    PictureInputComponent,
     InvalidFeedbackComponent,
     VerifiedMarkComponent,
     ModelEditorComponent,
     LanguageEditorComponent,
+    LanguageElementEditorComponent,
     JsonModelTreeComponent,
     //components
     AppComponent,

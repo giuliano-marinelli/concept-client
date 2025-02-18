@@ -1,0 +1,127 @@
+<div class="modal-content">
+  <form [class.loading]="elementLoading" [formGroup]="elementForm">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <fa-icon [icon]="'pen-to-square'"></fa-icon> {{ element ? 'Edit' : 'New' }} {{ capitalizeFirstLetter(type) }}
+      </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-lg-6">
+          <div class="row">
+            <label class="col-auto col-form-label">
+              Name
+            </label>
+            <div class="col">
+              <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name"
+                autocomplete="off" [ngClass]="setValid(name, true)" />
+              <invalid-feedback [control]="name" name="Name"
+                [messages]="{ pattern: 'Name only can have characters and numbers' }"></invalid-feedback>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="row">
+            <label class="col-auto col-form-label">
+              Tag
+            </label>
+            <div class="col">
+              <div class="input-spinner">
+                <input class="form-control bg-dark-subtle" type="text" name="tag" formControlName="tag"
+                  autocomplete="off" [ngClass]="setValid(tag, true)" />
+                <fa-icon *ngIf="tag.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
+                <invalid-feedback [control]="tag" name="Tag"
+                  [messages]="{ pattern: 'Tag only can have lower case alphanumeric' }"></invalid-feedback>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngVar="{ left_selected: 'gmodel', right_selected: 'inspector' } as tabs">
+        <div class="col-12 col-lg-5 pe-lg-0 ps-lg-2">
+          <ul class="nav nav-tabs">
+            <li class="nav-item flex-fill">
+              <a class="nav-link text-center pe-pointer text-body" [class.active]="tabs.left_selected == 'gmodel'"
+                (click)="tabs.left_selected = 'gmodel'">Graphics</a>
+            </li>
+            <li class="nav-item flex-fill">
+              <a class="nav-link text-center pe-pointer text-body" [class.active]="tabs.left_selected == 'amodel'"
+                (click)="tabs.left_selected = 'amodel'">Abstract</a>
+            </li>
+          </ul>
+          <div class="tab-content overflow-auto pt-1 border-start border-end" style="height: calc(100vh - 350px)">
+            <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.left_selected == 'gmodel' }">
+              <json-model-tree [jsonModel]="gModelTree"
+                (nodeSelected)="tabs.right_selected = 'inspector'"></json-model-tree>
+            </div>
+            <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.left_selected == 'amodel' }">
+              <json-model-tree [jsonModel]="aModelTree"
+                (nodeSelected)="tabs.right_selected = 'inspector'"></json-model-tree>
+            </div>
+          </div>
+        </div>
+        <div class="col col-lg-7">
+          <div class="row">
+            <div class="col-12 order-lg-last">
+              <div class="pb-2 pb-lg-0 mt-2">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item flex-fill">
+                    <a class="nav-link text-center pe-pointer text-body"
+                      [class.active]="tabs.right_selected == 'inspector'"
+                      (click)="tabs.right_selected = 'inspector'">Inspector</a>
+                  </li>
+                </ul>
+                <div class="tab-content overflow-auto pt-2 border-start border-end overflow-auto px-2"
+                  style="height: calc(100vh - 350px - 308px)">
+                  <div class="tab-pane fade" [ngClass]="{ 'show active': tabs.right_selected == 'inspector' }">
+                    <jsonforms *ngIf="gModelSelectedNode"
+                      [class.d-none]="tabs.left_selected != 'gmodel' && gModelSelectedNode" [data]="gModelSelectedNode"
+                      [schema]="gModelTree.getNodeSchema(gModelSelectedNode)"
+                      [uischema]="gModelTree.getNodeUISchema(gModelSelectedNode)" [renderers]="jsonFormsRenderers"
+                      (dataChange)="onGModelNodeChange($event)">
+                    </jsonforms>
+                    <jsonforms *ngIf="aModelSelectedNode"
+                      [class.d-none]="tabs.left_selected != 'amodel' && aModelSelectedNode" [data]="aModelSelectedNode"
+                      [schema]="aModelTree.getNodeSchema(aModelSelectedNode)"
+                      [uischema]="aModelTree.getNodeUISchema(aModelSelectedNode)" [renderers]="jsonFormsRenderers"
+                      (dataChange)="onAModelNodeChange($event)">
+                    </jsonforms>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-5 my-0 pe-0">
+              <div class="align-content-center text-center bg-body-tertiary rounded-start-2" style="height: 300px;">
+                <model-editor #showcase [showcaseMode]="true" [language]="showcaseLanguageElement"
+                  editMode="readonly"></model-editor>
+              </div>
+            </div>
+            <div class="col-7 my-0 ps-0">
+              <div class="pe-2 pt-2 bg-body-tertiary rounded-end-2 overflow-y-auto" style="height: 300px;">
+                <div *ngIf="isAModelEmpty()">
+                  <div class="d-flex align-items-center flex-row p-4 text-center text-muted">
+                    <fa-icon [icon]="'info-circle'" size="2x"></fa-icon>
+                    No data is defined in the Abstract Model
+                  </div>
+                </div>
+                <jsonforms *ngIf="defaultModel" [data]="defaultModel" [schema]="aModelJsonSchema"
+                  [uischema]="aModelUISchema" [renderers]="jsonFormsRenderers"
+                  (dataChange)="onDefaultModelChange($event)" [ajv]="ajv">
+                </jsonforms>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" ngbAutofocus class="btn btn-default"
+        (click)="activeModal.dismiss('Close click')">Close</button>
+      <button type="button" class="btn btn-success" [disabled]="!elementForm.valid || submitLoading"
+        (click)="element ? updateElement() : createElement()">
+        Save <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
+      </button>
+    </div>
+  </form>
+</div>

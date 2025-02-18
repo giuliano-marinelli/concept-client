@@ -45,9 +45,9 @@ export class ExtraValidators {
    * @returns An error map with the `tagExists` property
    * if the validation check fails, otherwise `null`.
    */
-  static metaModelTagExists(checkMetaModelTagExists: CheckMetaModelTagExists, metaModel: string): AsyncValidatorFn {
+  static metaModelTagExists(checkMetaModelTagExists: CheckMetaModelTagExists, metaModel?: string): AsyncValidatorFn {
     return (control: AbstractControl) => {
-      return checkMetaModelTagExists.fetch({ metaModel: metaModel, tag: control.value }).pipe(
+      return checkMetaModelTagExists.fetch({ tag: control.value, metaModel: metaModel }).pipe(
         map(({ data }) => {
           return data?.checkMetaModelTagExists ? { tagExists: true } : null;
         })
@@ -64,11 +64,11 @@ export class ExtraValidators {
   static metaElementTagExists(
     checkMetaElementTagExists: CheckMetaElementTagExists,
     metaModel: string,
-    metaElement: string
+    metaElement?: string
   ): AsyncValidatorFn {
     return (control: AbstractControl) => {
       return checkMetaElementTagExists
-        .fetch({ metaModel: metaModel, metaElement: metaElement, tag: control.value })
+        .fetch({ tag: control.value, metaModel: metaModel, metaElement: metaElement })
         .pipe(
           map(({ data }) => {
             return data?.checkMetaElementTagExists ? { tagExists: true } : null;

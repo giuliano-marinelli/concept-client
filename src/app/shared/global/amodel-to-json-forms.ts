@@ -1,4 +1,17 @@
-import { AModelArraySchema, AModelElementSchema, AModelEnumSchema, AModelObjectSchema } from '@dynamic-glsp/protocol';
+import {
+  AModelArraySchema,
+  AModelBooleanSchema,
+  AModelElementSchema,
+  AModelEnumSchema,
+  AModelIntegerSchema,
+  AModelObjectSchema,
+  AModelStringSchema,
+  BooleanStyle,
+  EnumStyle,
+  IntegerStyle,
+  StringStyle,
+  Type
+} from '@dynamic-glsp/protocol';
 import { JsonSchema, Labelable, Layout, Scoped, UISchemaElement } from '@jsonforms/core';
 
 export function AModelToJSONForms(
@@ -10,15 +23,15 @@ export function AModelToJSONForms(
   let jsonForms: { schema: JsonSchema; uiSchema: UISchemaElement };
 
   switch (aModel.type) {
-    case 'string':
-    case 'integer':
-    case 'boolean':
+    case Type.STRING:
+    case Type.INTEGER:
+    case Type.BOOLEAN:
       jsonForms = AModelPropertyToJSONForms(aModel as AModelElementSchema);
       break;
-    case 'array':
+    case Type.ARRAY:
       jsonForms = AModelArrayToJSONForms(aModel as AModelArraySchema, scope);
       break;
-    case 'object':
+    case Type.OBJECT:
     default:
       jsonForms = AModelObjectToJSONForms(aModel as AModelObjectSchema, scope);
       break;
@@ -35,7 +48,7 @@ export function AModelToJSONForms(
     (uiSchema as UISchemaElement & Scoped).scope = scope + 'properties/' + aModel.key;
   }
 
-  if (aModel.default) {
+  if (aModel.default != undefined) {
     schema.default = aModel.default;
   }
 
@@ -110,9 +123,30 @@ export function AModelPropertyToJSONForms(aModel: AModelElementSchema): {
     else schema.enum = (aModel as AModelEnumSchema).enum;
   }
 
+  if ((aModel as AModelStringSchema).minLength != undefined)
+    schema.minLength = (aModel as AModelStringSchema).minLength;
+  if ((aModel as AModelStringSchema).maxLength != undefined)
+    schema.maxLength = (aModel as AModelStringSchema).maxLength;
+
+  if ((aModel as AModelIntegerSchema).minimum != undefined) schema.minimum = (aModel as AModelIntegerSchema).minimum;
+  if ((aModel as AModelIntegerSchema).maximum != undefined) schema.maximum = (aModel as AModelIntegerSchema).maximum;
+
   const uiSchema: UISchemaElement = {
     type: 'Control'
   };
+
+  if ((aModel as any).style) {
+    if ((aModel as AModelEnumSchema).enum?.length) {
+      if ((aModel as AModelEnumSchema).style === EnumStyle.RADIO) uiSchema.options = { format: 'radio' };
+    } else {
+      if (aModel.type === Type.STRING && (aModel as AModelStringSchema).style === StringStyle.TEXTAREA)
+        uiSchema.options = { multi: true };
+      else if (aModel.type === Type.INTEGER && (aModel as AModelIntegerSchema).style === IntegerStyle.RANGE)
+        uiSchema.options = { slider: true };
+      else if (aModel.type === Type.BOOLEAN && (aModel as AModelBooleanSchema).style === BooleanStyle.SWITCH)
+        uiSchema.options = { toggle: true };
+    }
+  }
 
   return { schema, uiSchema };
 }

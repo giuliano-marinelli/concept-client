@@ -5,6 +5,12 @@
   width: 80px;
   height: 80px;
   padding: 2px !important;
+  transform: scale(1.5);
+}
+
+.logo-img-mini {
+  width: 50px;
+  height: 50px;
 }
 
 .element-img {
@@ -13,9 +19,33 @@
   padding: 2px !important;
 }
 
+.logo-container {
+  margin-right: -60px;
+}
+
+.info-container {
+  margin-left: 80px;
+}
+
 @include media-breakpoint-down(sm) {
   .logo-img {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .logo-container {
+    margin-right: -40px;
+  }
+
+  .border-info-container {
+    margin-left: -35px;
+  }
+
+  .info-container {
+    margin-left: 90px;
+  }
+
+  .desc-container {
+    margin-left: -75px;
   }
 }

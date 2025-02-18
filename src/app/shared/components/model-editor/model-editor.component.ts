@@ -14,10 +14,14 @@ import {
   FeatureModule,
   GLSPActionDispatcher,
   GLSPClient,
+  IDiagramOptions,
   MessageAction,
   StatusAction,
+  ViewerOptions,
   accessibilityModule,
-  createDiagramOptionsModule
+  createDiagramOptionsModule,
+  standaloneMarkerNavigatorModule,
+  standaloneViewportModule
 } from '@eclipse-glsp/client';
 import { JsonForms } from '@jsonforms/angular';
 
@@ -82,36 +86,24 @@ export class ModelEditorComponent implements AfterViewInit {
       // create a new custom WebSocket provider for the GLSP client, which sends authentication headers as protocol messages
       this.wsProvider = new DynamicGLSPWebSocketProvider(this.webSocketUrl, this.auth.getToken() || undefined);
 
-      // create a new feature module for the external services (it can provide access to services outside GLSP)
-      const externalServicesModule = new FeatureModule(
-        (bind, unbind, isBound, rebind) => {
-          const context = { bind, unbind, isBound, rebind };
-          bind(ExternalServices).toConstantValue(this.services);
-        },
-        { featureId: Symbol('externalServices') }
-      );
-
       async function glspOnConnection(connectionProvider: ConnectionProvider, isReconnecting = false): Promise<void> {
         // create GLSP client for the JSON RPC communication with server
         self.glspClient = new BaseJsonrpcGLSPClient({ id: self.id, connectionProvider });
 
+        const diagramOptions: IDiagramOptions = {
+          clientId: self.clientId,
+          diagramType: self.diagramType,
+          sourceUri: self.sourceUri,
+          editMode: self.editMode,
+          glspClientProvider: async () => self.glspClient
+        };
+
+        const viewerOptions: Partial<ViewerOptions> = { baseDiv: 'sprotty' };
+
         // create the diagram container which use the clientId to find the DOM element to render the diagram
         // and the diagramType to find the correct diagram configuration in the GLSP server
         // and the glspClient to communicate via JSON RPC with the GLSP server
-        self.container = initializeDynamicDiagramContainer(
-          createDiagramOptionsModule(
-            {
-              clientId: self.clientId,
-              diagramType: self.diagramType,
-              sourceUri: self.sourceUri,
-              editMode: self.editMode,
-              glspClientProvider: async () => self.glspClient
-            },
-            { baseDiv: 'sprotty' }
-          ),
-          self.editMode === 'editable' ? accessibilityModule : {},
-          externalServicesModule
-        );
+        self.container = initializeDynamicDiagramContainer(diagramOptions, viewerOptions, self.services);
 
         const actionDispatcher = self.container.get(GLSPActionDispatcher);
         const diagramLoader = self.container.get(DiagramLoader);

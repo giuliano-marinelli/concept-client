@@ -44,7 +44,7 @@
           <label class="form-label">
             Bio
           </label>
-          <textarea class="form-control form-control-sm bg-dark-subtle textarea-min-height" type="text" name="bio"
+          <textarea class="form-control form-control-sm bg-dark-subtle textarea-min-height" name="bio"
             formControlName="bio" autocomplete="off" rows="3" [ngClass]="setValid(bio)"></textarea>
           <span class="float-end textarea-count">{{ (bio.value?.length || 0) + '/200' }}</span>
           <invalid-feedback [control]="bio" name="Bio"></invalid-feedback>
@@ -81,40 +81,11 @@
           <label class="form-label">
             Profile picture
           </label>
-          <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
-            <img class="mb-4 img-thumbnail rounded-circle profile-img pe-pointer" [src]="avatar.value" #avatar_img
-              onerror="this.src='assets/images/default-user.png'" ngbDropdownToggle />
-            <input [hidden]="true" type="file" name="avatarFile" id="avatarFile" accept="image/*"
-              (change)="onChangeAvatar($event, crop_picture)" #avatarInputFile>
-            <div class="dropdown-menu shadow" ngbDropdownMenu>
-              <a ngbDropdownItem class="small pe-pointer" (click)="avatarInputFile.click()">
-                <fa-icon [icon]="'camera'"></fa-icon> Upload photo...
-              </a>
-              <a ngbDropdownItem class="small pe-pointer" (click)="avatar.setValue(''); avatarFile.setValue(null)">
-                <fa-icon [icon]="'trash-can'"></fa-icon> Remove photo
-              </a>
-            </div>
-          </div>
+          <picture-input [control]="avatar" [fileControl]="avatarFile" uploadLabel="Upload photo..."
+            removeLabel="Remove photo" cropLabel="Crop your profile picture" saveLabel="Save new profile picture"
+            defaultImage="assets/images/default-user.png"></picture-input>
         </div>
       </div>
     </div>
   </form>
 </div>
-
-<ng-template #crop_picture let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title small">Crop your profile picture</h4>
-    <button type="button" class="btn-close no-outline small" aria-label="Close"
-      (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <image-cropper #image_cropper output="base64" [imageChangedEvent]="avatarChangedEvent" [maintainAspectRatio]="true"
-      [aspectRatio]="1 / 1" format="png" (imageCropped)="onCroppedAvatar($event)" [roundCropper]="true"
-      [autoCrop]="false"></image-cropper>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-success w-100" (click)="image_cropper.crop(); modal.close('Save click')">
-      Save new profile picture
-    </button>
-  </div>
-</ng-template>

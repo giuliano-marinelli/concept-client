@@ -1,0 +1,13 @@
+::ng-deep .model-editor {
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+
+  > .sprotty-empty,
+  > .sprotty-graph,
+  > [aria-label='Diagram'] > .sprotty-graph,
+  > .sprotty-graph:focus,
+  > [aria-label='Diagram'] > .sprotty-graph:focus {
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+  }
+}

@@ -6,7 +6,6 @@ import { CustomValidators } from '@narik/custom-validators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { createMask } from '@ngneat/input-mask';
 
-import { Email } from '../../shared/entities/email.entity';
 import { FindUser, UpdateUser, User } from '../../shared/entities/user.entity';
 import { Global } from '../../shared/global/global';
 import { NgxImageCompressService } from 'ngx-image-compress';
@@ -23,7 +22,6 @@ import { MessagesService } from '../../services/messages.service';
 })
 export class ProfileSettingsComponent implements OnInit {
   @ViewChild('message_container') messageContainer!: ElementRef;
-  @ViewChild('avatar_img') avatarImage!: ElementRef;
 
   userLoading: boolean = true;
   submitLoading: boolean = false;
@@ -50,15 +48,12 @@ export class ProfileSettingsComponent implements OnInit {
   location = new FormControl('', [Validators.maxLength(100), Validators.pattern('[a-zA-Z0-9,\\s]*')]);
   avatar = new FormControl('', []);
   avatarFile = new FormControl<Blob | null>(null, []);
-  avatarChangedEvent!: Event;
 
   constructor(
     public auth: AuthService,
     public router: Router,
     public formBuilder: FormBuilder,
     public messages: MessagesService,
-    private modalService: NgbModal,
-    private compressor: NgxImageCompressService,
     private _findUser: FindUser,
     private _updateUser: UpdateUser
   ) {}
@@ -154,22 +149,6 @@ export class ProfileSettingsComponent implements OnInit {
         displayMode: 'replace',
         target: this.messageContainer
       });
-    }
-  }
-
-  onChangeAvatar(event: any, cropModal: any): void {
-    if (event.target.files[0]) {
-      this.modalService.open(cropModal, { centered: true });
-      this.avatarChangedEvent = event;
-    }
-  }
-
-  async onCroppedAvatar(event: ImageCroppedEvent): Promise<void> {
-    if (event.base64) {
-      const compressedImage = await this.compressor.compressFile(event.base64, 0, 50, 50, 500, 500); // 50% ration, 50% quality, 500x500px max size
-      this.avatarFile.setValue(base64ToFile(compressedImage));
-      this.avatarFile.markAsDirty();
-      this.avatarImage.nativeElement.src = event.base64;
     }
   }
 }

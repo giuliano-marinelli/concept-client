@@ -36,6 +36,22 @@ export class Global {
     });
   }
 
+  static adjustSVGWidth(svg: string, width: number): string {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svg, 'image/svg+xml');
+    const svgElement = doc.getElementsByTagName('svg')[0];
+    const gElement = doc.getElementsByTagName('g')[0];
+    if (svgElement && svgElement.width.baseVal.value > width) {
+      const gElementTranslate = gElement.getAttribute('transform')?.match(/translate\(([^)]+)\)/);
+      // assume the g scale is 1
+      const scale = width / svgElement.width.baseVal.value;
+      gElement.setAttribute('transform', `scale(${scale}) ${gElementTranslate ? gElementTranslate[0] : ''}`);
+      svgElement.setAttribute('width', `${svgElement.width.baseVal.value * scale}`);
+      svgElement.setAttribute('height', `${svgElement.height.baseVal.value * scale}`);
+    }
+    return new XMLSerializer().serializeToString(doc);
+  }
+
   //convert base64 url to file
   static dataURLtoFile(dataurl: string, filename: string): File {
     let arr: any = dataurl.split(',');

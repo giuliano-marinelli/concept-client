@@ -3,49 +3,27 @@
 /* Imported for customize/extend bootstrap variables and utilities before it's computed */
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
-// @import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
 
-/* Enable responsive utilities for borders */
-/*$utilities: map-merge(
-  $utilities,
-  (
-    "border":
-      map-merge(
-        map-get($utilities, "border"),
-        (
-          responsive: true,
-        )
-      ),
-    "border-top":
-      map-merge(
-        map-get($utilities, "border-top"),
-        (
-          responsive: true,
-        )
-      ),
-    "border-end":
-      map-merge(
-        map-get($utilities, "border-end"),
-        (
-          responsive: true,
-        )
-      ),
-    "border-bottom":
-      map-merge(
-        map-get($utilities, "border-bottom"),
-        (
-          responsive: true,
-        )
-      ),
-    "border-start":
-      map-merge(
-        map-get($utilities, "border-start"),
-        (
-          responsive: true,
-        )
-      ),
-  )
-);*/
+/* Custom container size */
+$container-max-widths: (
+  sm: 720px,
+  md: 960px,
+  lg: 1140px,
+  xl: 1145px,
+  xxl: 1320px
+);
+
+/* Custom css variables */
+:root {
+  // default image cropper outline color
+  --cropper-outline-color: rgba(0, 0, 0, 0.9);
+  // default image cropper overlay color
+  --cropper-overlay-color: rgba(255, 255, 255, 1);
+}
 
 /* Add custom is-pending state for forms input validation */
 $form-validation-states: map-merge(
@@ -61,40 +39,6 @@ $form-validation-states: map-merge(
       'border-color': #838383
     )
   )
-);
-
-/* This is the spinner style for pending state icon */
-.input-spinner {
-  position: relative;
-}
-.input-spinner > .form-control ~ fa-icon {
-  position: absolute;
-  margin-top: 7px;
-  margin-right: 10px;
-  top: 0;
-  right: 0;
-}
-
-.input-spinner > .form-control-sm ~ fa-icon {
-  margin-top: 3px;
-  margin-right: 5px;
-}
-
-/* Custom css variables */
-:root {
-  // default image cropper outline color
-  --cropper-outline-color: rgba(0, 0, 0, 0.9);
-  // default image cropper overlay color
-  --cropper-overlay-color: rgba(255, 255, 255, 1);
-}
-
-/* Custom container size */
-$container-max-widths: (
-  sm: 720px,
-  md: 960px,
-  lg: 1140px,
-  xl: 1145px,
-  xxl: 1320px
 );
 
 /* Importing Bootstrap files */
@@ -139,6 +83,166 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 /* Importing Dynamic GLSP files and customized version */
 @import '@dynamic-glsp/client/css/dynamic-glsp.css';
 @import 'assets/scss/dynamic-glsp.scss';
+
+/* Button style based on the theme
+  If the theme is light, the button will have the btn-light class
+  If the theme is dark, the button will have the btn-dark class
+  Apply for btn-outline too
+*/
+.btn.btn-theme {
+  @extend .btn-light;
+
+  html[data-bs-theme='dark'] & {
+    @extend .btn-dark;
+  }
+}
+
+.btn.btn-outline-theme {
+  @extend .btn-outline-light;
+
+  html[data-bs-theme='dark'] & {
+    @extend .btn-outline-dark;
+  }
+}
+
+/* Image Thumbnail mixin: for include as content of other classes */
+@mixin img-thumbnail {
+  padding: $thumbnail-padding;
+  background-color: $thumbnail-bg;
+  border: $thumbnail-border-width solid $thumbnail-border-color;
+  @include border-radius($thumbnail-border-radius);
+  @include box-shadow($thumbnail-box-shadow);
+
+  // Keep them at most 100% wide
+  @include img-fluid();
+}
+
+/* Enable responsive for borders */
+$utilities: map-merge(
+  $utilities,
+  (
+    'border': map-merge(
+        map-get($utilities, 'border'),
+        (
+          responsive: true
+        )
+      ),
+    'border-start': map-merge(
+        map-get($utilities, 'border-start'),
+        (
+          responsive: true
+        )
+      ),
+    'border-end': map-merge(
+        map-get($utilities, 'border-end'),
+        (
+          responsive: true
+        )
+      ),
+    'border-top': map-merge(
+        map-get($utilities, 'border-top'),
+        (
+          responsive: true
+        )
+      ),
+    'border-bottom': map-merge(
+        map-get($utilities, 'border-bottom'),
+        (
+          responsive: true
+        )
+      )
+  )
+);
+
+/* Enable responsive for rounded */
+$utilities: map-merge(
+  $utilities,
+  (
+    'rounded': map-merge(
+        map-get($utilities, 'rounded'),
+        (
+          responsive: true
+        )
+      ),
+    'rounded-start': map-merge(
+        map-get($utilities, 'rounded-start'),
+        (
+          responsive: true
+        )
+      ),
+    'rounded-end': map-merge(
+        map-get($utilities, 'rounded-end'),
+        (
+          responsive: true
+        )
+      ),
+    'rounded-top': map-merge(
+        map-get($utilities, 'rounded-top'),
+        (
+          responsive: true
+        )
+      ),
+    'rounded-bottom': map-merge(
+        map-get($utilities, 'rounded-bottom'),
+        (
+          responsive: true
+        )
+      )
+  )
+);
+
+/* Enable responsive for text-break, text-break-all, text-wrap, text-nowrap, text-pre-wrap */
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    .text-#{$breakpoint}-break {
+      word-wrap: break-word;
+    }
+
+    .text-#{$breakpoint}-break-all {
+      word-break: break-all;
+    }
+
+    .text-#{$breakpoint}-wrap {
+      white-space: normal;
+    }
+
+    .text-#{$breakpoint}-nowrap {
+      white-space: nowrap;
+    }
+
+    .text-#{$breakpoint}-pre-wrap {
+      white-space: pre-wrap;
+    }
+  }
+}
+
+/* Enable responsive for img-thumbnail */
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    .img-thumbnail-#{$breakpoint} {
+      @include img-thumbnail();
+    }
+  }
+}
+
+@import 'bootstrap/scss/utilities/api';
+
+/* This is the spinner style for pending state icon */
+.input-spinner {
+  position: relative;
+}
+.input-spinner > .form-control ~ fa-icon {
+  position: absolute;
+  margin-top: 7px;
+  margin-right: 10px;
+  top: 0;
+  right: 0;
+}
+
+.input-spinner > .form-control-sm ~ fa-icon {
+  margin-top: 3px;
+  margin-right: 5px;
+}
 
 /* Adds animations to the masonry layout component items */
 .masonry-item {
@@ -281,9 +385,19 @@ a {
   white-space: pre-wrap;
 }
 
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Break text that overflows by characters instead of words */
 .text-break-all {
   word-break: break-all;
+}
+
+.text-hyphens {
+  hyphens: auto;
 }
 
 /* Base style for izitoasts */
@@ -293,41 +407,6 @@ a {
 
 .iziToast-icon-config {
   font-size: 17px !important;
-}
-
-/* Image Thumbnail mixin: for include as content of other classes */
-@mixin img-thumbnail {
-  padding: $thumbnail-padding;
-  background-color: $thumbnail-bg;
-  border: $thumbnail-border-width solid $thumbnail-border-color;
-  @include border-radius($thumbnail-border-radius);
-  @include box-shadow($thumbnail-box-shadow);
-
-  // Keep them at most 100% wide
-  @include img-fluid();
-}
-
-/* Allows remove borders when screen is md or above */
-@include media-breakpoint-up(md) {
-  .border-md-0 {
-    border: none !important;
-    border-top: none !important;
-    border-bottom: none !important;
-    border-left: none !important;
-    border-right: none !important;
-  }
-
-  .text-md-pre-wrap {
-    white-space: pre-wrap;
-  }
-
-  .text-md-break-all {
-    word-break: break-all;
-  }
-
-  .img-thumbnail-md {
-    @include img-thumbnail();
-  }
 }
 
 /* Add a top arrow to a dropdown-menu for looks like a popover */

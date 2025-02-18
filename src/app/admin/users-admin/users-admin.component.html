@@ -63,10 +63,11 @@
                 <fa-icon [icon]="'user-slash'"></fa-icon> Delete user
               </a>
               <ng-template #delete_message>
-                <p class="mb-0">
+                <p>
                   Are you sure you want to delete the user:
                 </p>
-                <ng-container [ngTemplateOutlet]="userMini" [ngTemplateOutletContext]="{ user: user }"></ng-container>
+                <ng-container [ngTemplateOutlet]="userMini" [ngTemplateOutletContext]="{ user: user }">
+                </ng-container>
               </ng-template>
             </div>
           </div>
@@ -203,7 +204,7 @@
 </ng-template>
 
 <ng-template #userMini let-user="user">
-  <div class="card m-auto mt-2" style="max-width: 220px;">
+  <div class="card m-auto" style="max-width: 220px;">
     <div class="card-body p-2">
       <div class="d-flex flex-row">
         <div class="flex-shrink-0">

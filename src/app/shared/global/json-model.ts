@@ -12,6 +12,7 @@ export interface JsonModelElementConfig {
   descriptor?: string | ((node: any) => string);
   children?: string;
   childrenKey?: string;
+  defaultKey?: string;
   fields?: string[];
   default?: any;
   aModel?: AModelElementSchema;

@@ -47,9 +47,7 @@ export class NumberControlRenderer extends JsonFormsControl {
 
   override getEventValue = (event: any) => {
     const value = event.target.value;
-    console.log('number event value', value);
     if (!isNaN(value)) {
-      console.log('is a number');
       return Number(value);
     }
     return value;
@@ -124,7 +122,7 @@ export class NumberControlRenderer extends JsonFormsControl {
     this.max = this.scopedSchema?.maximum || Number.MAX_VALUE;
     this.step = this.scopedSchema.type == 'integer' ? 1 : this.scopedSchema.multipleOf || 0.1;
     this.default = this.scopedSchema.default || this.min;
-    this.data = this.data || this.default;
+    this.data = this.data != undefined ? this.data : this.default;
 
     // this is used for determining the decimal separator
     // this.locale = this.jsonFormsService.getLocale()!;
