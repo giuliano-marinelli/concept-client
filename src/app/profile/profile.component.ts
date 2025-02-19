@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { FindUsers, User } from '../shared/entities/user.entity';
 
 import { AuthService } from '../services/auth.service';
+import { TitleService } from '../services/title.service';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'profile',
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
     public auth: AuthService,
     public route: ActivatedRoute,
     public router: Router,
-    public titleService: Title,
+    public titleService: TitleService,
     public changeDetector: ChangeDetectorRef,
     private _findUsers: FindUsers
   ) {
@@ -50,9 +50,8 @@ export class ProfileComponent implements OnInit {
           if (data?.users?.set) {
             this.user = data.users.set[0] ?? null;
             if (this.user) {
-              this.titleService.setTitle(
-                this.user.username + (this.user.profile?.name ? ' · ' + this.user.profile?.name : '')
-              );
+              if (this.user.username) this.titleService.setParam('username', this.user.username);
+              if (this.user.profile?.name) this.titleService.setParam('profilename', this.user.profile.name);
             } else {
               this.router.navigate(['not-found']);
             }

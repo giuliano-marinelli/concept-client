@@ -19,7 +19,7 @@ import {
 } from '@jsonforms/core';
 
 @Component({
-  selector: 'jsonforms-categorization-layout',
+  selector: 'CategorizationLayoutRenderer',
   template: `
     <div class="row" [style.display]="hidden ? 'none' : ''">
       <ul class="nav nav-tabs">

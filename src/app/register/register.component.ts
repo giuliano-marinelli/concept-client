@@ -15,7 +15,7 @@ import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
 
 @Component({
-  selector: 'app-register',
+  selector: 'register',
   templateUrl: './register.component.html'
 })
 export class RegisterComponent implements OnInit {

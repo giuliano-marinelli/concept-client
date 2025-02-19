@@ -9,25 +9,54 @@ import { LeaveGuard } from './shared/guards/leave.guard';
 //components
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AboutComponent } from './about/about.component';
-import { AccountComponent } from './account/account.component';
-import { ProfileSettingsComponent } from './account/profile-settings/profile-settings.component';
-import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
-import { EmailsSettingsComponent } from './account/emails-settings/emails-settings.component';
-import { SecuritySettingsComponent } from './account/security-settings/security-settings.component';
-import { DevicesSettingsComponent } from './account/devices-settings/devices-settings.component';
+import { SettingsComponent } from './settings/settings.component';
+import { SettingsProfileComponent } from './settings/profile/settings-profile.component';
+import { SettingsAccountComponent } from './settings/account/settings-account.component';
+import { SettingsEmailsComponent } from './settings/emails/settings-emails.component';
+import { SettingsSecurityComponent } from './settings/security/settings-security.component';
+import { SettingsDevicesComponent } from './settings/devices/settings-devices.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ProfileOverviewComponent } from './profile/overview/profile-overview.component';
+import { ProfileLanguagesComponent } from './profile/languages/profile-languages.component';
+import { ProfileModelsComponent } from './profile/models/profile-models.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { AdminComponent } from './admin/admin.component';
-import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
+import { AdminUsersComponent } from './admin/users/admin-users.component';
 import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: '' } },
-  { path: 'user/:username', component: ProfileComponent },
+  {
+    path: 'user/:username',
+    component: ProfileComponent,
+    data: {
+      title: (params: { [key: string]: string }) => {
+        if (!params['username']) return '...';
+        return params['username'] + (params['profilename'] ? ' · ' + params['profilename'] : '');
+      }
+    },
+    children: [
+      {
+        path: 'overview',
+        component: ProfileOverviewComponent
+      },
+      {
+        path: 'languages',
+        component: ProfileLanguagesComponent,
+        data: { title: 'Languages' }
+      },
+      {
+        path: 'models',
+        component: ProfileModelsComponent,
+        data: { title: 'Models' }
+      },
+      { path: '**', redirectTo: 'overview' }
+    ]
+  },
   { path: 'login', component: LoginComponent, data: { title: 'Sign in' } },
   { path: 'register', component: RegisterComponent, data: { title: 'Sign up' }, canDeactivate: [LeaveGuard] },
   {
@@ -42,35 +71,35 @@ const routes: Routes = [
   },
   {
     path: 'settings',
-    component: AccountComponent,
+    component: SettingsComponent,
     data: { title: 'Settings' },
     canActivate: [AuthLoginGuard],
     children: [
       {
         path: 'profile',
-        component: ProfileSettingsComponent,
-        data: { title: 'Settings > Profile' },
+        component: SettingsProfileComponent,
+        data: { title: 'Profile' },
         canDeactivate: [LeaveGuard]
       },
       {
         path: 'account',
-        component: AccountSettingsComponent,
-        data: { title: 'Settings > Account' },
+        component: SettingsAccountComponent,
+        data: { title: 'Account' },
         canDeactivate: [LeaveGuard]
       },
       {
         path: 'emails',
-        component: EmailsSettingsComponent,
-        data: { title: 'Settings > Emails' },
+        component: SettingsEmailsComponent,
+        data: { title: 'Emails' },
         canDeactivate: [LeaveGuard]
       },
       {
         path: 'security',
-        component: SecuritySettingsComponent,
-        data: { title: 'Settings > Passwords' },
+        component: SettingsSecurityComponent,
+        data: { title: 'Passwords' },
         canDeactivate: [LeaveGuard]
       },
-      { path: 'devices', component: DevicesSettingsComponent, data: { title: 'Settings > Devices' } },
+      { path: 'devices', component: SettingsDevicesComponent, data: { title: 'Devices' } },
       { path: '**', redirectTo: 'profile' }
     ]
   },
@@ -80,13 +109,22 @@ const routes: Routes = [
     data: { title: 'Admin' },
     canActivate: [AuthAdminGuard],
     children: [
-      { path: 'users', component: UsersAdminComponent, data: { title: 'Admin > Users' }, canDeactivate: [LeaveGuard] },
+      { path: 'users', component: AdminUsersComponent, data: { title: 'Users' }, canDeactivate: [LeaveGuard] },
       { path: '**', redirectTo: 'users' }
     ]
   },
   // { path: 'graphql' },
   { path: 'languages', component: LanguagesComponent, data: { title: 'Languages' } },
-  { path: 'language/:language', component: LanguageComponent, data: { title: 'Language' } },
+  {
+    path: 'language/:language',
+    component: LanguageComponent,
+    data: {
+      title: (params: { [key: string]: string }) => {
+        if (!params['languagetag']) return '...';
+        return params['languagetag'] + '@' + params['languageversion'] + ' · ' + params['languagename'];
+      }
+    }
+  },
   {
     path: 'models',
     component: ModelsComponent,

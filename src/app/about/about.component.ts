@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
 
 @Component({
-  selector: 'app-about',
+  selector: 'about',
   templateUrl: './about.component.html',
   styleUrl: './about.component.scss'
 })

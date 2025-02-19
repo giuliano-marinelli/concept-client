@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

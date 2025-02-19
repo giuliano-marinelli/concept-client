@@ -85,6 +85,12 @@
                 <a ngbDropdownItem class="small" routerLink="/user/{{ auth.user.username }}">
                   <fa-icon [icon]="'user'"></fa-icon> Your profile
                 </a>
+                <a ngbDropdownItem class="small" routerLink="/user/{{ auth.user.username }}/languages">
+                  <fa-icon [icon]="'book'"></fa-icon> Your languages
+                </a>
+                <a ngbDropdownItem class="small" routerLink="/user/{{ auth.user.username }}/models">
+                  <fa-icon [icon]="'diagram-project'"></fa-icon> Your models
+                </a>
                 <div class="dropdown-divider m-1"></div>
                 <a ngbDropdownItem class="small" routerLink="/settings">
                   <fa-icon [icon]="'gears'"></fa-icon> Settings

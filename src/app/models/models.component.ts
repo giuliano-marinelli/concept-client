@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-models',
+  selector: 'models',
   templateUrl: './models.component.html',
   styleUrl: './models.component.scss'
 })

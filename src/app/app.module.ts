@@ -32,6 +32,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
 import { NgxMasonryModule } from 'ngx-masonry';
 import { AngularResizeEventModule } from 'angular-resize-event-package';
 import { JsonFormsAngularService, JsonFormsModule } from '@jsonforms/angular';
+import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/module';
 //environment
 import { environment } from '../environments/environment';
 //icons
@@ -53,9 +54,15 @@ import { LeaveGuardWarningComponent } from './shared/components/leave-guard-warn
 import { SearchComponent } from './shared/components/search/search.component';
 import { InvalidFeedbackComponent } from './shared/components/invalid-feedback/invalid-feedback.component';
 import { VerifiedMarkComponent } from './shared/components/verified-mark/verified-mark.component';
-import { ModelEditorComponent } from './shared/components/model-editor/model-editor.component';
-import { LanguageElementEditorComponent } from './shared/components/language-element-editor/language-element-editor.component';
+import { PictureInputComponent } from './shared/components/picture-input/picture-input.component';
 import { JsonModelTreeComponent } from './shared/components/json-model-tree/json-model-tree.component';
+import { ModelEditorComponent } from './shared/components/model/editor/model-editor.component';
+import { LanguageCardComponent } from './shared/components/language/card/language-card.component';
+import { LanguageMiniComponent } from './shared/components/language/mini/language-mini.component';
+import { LanguageEditorComponent } from './shared/components/language/editor/language-editor.component';
+import { LanguageElementCardComponent } from './shared/components/language-element/card/language-element-card.component';
+import { LanguageElementMiniComponent } from './shared/components/language-element/mini/language-element-mini.component';
+import { LanguageElementEditorComponent } from './shared/components/language-element/editor/language-element-editor.component';
 //components
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -63,20 +70,20 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { ProfileComponent } from './profile/profile.component';
-import { AccountComponent } from './account/account.component';
-import { ProfileSettingsComponent } from './account/profile-settings/profile-settings.component';
-import { AccountSettingsComponent } from './account/account-settings/account-settings.component';
-import { EmailsSettingsComponent } from './account/emails-settings/emails-settings.component';
-import { SecuritySettingsComponent } from './account/security-settings/security-settings.component';
-import { DevicesSettingsComponent } from './account/devices-settings/devices-settings.component';
+import { ProfileOverviewComponent } from './profile/overview/profile-overview.component';
+import { ProfileLanguagesComponent } from './profile/languages/profile-languages.component';
+import { ProfileModelsComponent } from './profile/models/profile-models.component';
+import { SettingsComponent } from './settings/settings.component';
+import { SettingsProfileComponent } from './settings/profile/settings-profile.component';
+import { SettingsAccountComponent } from './settings/account/settings-account.component';
+import { SettingsEmailsComponent } from './settings/emails/settings-emails.component';
+import { SettingsSecurityComponent } from './settings/security/settings-security.component';
+import { SettingsDevicesComponent } from './settings/devices/settings-devices.component';
 import { AdminComponent } from './admin/admin.component';
-import { UsersAdminComponent } from './admin/users-admin/users-admin.component';
+import { AdminUsersComponent } from './admin/users/admin-users.component';
+import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
-import { ModelsComponent } from './models/models.component';
-import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/module';
-import { LanguageEditorComponent } from './shared/components/language-editor/language-editor.component';
-import { PictureInputComponent } from './shared/components/picture-input/picture-input.component';
 
 @NgModule({
   declarations: [
@@ -90,13 +97,17 @@ import { PictureInputComponent } from './shared/components/picture-input/picture
     ConfirmComponent,
     LeaveGuardWarningComponent,
     SearchComponent,
-    PictureInputComponent,
     InvalidFeedbackComponent,
     VerifiedMarkComponent,
-    ModelEditorComponent,
-    LanguageEditorComponent,
-    LanguageElementEditorComponent,
+    PictureInputComponent,
     JsonModelTreeComponent,
+    ModelEditorComponent,
+    LanguageCardComponent,
+    LanguageMiniComponent,
+    LanguageEditorComponent,
+    LanguageElementCardComponent,
+    LanguageElementMiniComponent,
+    LanguageElementEditorComponent,
     //components
     AppComponent,
     NotFoundComponent,
@@ -104,17 +115,20 @@ import { PictureInputComponent } from './shared/components/picture-input/picture
     RegisterComponent,
     PasswordResetComponent,
     ProfileComponent,
-    AccountComponent,
-    ProfileSettingsComponent,
-    AccountSettingsComponent,
-    EmailsSettingsComponent,
-    SecuritySettingsComponent,
-    DevicesSettingsComponent,
+    ProfileOverviewComponent,
+    ProfileLanguagesComponent,
+    ProfileModelsComponent,
+    SettingsComponent,
+    SettingsProfileComponent,
+    SettingsAccountComponent,
+    SettingsEmailsComponent,
+    SettingsSecurityComponent,
+    SettingsDevicesComponent,
     AdminComponent,
-    UsersAdminComponent,
+    AdminUsersComponent,
+    ModelsComponent,
     LanguagesComponent,
-    LanguageComponent,
-    ModelsComponent
+    LanguageComponent
   ],
   bootstrap: [AppComponent],
   imports: [

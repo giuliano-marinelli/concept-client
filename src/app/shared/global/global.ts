@@ -1,4 +1,5 @@
 import { FormControl } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import _ from 'lodash';
 
@@ -34,6 +35,11 @@ export class Global {
       // start loading our image
       inputImage.src = data;
     });
+  }
+
+  static sanitizeSVG(sanitizer: DomSanitizer, svg?: string, width?: number): any {
+    if (!svg) return '';
+    return sanitizer.bypassSecurityTrustHtml(width ? Global.adjustSVGWidth(svg, width) : svg);
   }
 
   static adjustSVGWidth(svg: string, width: number): string {

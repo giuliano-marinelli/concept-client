@@ -1,12 +1,13 @@
 <div [ngClass]="searchClass">
   <div class="input-button" [class.input-button-sm]="advancedCollapsed" (keyup)="onKey($event)">
     <input type="text" class="form-control form-control-sm bg-dark-subtle" [ngClass]="searchInputClass"
-      *ngIf="advancedCollapsed" placeholder="Search" [(ngModel)]="searchSimple" (input)="onSearch(true)" />
+      *ngIf="advancedCollapsed" placeholder="{{ searchPlaceholder }}" [(ngModel)]="searchSimple"
+      (input)="onSearch(true)" />
     <div
       class="form-control form-control-md bg-dark-subtle d-flex flex-row align-items-center pt-1 pb-0 ps-1 pe-5 flex-wrap"
       [ngClass]="searchTagsClass" *ngIf="!advancedCollapsed">
       <span class="ms-1 pb-1 small input-tags-placeholder text-muted" *ngIf="searchAttributes.length <= 0">
-        Search by adding tags
+        {{ searchAdvancedPlaceholder }}
       </span>
       <!--search tags-->
       <div [ngClass]="

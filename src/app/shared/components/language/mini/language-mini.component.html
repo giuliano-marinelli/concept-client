@@ -1,0 +1,14 @@
+<div class="card m-auto" style="max-width: 220px;">
+  <div class="card-body p-2">
+    <div class="d-flex flex-row">
+      <div class="flex-shrink-0">
+        <img class="me-3 img-thumbnail rounded-circle logo-img" [src]="language.logo"
+          onerror="this.src='assets/images/default-language.png'" />
+      </div>
+      <div class="flex-fill d-flex flex-column text-break">
+        <span class="small">{{ language.name }}</span>
+        <span class="text-muted small">{{ language.tag }}&#64;{{ language.version}}</span>
+      </div>
+    </div>
+  </div>
+</div>

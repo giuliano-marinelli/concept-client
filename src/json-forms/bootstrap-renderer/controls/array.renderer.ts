@@ -28,7 +28,7 @@ import {
 } from '@jsonforms/core';
 
 @Component({
-  selector: 'app-array-layout-renderer',
+  selector: 'ArrayControlRenderer',
   template: `
     <div class="card mb-1" [style.display]="hidden ? 'none' : ''" [class.bg-body-secondary]="!this.isEnabled()">
       <div class="card-body px-2 pb-1 pt-1">

@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
 
 @Component({
-  selector: 'app-languages',
+  selector: 'languages',
   templateUrl: './languages.component.html',
   styleUrl: './languages.component.scss'
 })
@@ -79,18 +79,5 @@ export class LanguagesComponent {
       });
   }
 
-  deleteLanguage(language: MetaModel): void {
-    // if (metaModel._id) this.submitLoading.push(metaModel._id);
-    // this.metaModelService.deleteMetaModel(metaModel).subscribe({
-    //   next: (data) => {
-    //     this.getMetaModels();
-    //     this.message.success('MetaModel succesfully deleted.', { onlyOne: true, displayMode: 'replace', target: this.messageContainer });
-    //   },
-    //   error: (error) => {
-    //     this.message.error(error, { onlyOne: true, displayMode: 'replace', target: this.messageContainer });
-    //   }
-    // }).add(() => {
-    //   this.submitLoading = this.submitLoading.filter(id => id != metaModel._id)
-    // });
-  }
+  editLanguage(): void {}
 }

@@ -98,6 +98,9 @@ export class SearchComponent implements OnInit {
   @Input() defaultTagColor: Color = 'body-secondary';
   @Input() defaultTagTitleColor: TextColor = 'body';
   @Input() defaultTagCategoryColor: TextColor = 'body-emphasis';
+  //placeholders
+  @Input() searchPlaceholder: string = 'Search...';
+  @Input() searchAdvancedPlaceholder: string = 'Search by adding tags...';
 
   @Input() search: any;
   @Output() searchChange = new EventEmitter<any>();

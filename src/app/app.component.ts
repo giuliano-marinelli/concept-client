@@ -1,34 +1,33 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 import { environment } from '../environments/environment';
-import { filter, map } from 'rxjs';
 
 import { Logout } from './shared/entities/user.entity';
 
 import { AuthService } from './services/auth.service';
 import { DarkmodeService } from './services/darkmode.service';
 import { MessagesService } from './services/messages.service';
+import { TitleService } from './services/title.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'Concept';
   currentYear = new Date().getUTCFullYear();
-  fullNavbarComponents: string[] = ['Models'];
-  fullNavbar = false;
   isDevelopment: boolean = !environment.production;
+  fullNavbarComponents: string[] = ['/models'];
+  fullNavbar = false;
 
   constructor(
     public auth: AuthService,
     public router: Router,
     public messages: MessagesService,
-    public titleService: Title,
     public darkmodeService: DarkmodeService,
+    public titleService: TitleService,
     public _logout: Logout
   ) {}
 
@@ -37,31 +36,14 @@ export class AppComponent {
     this.darkmodeService.initTheme();
 
     //for change page title
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => {
-          let route: ActivatedRoute = this.router.routerState.root;
-          let routeTitle = '';
-          while (route!.firstChild) {
-            route = route.firstChild;
-          }
-          if (route.snapshot.data['title'] != undefined) {
-            routeTitle = route!.snapshot.data['title'];
-          }
-          return routeTitle;
-        })
-      )
-      .subscribe((title: string) => {
-        if (title) {
-          this.titleService.setTitle(`${title} · Concept`);
-        } else {
-          this.titleService.setTitle(`Concept`);
-        }
+    this.titleService.initTitle();
 
-        //for make navbar take full size for some components
-        this.fullNavbar = this.fullNavbarComponents.includes(title);
-      });
+    // get the current route and check if the navbar should be full
+    this.router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        this.fullNavbar = this.fullNavbarComponents.includes(this.router.url);
+      }
+    });
   }
 
   logout() {

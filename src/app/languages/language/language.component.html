@@ -32,8 +32,7 @@
                   Are you sure you want to delete the language:
                 </p>
                 <div class="mb-3">
-                  <ng-container [ngTemplateOutlet]="languageMini" [ngTemplateOutletContext]="{ language: language }">
-                  </ng-container>
+                  <language-mini [language]="language"></language-mini>
                 </div>
                 <p class="mb-0 fw-bold text-danger text-center">
                   <fa-icon [icon]="'warning'"></fa-icon> This action cannot be reverted
@@ -48,7 +47,7 @@
       <div class="col-12 col-md-6 mb-2">
         <h3>Nodes</h3>
         <div class="col-12 col-lg-12 mb-2">
-          <div class="card text-center btn btn-theme" (click)="editElement({ type: LanguageElementType.NODE })"
+          <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.NODE)"
             style="cursor: pointer;">
             <div class="card-body d-flex align-items-center justify-content-center p-1">
               <fa-icon [icon]="'plus'" size="2x"></fa-icon>
@@ -60,16 +59,16 @@
           *ngIf="filter(language.metaElements, { type: LanguageElementType.NODE })?.length">
           <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
             *ngFor="let node of language.metaElements | filter: { type: LanguageElementType.NODE }">
-            <ng-container [ngTemplateOutlet]="elementCard"
-              [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
-            </ng-container>
+            <language-element-card [language]="language" [element]="node" [masonry]="masonry" (onEdit)="onEditElement()"
+              (onDelete)="onDeleteElement()">
+            </language-element-card>
           </div>
         </ngx-masonry>
       </div>
       <div class="col-12 col-md-6">
         <h3>Edges</h3>
         <div class="col-12 col-lg-12 mb-2">
-          <div class="card text-center btn btn-theme" (click)="editElement({ type: LanguageElementType.EDGE })"
+          <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.EDGE)"
             style="cursor: pointer;">
             <div class="card-body d-flex align-items-center justify-content-center p-1">
               <fa-icon [icon]="'plus'" size="2x"></fa-icon>
@@ -80,90 +79,13 @@
           class="row g-2" [class.loading]="languageLoading"
           *ngIf="filter(language.metaElements, { type: LanguageElementType.EDGE })?.length">
           <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
-            *ngFor="let node of language.metaElements | filter: { type: LanguageElementType.EDGE }">
-            <ng-container [ngTemplateOutlet]="elementCard"
-              [ngTemplateOutletContext]="{ element: node, language: language, masonry: masonry }">
-            </ng-container>
+            *ngFor="let edge of language.metaElements | filter: { type: LanguageElementType.EDGE }">
+            <language-element-card [language]="language" [element]="edge" [masonry]="masonry" (onEdit)="onEditElement()"
+              (onDelete)="onDeleteElement()">
+            </language-element-card>
           </div>
         </ngx-masonry>
       </div>
     </div>
   </div>
 </div>
-
-<ng-template #elementCard let-element="element" let-language="language" let-masonry="masonry">
-  <div class="card" (resized)="masonry.layout()">
-    <div *ngIf="submitLoading.includes(element.id)"
-      class="overlay d-flex align-items-center text-center text-body rounded">
-      <fa-icon class="flex-fill" [icon]="'spinner'" [animation]="'spin-pulse'" size="2x"></fa-icon>
-    </div>
-    <div class="card-body">
-      <div class="d-flex flex-column">
-        <div class="w-100 rounded bg-body-tertiary d-flex flex-column align-items-center p-2 mb-1">
-          <div class="sprotty overflow-hidden" [innerHTML]="adjustSVG(element.preview, 100)"
-            style="max-width: 100px; max-height: 75px;">
-          </div>
-        </div>
-        <div class="d-flex flex-column">
-          <div class="text-ellipsis">
-            <span>{{ element.name }}</span><br>
-            <span class="badge text-bg-secondary pb-2">{{ element.tag }}</span>
-          </div>
-          <div class="align-self-end mt-3">
-            <a class="btn btn-sm btn-theme me-1" (click)="editElement({ element })">
-              <fa-icon [icon]="'pen'"></fa-icon> Edit
-            </a>
-            <a class="btn btn-sm btn-theme" (confirm)="deleteElement(element)" [confirmTemplate]="delete_message"
-              confirmActionButton="Delete">
-              <fa-icon [icon]="'trash'"></fa-icon>
-            </a>
-            <ng-template #delete_message>
-              <p>
-                Are you sure you want to delete the element:
-              </p>
-              <ng-container [ngTemplateOutlet]="elementMini" [ngTemplateOutletContext]="{ element: element }">
-              </ng-container>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #elementMini let-element="element">
-  <div class="card m-auto" style="max-width: 220px;">
-    <div class="card-body p-2">
-      <div class="d-flex flex-column">
-        <div class="w-100 rounded bg-body-tertiary d-flex flex-column align-items-center p-2 mb-1">
-          <div class="sprotty overflow-hidden" [innerHTML]="adjustSVG(element.preview, 100)"
-            style="max-width: 100px; max-height: 75px;">
-          </div>
-        </div>
-      </div>
-      <div class="d-flex flex-column">
-        <div class="text-ellipsis">
-          <span>{{ element.name }}</span><br>
-          <span class="badge text-bg-secondary pb-2">{{ element.tag }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #languageMini let-language="language">
-  <div class="card m-auto" style="max-width: 220px;">
-    <div class="card-body p-2">
-      <div class="d-flex flex-row">
-        <div class="flex-shrink-0">
-          <img class="me-3 img-thumbnail rounded-circle logo-img-mini" [src]="language.logo"
-            onerror="this.src='assets/images/default-language.png'" />
-        </div>
-        <div class="flex-fill d-flex flex-column text-break">
-          <span class="small">{{ language.name }}</span>
-          <span class="text-muted small">{{ language.tag }}&#64;{{ language.version}}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>

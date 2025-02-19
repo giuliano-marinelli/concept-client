@@ -13,7 +13,7 @@ import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
 
 @Component({
-  selector: 'app-password-reset',
+  selector: 'password-reset',
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss'
 })

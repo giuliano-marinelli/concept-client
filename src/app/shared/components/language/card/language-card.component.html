@@ -1,0 +1,67 @@
+<div class="card bg-dark-subtle" (resized)="masonry?.layout()">
+  <div *ngIf="loading" class="overlay d-flex align-items-center text-center text-body rounded">
+    <fa-icon class="flex-fill" [icon]="'spinner'" [animation]="'spin-pulse'" size="2x"></fa-icon>
+  </div>
+  <div class="card-body">
+    <div class="card-text">
+      <div class="d-flex flex-row pb-1">
+        <div class="flex-shrink-0">
+          <img class="me-3 img-thumbnail rounded-circle logo-img" [src]="language.logo"
+            onerror="this.src='assets/images/default-language.png'" />
+        </div>
+        <div class="flex-fill d-flex flex-column text-break">
+          <span class="small" *ngIf="language.name">{{ language.name }}</span>
+          <span [ngClass]="language.name ? 'text-muted small' : ''">{{ language.tag }}&#64;{{ language.version
+            }}</span>
+        </div>
+        <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
+          <a class="btn p-0 text-body">
+            <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
+          </a>
+          <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'admin'" class="dropdown-menu shadow-sm"
+            ngbDropdownMenu>
+            <a ngbDropdownItem class="small pe-pointer"
+              routerLink="/language/{{ language.tag }}@{{ language.version }}">
+              <fa-icon [icon]="'eye'"></fa-icon> Inspect
+            </a>
+            <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteLanguage(language)"
+              [confirmTemplate]="delete_message" confirmActionButton="Delete">
+              <fa-icon [icon]="'trash'"></fa-icon> Delete
+            </a>
+            <ng-template #delete_message>
+              <p>
+                Are you sure you want to delete the language:
+              </p>
+              <div class="mb-3">
+                <language-mini [language]="language"></language-mini>
+              </div>
+              <p class="mb-0 fw-bold text-danger text-center">
+                <fa-icon [icon]="'warning'"></fa-icon> This action cannot be reverted
+              </p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="language.description">
+        <div class="mt-1 small" *ngVar="{ descriptionCollapsed: true } as descriptionSettings">
+          <a [ngClass]="language.description ? 'pe-pointer dropdown-toggle text-body' : ''"
+            (click)="language.description ? descriptionCollapse.toggle() : null"
+            [attr.aria-expanded]="!descriptionSettings.descriptionCollapsed">
+            <b>Description</b>
+            <span *ngIf="!language.description" class="text-muted">&nbsp;empty</span>
+          </a>
+          <div #descriptionCollapse="ngbCollapse" [(ngbCollapse)]="descriptionSettings.descriptionCollapsed">
+            <div class="card">
+              <div class="card-body p-2">
+                {{ language.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 pt-1 small border-top">
+        <b>Created at:</b> {{ language.createdAt | amLocal | amDateFormat:'LLL' }}
+      </div>
+    </div>
+  </div>
+</div>
