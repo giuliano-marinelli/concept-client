@@ -24,13 +24,13 @@
         <ul class="navbar-nav flex-row align-items-center">
           <li class="nav-item me-2" *ngIf="isDevelopment">
             <a class="btn btn-outline-oposite-theme opacity-50 p-1" href="/graphql"
-              (click)="navbarSettings.collapsed = true" tp="API">
+              (click)="navbarSettings.collapsed = true" tp="API" tpVariation="no_arrow">
               <fa-icon [icon]="'globe'"></fa-icon>
             </a>
           </li>
           <li class="nav-item me-2">
             <a class="btn btn-outline-oposite-theme opacity-50 p-1" (click)="darkmodeService.toggleTheme()"
-              [tp]="darkmodeService.isDarkMode() ? 'Light mode' : 'Dark mode'">
+              [tp]="darkmodeService.isDarkMode() ? 'Light mode' : 'Dark mode'" tpVariation="no_arrow">
               <fa-icon [icon]="darkmodeService.isDarkMode() ? 'moon' : 'sun'"></fa-icon>
             </a>
           </li>
@@ -84,7 +84,7 @@
         <ul class="navbar-nav ms-2">
           <li class="nav-item border-top border-md-0 me-2">
             <a class="d-none d-md-block btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/languages"
-              routerLinkActive="active" tp="Languages" (click)="navbarSettings.collapsed = true">
+              routerLinkActive="active" tp="Languages" tpVariation="no_arrow" (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'book'"></fa-icon>
             </a>
             <a class="d-md-none nav-link " routerLink="/languages" routerLinkActive="active"
@@ -94,7 +94,7 @@
           </li>
           <li class="nav-item border-top border-md-0 me-2">
             <a class="d-none d-md-block btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/models"
-              routerLinkActive="active" tp="Models">
+              routerLinkActive="active" tp="Models" tpVariation="no_arrow">
               <fa-icon [icon]="'diagram-project'"></fa-icon>
             </a>
             <a class="d-md-none nav-link " routerLink="/models" routerLinkActive="active"
@@ -104,7 +104,7 @@
           </li>
           <li class="nav-item border-top border-md-0 me-2" *ngIf="!auth.loading && auth.user?.role == 'admin'">
             <a class="d-none d-md-block btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/admin"
-              routerLinkActive="active" tp="Admin" (click)="navbarSettings.collapsed = true">
+              routerLinkActive="active" tp="Admin" tpVariation="no_arrow" (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'screwdriver-wrench'"></fa-icon>
             </a>
             <a class="d-md-none nav-link " routerLink="/admin" routerLinkActive="active"

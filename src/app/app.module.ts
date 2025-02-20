@@ -183,6 +183,14 @@ import { LanguageComponent } from './languages/language/language.component';
           trigger: 'mouseenter',
           offset: [0, 5]
         },
+        no_arrow: {
+          theme: 'material',
+          arrow: false,
+          maxWidth: 200,
+          animation: 'scale',
+          trigger: 'mouseenter',
+          offset: [0, 5]
+        },
         popper: {
           theme: 'material',
           arrow: true,
