@@ -58,8 +58,8 @@ export class MetaModel {
 @Injectable({ providedIn: 'root' })
 export class CreateMetaModel extends DynamicMutation<{ createMetaModel: MetaModel }> {
   override document = gql`
-    mutation CreateMetaModel($metaModelCreateInput: MetaModelCreateInput!) {
-      createMetaModel(metaModelCreateInput: $metaModelCreateInput) {
+    mutation CreateMetaModel($metaModelCreateInput: MetaModelCreateInput!, $logoFile: Upload) {
+      createMetaModel(metaModelCreateInput: $metaModelCreateInput, logoFile: $logoFile) {
         MetaModel
       }
     }

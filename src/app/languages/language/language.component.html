@@ -1,91 +1,89 @@
-<div class="container">
-  <div class="row mt-3 text-center" *ngIf="languageLoading && !language">
-    <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
-  </div>
-  <div class="mt-4" [class.loading]="languageLoading" *ngIf="language">
-    <div class="d-flex flex-row" style="margin-left: 1.5rem; margin-top: 2.25rem">
-      <div class="flex-shrink-0 logo-container">
-        <img class="me-3 img-thumbnail rounded-circle logo-img" [src]="language.logo"
-          onerror="this.src='assets/images/default-language.png'" />
-      </div>
-      <div class="flex-fill py-1 border-start border-top border-bottom rounded-start border-info-container">
-        <div class="d-flex flex-column flex-md-row info-container">
-          <div class="d-flex flex-column mb-3 mb-sm-0">
-            <h2>{{ language.name }}</h2>
-            <h4 class="text-muted">{{ language.tag }}&#64;{{ language.version}}</h4>
+<div class="row mt-3 text-center" *ngIf="languageLoading && !language">
+  <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
+</div>
+<div class="mt-4" [class.loading]="languageLoading" *ngIf="language">
+  <div class="d-flex flex-row" style="margin-left: 1.5rem; margin-top: 2.25rem">
+    <div class="flex-shrink-0 logo-container">
+      <img class="me-3 img-thumbnail rounded-circle logo-img" [src]="language.logo"
+        onerror="this.src='assets/images/default-language.png'" />
+    </div>
+    <div class="flex-fill py-1 border-start border-top border-bottom rounded-start border-info-container">
+      <div class="d-flex flex-column flex-md-row info-container">
+        <div class="d-flex flex-column mb-3 mb-sm-0">
+          <h2>{{ language.name }}</h2>
+          <h4 class="text-muted">{{ language.tag }}&#64;{{ language.version}}</h4>
+        </div>
+        <div class="flex-fill d-flex flex-column flex-lg-row ms-md-4 border-start-md">
+          <div class="flex-fill pe-4 pe-lg-0 ps-md-4 text-break text-hyphens desc-container">
+            <span *ngIf="language.description">{{ language.description }}</span>
+            <span *ngIf="!language.description" class="text-muted fst-italic">No description</span>
           </div>
-          <div class="d-flex flex-column flex-lg-row ms-md-4 border-start-md">
-            <div class="flex-fill pe-4 pe-lg-0 ps-md-4 text-break text-hyphens desc-container">
-              <span *ngIf="language.description">{{ language.description }}</span>
-              <span *ngIf="!language.description" class="text-muted fst-italic">No description</span>
-            </div>
-            <div class="flex-shrink-0 align-self-end">
-              <a class="btn btn-sm btn-theme me-1" (click)="editLanguage()">
-                <fa-icon [icon]="'pen'"></fa-icon> Edit
-              </a>
-              <a class="btn btn-sm btn-theme" (confirm)="deleteLanguage()" [confirmTemplate]="delete_message"
-                confirmActionButton="Delete">
-                <fa-icon [icon]="'trash'"></fa-icon>
-              </a>
-              <ng-template #delete_message>
-                <p>
-                  Are you sure you want to delete the language:
-                </p>
-                <div class="mb-3">
-                  <language-mini [language]="language"></language-mini>
-                </div>
-                <p class="mb-0 fw-bold text-danger text-center">
-                  <fa-icon [icon]="'warning'"></fa-icon> This action cannot be reverted
-                </p>
-              </ng-template>
-            </div>
+          <div class="flex-shrink-0 align-self-end">
+            <a class="btn btn-sm btn-theme me-1" (click)="editLanguage()">
+              <fa-icon [icon]="'pen'"></fa-icon> Edit
+            </a>
+            <a class="btn btn-sm btn-theme" (confirm)="deleteLanguage()" [confirmTemplate]="delete_message"
+              confirmActionButton="Delete">
+              <fa-icon [icon]="'trash'"></fa-icon>
+            </a>
+            <ng-template #delete_message>
+              <p>
+                Are you sure you want to delete the language:
+              </p>
+              <div class="mb-3">
+                <language-mini [language]="language"></language-mini>
+              </div>
+              <p class="mb-0 fw-bold text-danger text-center">
+                <fa-icon [icon]="'warning'"></fa-icon> This action cannot be reverted
+              </p>
+            </ng-template>
           </div>
         </div>
       </div>
     </div>
-    <div class="pt-4 row">
-      <div class="col-12 col-md-6 mb-2">
-        <h3>Nodes</h3>
-        <div class="col-12 col-lg-12 mb-2">
-          <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.NODE)"
-            style="cursor: pointer;">
-            <div class="card-body d-flex align-items-center justify-content-center p-1">
-              <fa-icon [icon]="'plus'" size="2x"></fa-icon>
-            </div>
+  </div>
+  <div class="pt-4 row">
+    <div class="col-12 col-md-6 mb-2">
+      <h3>Nodes</h3>
+      <div class="col-12 col-lg-12 mb-2">
+        <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.NODE)"
+          style="cursor: pointer;">
+          <div class="card-body d-flex align-items-center justify-content-center p-1">
+            <fa-icon [icon]="'plus'" size="2x"></fa-icon>
           </div>
         </div>
-        <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
-          class="row g-2" [class.loading]="languageLoading"
-          *ngIf="filter(language.metaElements, { type: LanguageElementType.NODE })?.length">
-          <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
-            *ngFor="let node of language.metaElements | filter: { type: LanguageElementType.NODE }">
-            <language-element-card [language]="language" [element]="node" [masonry]="masonry" (onEdit)="onEditElement()"
-              (onDelete)="onDeleteElement()">
-            </language-element-card>
-          </div>
-        </ngx-masonry>
       </div>
-      <div class="col-12 col-md-6">
-        <h3>Edges</h3>
-        <div class="col-12 col-lg-12 mb-2">
-          <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.EDGE)"
-            style="cursor: pointer;">
-            <div class="card-body d-flex align-items-center justify-content-center p-1">
-              <fa-icon [icon]="'plus'" size="2x"></fa-icon>
-            </div>
+      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
+        class="row g-2" [class.loading]="languageLoading"
+        *ngIf="filter(language.metaElements, { type: LanguageElementType.NODE })?.length">
+        <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
+          *ngFor="let node of language.metaElements | filter: { type: LanguageElementType.NODE }">
+          <language-element-card [language]="language" [element]="node" [masonry]="masonry" (onEdit)="getLanguage()"
+            (onDelete)="getLanguage()">
+          </language-element-card>
+        </div>
+      </ngx-masonry>
+    </div>
+    <div class="col-12 col-md-6">
+      <h3>Edges</h3>
+      <div class="col-12 col-lg-12 mb-2">
+        <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.EDGE)"
+          style="cursor: pointer;">
+          <div class="card-body d-flex align-items-center justify-content-center p-1">
+            <fa-icon [icon]="'plus'" size="2x"></fa-icon>
           </div>
         </div>
-        <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
-          class="row g-2" [class.loading]="languageLoading"
-          *ngIf="filter(language.metaElements, { type: LanguageElementType.EDGE })?.length">
-          <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
-            *ngFor="let edge of language.metaElements | filter: { type: LanguageElementType.EDGE }">
-            <language-element-card [language]="language" [element]="edge" [masonry]="masonry" (onEdit)="onEditElement()"
-              (onDelete)="onDeleteElement()">
-            </language-element-card>
-          </div>
-        </ngx-masonry>
       </div>
+      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
+        class="row g-2" [class.loading]="languageLoading"
+        *ngIf="filter(language.metaElements, { type: LanguageElementType.EDGE })?.length">
+        <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
+          *ngFor="let edge of language.metaElements | filter: { type: LanguageElementType.EDGE }">
+          <language-element-card [language]="language" [element]="edge" [masonry]="masonry" (onEdit)="getLanguage()"
+            (onDelete)="getLanguage()">
+          </language-element-card>
+        </div>
+      </ngx-masonry>
     </div>
   </div>
 </div>

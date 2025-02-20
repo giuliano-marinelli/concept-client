@@ -1,10 +1,14 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { FindMetaModels, MetaModel } from '../shared/entities/meta-model.entity';
 import { CloseSession } from '../shared/entities/session.entity';
 import { Global } from '../shared/global/global';
 import { Observable } from 'rxjs';
+
+import { LanguageEditorComponent } from '../shared/components/language/editor/language-editor.component';
 
 import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
@@ -31,6 +35,7 @@ export class LanguagesComponent {
   constructor(
     public auth: AuthService,
     public router: Router,
+    public modalService: NgbModal,
     public messages: MessagesService,
     public _findMetaModels: FindMetaModels,
     public _closeSession: CloseSession
@@ -79,5 +84,16 @@ export class LanguagesComponent {
       });
   }
 
-  editLanguage(): void {}
+  newLanguage(): void {
+    const modalRef = this.modalService.open(LanguageEditorComponent, {
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    const editor = modalRef.componentInstance;
+
+    editor.onCreate.subscribe(() => {
+      this.getLanguages();
+    });
+  }
 }

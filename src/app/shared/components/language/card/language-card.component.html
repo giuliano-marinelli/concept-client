@@ -24,7 +24,8 @@
               routerLink="/language/{{ language.tag }}@{{ language.version }}">
               <fa-icon [icon]="'eye'"></fa-icon> Inspect
             </a>
-            <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteLanguage(language)"
+            <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteLanguage($event, language)"
+              [requiredPassword]="true" requiredPasswordMessage="Please enter your password to continue."
               [confirmTemplate]="delete_message" confirmActionButton="Delete">
               <fa-icon [icon]="'trash'"></fa-icon> Delete
             </a>

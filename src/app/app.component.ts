@@ -18,9 +18,13 @@ import { TitleService } from './services/title.service';
 export class AppComponent {
   title = 'Concept';
   currentYear = new Date().getUTCFullYear();
+
   isDevelopment: boolean = !environment.production;
-  fullNavbarComponents: string[] = ['/models'];
-  fullNavbar = false;
+
+  stretchComponents: string[] = ['/models'];
+  stretch = false;
+
+  breadcrumb: { path: string; title: string }[] = [];
 
   constructor(
     public auth: AuthService,
@@ -32,16 +36,22 @@ export class AppComponent {
   ) {}
 
   ngOnInit() {
-    //initialize darkmode
+    // initialize darkmode
     this.darkmodeService.initTheme();
 
-    //for change page title
+    // for change page title
+    this.titleService.appTitle = this.title;
     this.titleService.initTitle();
+
+    // get the routes for breadcrumb
+    this.titleService.breadcrumbSubject.subscribe((breadcrumb) => {
+      this.breadcrumb = breadcrumb;
+    });
 
     // get the current route and check if the navbar should be full
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        this.fullNavbar = this.fullNavbarComponents.includes(this.router.url);
+        this.stretch = this.stretchComponents.includes(this.router.url);
       }
     });
   }

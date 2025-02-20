@@ -43,9 +43,10 @@ export class LanguageComponent implements OnInit {
     public changeDetector: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
     public messages: MessagesService,
-    private _findMetaModels: FindMetaModels,
-    private _deleteMetaElement: DeleteMetaElement
-  ) {
+    private _findMetaModels: FindMetaModels
+  ) {}
+
+  ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const fullTag = params['language']; // tag with version
       if (fullTag?.split('@').length === 2) {
@@ -53,9 +54,7 @@ export class LanguageComponent implements OnInit {
         this.version = fullTag.split('@')[1];
       }
     });
-  }
 
-  ngOnInit(): void {
     if (!this.tag || !this.version) this.router.navigate(['/']);
     this.getLanguage();
   }
@@ -97,7 +96,12 @@ export class LanguageComponent implements OnInit {
 
     editor.language = this.language;
 
-    editor.onUpdate.subscribe(() => {
+    editor.onUpdate.subscribe((language: MetaModel) => {
+      if (language.tag != this.language?.tag) {
+        this.tag = language.tag!;
+        this.version = language.version!;
+        this.router.navigate(['/language', language.tag + '@' + language.version]);
+      }
       this.getLanguage();
     });
   }
@@ -119,13 +123,5 @@ export class LanguageComponent implements OnInit {
     editor.onCreate.subscribe(() => {
       this.getLanguage();
     });
-  }
-
-  onEditElement() {
-    this.getLanguage();
-  }
-
-  onDeleteElement() {
-    this.getLanguage();
   }
 }

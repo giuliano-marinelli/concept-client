@@ -29,7 +29,7 @@ import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
 
 const routes: Routes = [
-  { path: '', component: AboutComponent, data: { title: '' } },
+  { path: '', component: AboutComponent, data: { title: 'Welcome', breadcrumb: 'Home' } },
   {
     path: 'user/:username',
     component: ProfileComponent,
@@ -37,6 +37,10 @@ const routes: Routes = [
       title: (params: { [key: string]: string }) => {
         if (!params['username']) return '...';
         return params['username'] + (params['profilename'] ? ' · ' + params['profilename'] : '');
+      },
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username']) return '...';
+        return params['username'];
       }
     },
     children: [
@@ -72,7 +76,7 @@ const routes: Routes = [
   {
     path: 'settings',
     component: SettingsComponent,
-    data: { title: 'Settings' },
+    data: { title: 'Settings', breadcrumb: 'Settings' },
     canActivate: [AuthLoginGuard],
     children: [
       {
@@ -106,7 +110,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    data: { title: 'Admin' },
+    data: { title: 'Admin', breadcrumb: 'Admin' },
     canActivate: [AuthAdminGuard],
     children: [
       { path: 'users', component: AdminUsersComponent, data: { title: 'Users' }, canDeactivate: [LeaveGuard] },
@@ -114,7 +118,7 @@ const routes: Routes = [
     ]
   },
   // { path: 'graphql' },
-  { path: 'languages', component: LanguagesComponent, data: { title: 'Languages' } },
+  { path: 'languages', component: LanguagesComponent, data: { title: 'Languages', breadcrumb: 'Languages' } },
   {
     path: 'language/:language',
     component: LanguageComponent,
@@ -122,13 +126,17 @@ const routes: Routes = [
       title: (params: { [key: string]: string }) => {
         if (!params['languagetag']) return '...';
         return params['languagetag'] + '@' + params['languageversion'] + ' · ' + params['languagename'];
+      },
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['languagetag']) return '...';
+        return params['languagetag'] + '@' + params['languageversion'];
       }
     }
   },
   {
     path: 'models',
     component: ModelsComponent,
-    data: { title: 'Models' }
+    data: { title: 'Models', breadcrumb: 'Models' }
     // children: [{ path: 'editor', component: ModelEditorComponent, data: { title: 'Models > Editor' } }]
   },
   { path: 'notfound', component: NotFoundComponent, data: { title: 'Page not found' } },

@@ -1,7 +1,7 @@
-<div class="container">
-  <div class="m-auto mt-md-4" style="max-width: 680px">
-    <div class="row flex-column-reverse flex-md-row align-items-center">
-      <div class="alert alert-dark rounded-3 col-12 col-md-6">
+<div class="m-auto mt-md-4" style="max-width: 680px">
+  <div class="row flex-column-reverse flex-md-row align-items-center">
+    <div class="col-12 col-md-6">
+      <div class="alert alert-dark rounded-3">
         <div #message_container></div>
         <form [formGroup]="registerForm" (ngSubmit)="register()">
           <div class="mb-3">
@@ -47,15 +47,17 @@
           </div>
         </form>
       </div>
-      <div class="col-12 col-md-6">
-        <div class="my-4 text-center">
-          <fa-icon [icon]="'user-plus'" size="6x"></fa-icon>
-        </div>
-        <h3 class="fs-3 fw-light text-center">Start making world knowledge better with Concept!</h3>
-      </div>
     </div>
-    <div class="row">
-      <div class="alert alert-secondary rounded-3 text-center col">
+    <div class="col-12 col-md-6">
+      <div class="my-4 text-center">
+        <fa-icon [icon]="'user-plus'" size="6x"></fa-icon>
+      </div>
+      <h3 class="fs-3 fw-light text-center">Start making world knowledge better with Concept!</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="alert alert-secondary rounded-3 text-center">
         Did you already have an account? <a routerLink="/login">Login here</a>
       </div>
     </div>

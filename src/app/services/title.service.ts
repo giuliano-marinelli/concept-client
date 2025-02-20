@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { filter, map } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, filter, map } from 'rxjs';
+
+export interface Breadcrumb {
+  path: string;
+  title: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +18,18 @@ export class TitleService {
   subTitleSeparator: string = ' / ';
 
   titles: any[] = [];
+
   params: { [key: string]: string } = {};
+
+  breadcrumb: Breadcrumb[] = [];
+  breadcrumbSubject: ReplaySubject<Breadcrumb[]>;
 
   constructor(
     public router: Router,
     public titleService: Title
-  ) {}
+  ) {
+    this.breadcrumbSubject = new ReplaySubject();
+  }
 
   initTitle(): void {
     this.router.events
@@ -27,21 +38,42 @@ export class TitleService {
         map(() => {
           let route: ActivatedRoute = this.router.routerState.root;
           const titles: any[] = [];
+          const breadcrumb: Breadcrumb[] = [];
 
           // add the titles of the route tree nodes
           while (route?.firstChild) {
             route = route.firstChild;
+
             // add the title of the route
             if (route.snapshot.data['title']) titles.push(route.snapshot.data['title']);
+
+            // add the breadcrumb of the route
+            if (route.snapshot.data['breadcrumb'])
+              breadcrumb.push({
+                path: '/' + route.snapshot.url.map((r) => r.path).join('/'),
+                title: route.snapshot.data['breadcrumb']
+              });
           }
 
-          return titles;
+          return { titles, breadcrumb };
         })
       )
-      .subscribe((titles: any[]) => {
+      .subscribe(({ titles, breadcrumb }) => {
         this.titles = titles;
+        this.breadcrumb = breadcrumb;
         this.updateTitle();
+        this.updateBreadcrumb();
       });
+  }
+
+  setParam(key: string, value: string): void {
+    this.params[key] = value;
+    this.updateTitle();
+    this.updateBreadcrumb();
+  }
+
+  getBreadcrumb(): Observable<Breadcrumb[]> {
+    return this.breadcrumbSubject.asObservable();
   }
 
   updateTitle(): void {
@@ -59,8 +91,14 @@ export class TitleService {
     this.titleService.setTitle(title + this.appSeparator + this.appTitle);
   }
 
-  setParam(key: string, value: string): void {
-    this.params[key] = value;
-    this.updateTitle();
+  updateBreadcrumb(): void {
+    let breadcrumb: { path: string; title: string }[] = [];
+
+    // process the breadcrumb if it is a function call it with params else use it as is
+    this.breadcrumb.forEach((b: any) => {
+      breadcrumb.push({ path: b.path, title: typeof b.title === 'function' ? b.title(this.params) : b.title });
+    });
+
+    this.breadcrumbSubject.next(breadcrumb);
   }
 }
