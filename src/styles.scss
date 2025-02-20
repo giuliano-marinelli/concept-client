@@ -97,11 +97,27 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
   }
 }
 
+.btn.btn-oposite-theme {
+  @extend .btn-dark;
+
+  html[data-bs-theme='dark'] & {
+    @extend .btn-light;
+  }
+}
+
 .btn.btn-outline-theme {
   @extend .btn-outline-light;
 
   html[data-bs-theme='dark'] & {
     @extend .btn-outline-dark;
+  }
+}
+
+.btn.btn-outline-oposite-theme {
+  @extend .btn-outline-dark;
+
+  html[data-bs-theme='dark'] & {
+    @extend .btn-outline-light;
   }
 }
 

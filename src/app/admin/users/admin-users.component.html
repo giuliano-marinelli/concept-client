@@ -17,7 +17,6 @@
     { name: 'profile.location', category: 'Profile', title: 'Location', type: 'string', color: 'secondary', simple: true },
     { name: 'profile.publicEmail.address', category: 'Profile', title: 'Public Email', type: 'string', color: 'secondary', simple: true }
   ]" [(search)]="usersSearch" (searchChange)="getUsers()"></search>
-<div #message_container></div>
 <div class="text-center mt-3" *ngIf="!usersLoading && users.length <= 0">
   <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
   <p class="mt-2">No users found</p>

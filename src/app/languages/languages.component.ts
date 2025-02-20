@@ -19,8 +19,6 @@ import { MessagesService } from '../services/messages.service';
   styleUrl: './languages.component.scss'
 })
 export class LanguagesComponent {
-  @ViewChild('message_container') messageContainer!: ElementRef;
-
   filter: any = Global.filter;
 
   languagesLoading: boolean = true;
@@ -69,8 +67,7 @@ export class LanguagesComponent {
           if (errors)
             this.messages.error(errors, {
               onlyOne: true,
-              displayMode: 'replace',
-              target: this.messageContainer
+              displayMode: 'replace'
             });
           if (data?.metaModels) {
             const metaModels = data?.metaModels;

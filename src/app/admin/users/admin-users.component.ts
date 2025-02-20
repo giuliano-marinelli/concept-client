@@ -18,8 +18,6 @@ import { MessagesService } from '../../services/messages.service';
   styleUrl: './admin-users.component.scss'
 })
 export class AdminUsersComponent implements OnInit {
-  @ViewChild('message_container') messageContainer!: ElementRef;
-
   filter: any = Global.filter;
 
   usersLoading: boolean = true;
@@ -67,8 +65,7 @@ export class AdminUsersComponent implements OnInit {
           if (errors)
             this.messages.error(errors, {
               onlyOne: true,
-              displayMode: 'replace',
-              target: this.messageContainer
+              displayMode: 'replace'
             });
           if (data?.users) {
             const users = data?.users;
@@ -107,8 +104,7 @@ export class AdminUsersComponent implements OnInit {
             this.messages.error(errors, {
               close: false,
               onlyOne: true,
-              displayMode: 'replace',
-              target: this.messageContainer
+              displayMode: 'replace'
             });
           if (data?.closeSession) {
             this.getUsers();
