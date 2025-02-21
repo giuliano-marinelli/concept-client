@@ -11,7 +11,6 @@ import {
   BaseJsonrpcGLSPClient,
   ConnectionProvider,
   DiagramLoader,
-  FeatureModule,
   GLSPActionDispatcher,
   GLSPClient,
   IDiagramOptions,
@@ -21,6 +20,7 @@ import {
 } from '@eclipse-glsp/client';
 import { JsonForms } from '@jsonforms/angular';
 
+import { environment } from '../../../../../environments/environment';
 import { bootstrapRenderers } from '../../../../../json-forms/bootstrap-renderer';
 import { AModelToJSONForms } from '../../../global/amodel-to-json-forms';
 import { Container } from 'inversify';
@@ -38,16 +38,11 @@ export class ModelEditorComponent implements AfterViewInit {
   @Input() editMode: 'readonly' | 'editable' = 'editable';
   @Input() showcaseMode: boolean = false; // only works with language element
 
-  port: number = 3001;
-
-  // id for the JSON RPC Client
-  id: string = 'dynamic';
-
   // diagramType for the GLSP server (it's always dynamic)
   diagramType: string = 'dynamic';
 
   clientId: string = 'sprotty';
-  webSocketUrl: string = `ws://127.0.0.1:${this.port}/${this.id}`;
+  webSocketUrl: string = `ws://${environment.host}:${environment.glspPort}/${environment.glsp}`;
 
   glspClient!: GLSPClient;
   container!: Container;
@@ -84,7 +79,7 @@ export class ModelEditorComponent implements AfterViewInit {
 
       async function glspOnConnection(connectionProvider: ConnectionProvider, isReconnecting = false): Promise<void> {
         // create GLSP client for the JSON RPC communication with server
-        self.glspClient = new BaseJsonrpcGLSPClient({ id: self.id, connectionProvider });
+        self.glspClient = new BaseJsonrpcGLSPClient({ id: environment.glsp, connectionProvider });
 
         const diagramOptions: IDiagramOptions = {
           clientId: self.clientId,
@@ -111,7 +106,7 @@ export class ModelEditorComponent implements AfterViewInit {
         });
 
         if (isReconnecting) {
-          const message = `Connection to the ${self.id} GLSP server got closed. Connection was successfully re-established.`;
+          const message = `Connection to the ${environment.glsp} GLSP server got closed. Connection was successfully re-established.`;
           const timeout = 5000;
           const severity = 'WARNING';
 

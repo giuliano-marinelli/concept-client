@@ -18,15 +18,15 @@
           <a class="btn p-0 text-body">
             <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
           </a>
-          <div *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'admin'" class="dropdown-menu shadow-sm"
-            ngbDropdownMenu>
+          <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
             <a ngbDropdownItem class="small pe-pointer"
               routerLink="/language/{{ language.tag }}@{{ language.version }}">
               <fa-icon [icon]="'eye'"></fa-icon> Inspect
             </a>
-            <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteLanguage($event, language)"
-              [requiredPassword]="true" requiredPasswordMessage="Please enter your password to continue."
-              [confirmTemplate]="delete_message" confirmActionButton="Delete">
+            <a ngbDropdownItem *ngIf="language.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
+              class="small pe-pointer" (confirm)="deleteLanguage($event, language)" [requiredPassword]="true"
+              requiredPasswordMessage="Please enter your password to continue." [confirmTemplate]="delete_message"
+              confirmActionButton="Delete">
               <fa-icon [icon]="'trash'"></fa-icon> Delete
             </a>
             <ng-template #delete_message>

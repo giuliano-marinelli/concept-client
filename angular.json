@@ -9,13 +9,11 @@
         "@schematics/angular:component": {
           "style": "scss",
           "standalone": false,
-          "skipTests": true,
-          "selector": ""
+          "skipTests": true
         },
         "@schematics/angular:directive": {
           "standalone": false,
-          "skipTests": true,
-          "selector": ""
+          "skipTests": true
         },
         "@schematics/angular:service": {
           "skipTests": true
@@ -23,7 +21,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",

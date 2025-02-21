@@ -4,8 +4,11 @@
 
 export const environment = {
   production: false,
-  graphqlHTTPUri: 'http://localhost:3000/graphql',
-  graphqlWSUri: 'ws://localhost:3000/graphql'
+  host: '127.0.0.1',
+  appPort: 3000,
+  glspPort: 3001,
+  glsp: 'dynamic',
+  graphql: 'graphql'
 };
 
 /*

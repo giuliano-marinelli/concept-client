@@ -1,0 +1,17 @@
+<div class="card m-auto" style="max-width: 220px;">
+  <div class="card-body p-2">
+    <div class="d-flex flex-row">
+      <div class="flex-shrink-0">
+        <img class="me-3 img-thumbnail rounded-circle profile-img" [src]="user.profile?.avatar"
+          onerror="this.src='assets/images/default-user.png'" />
+      </div>
+      <div class="flex-fill d-flex flex-column text-break">
+        <span class="small" *ngIf="user.profile?.name">{{ user.profile?.name }}</span>
+        <span [ngClass]="user.profile?.name ? 'text-muted small' : ''">{{ user.username }}</span>
+      </div>
+    </div>
+    <div class="mt-1 small">
+      <div class="text-muted text-end">{{ user.primaryEmail?.address }}</div>
+    </div>
+  </div>
+</div>

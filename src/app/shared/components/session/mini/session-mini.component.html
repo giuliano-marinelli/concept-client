@@ -1,0 +1,51 @@
+<div class="d-flex flex-row">
+  <fa-icon class="me-2" [icon]="session.device?.type == 'desktop' ? 'desktop' : 'mobile'">
+  </fa-icon>
+  <div class="flex-fill">
+    {{
+    session.device?.brand
+    ? session.device?.brand + ' ' + (session.device?.model ? session.device?.model : '')
+    : session.device?.os ? session.device?.os : 'Unknown'
+    }}
+  </div>
+  <div *ngIf="session.token != auth.getToken() && !session.blockedAt && !session.closedAt" ngbDropdown display="dynamic"
+    placement="bottom-end" autoClose="true">
+    <a class="btn p-0">
+      <fa-icon class="no-dropdown-arrow small" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
+    </a>
+    <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
+      <a ngbDropdownItem class="small pe-pointer" (click)="closeSession(session)">
+        <fa-icon [icon]="'sign-out'"></fa-icon> Close session
+      </a>
+    </div>
+  </div>
+</div>
+<div class="mt-1 small text-danger" *ngIf="session.blockedAt">
+  <fa-icon [icon]="'lock'"></fa-icon> Blocked
+</div>
+<div class="mt-1 small text-secondary" *ngIf="session.closedAt && !session.blockedAt">
+  <fa-icon [icon]="'circle-xmark'"></fa-icon> Closed
+</div>
+<div class="mt-1 small text-success" *ngIf="session.token == auth.getToken()">
+  <fa-icon [icon]="'circle-check'"></fa-icon> Current device
+</div>
+<div class="small d-flex flex-row text-muted" *ngIf="session.device?.ip">
+  <fa-icon class="me-1" [icon]="'globe'"></fa-icon>
+  <div>{{ session.device?.ip }}</div>
+</div>
+<div class="small d-flex flex-row text-muted" *ngIf="session.device?.client">
+  <fa-icon class="me-1" [icon]="['fab', browserIcon(session.device?.client)]"></fa-icon>
+  <div>{{ session.device?.client }}</div>
+</div>
+<div class="small d-flex flex-row text-muted">
+  <fa-icon class="me-1" [icon]="'calendar-check'"></fa-icon>
+  <div>
+    first login: {{ session.createdAt | amLocal | amDateFormat:'LLL' }}
+  </div>
+</div>
+<div class="small d-flex flex-row text-muted">
+  <fa-icon class="me-1" [icon]="'clock'"></fa-icon>
+  <div>
+    recent activity: {{ session.updatedAt | amLocal | amTimeAgo }}
+  </div>
+</div>

@@ -56,6 +56,10 @@ import { InvalidFeedbackComponent } from './shared/components/invalid-feedback/i
 import { VerifiedMarkComponent } from './shared/components/verified-mark/verified-mark.component';
 import { PictureInputComponent } from './shared/components/picture-input/picture-input.component';
 import { JsonModelTreeComponent } from './shared/components/json-model-tree/json-model-tree.component';
+import { UserCardComponent } from './shared/components/user/card/user-card.component';
+import { UserMiniComponent } from './shared/components/user/mini/user-mini.component';
+import { SessionCardComponent } from './shared/components/session/card/session-card.component';
+import { SessionMiniComponent } from './shared/components/session/mini/session-mini.component';
 import { ModelEditorComponent } from './shared/components/model/editor/model-editor.component';
 import { LanguageCardComponent } from './shared/components/language/card/language-card.component';
 import { LanguageMiniComponent } from './shared/components/language/mini/language-mini.component';
@@ -84,7 +88,6 @@ import { AdminUsersComponent } from './admin/users/admin-users.component';
 import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
-
 @NgModule({
   declarations: [
     //directives
@@ -101,6 +104,10 @@ import { LanguageComponent } from './languages/language/language.component';
     VerifiedMarkComponent,
     PictureInputComponent,
     JsonModelTreeComponent,
+    UserCardComponent,
+    UserMiniComponent,
+    SessionCardComponent,
+    SessionMiniComponent,
     ModelEditorComponent,
     LanguageCardComponent,
     LanguageMiniComponent,
@@ -206,7 +213,7 @@ import { LanguageComponent } from './languages/language/language.component';
       useFactory(httpLink: HttpLink, messages: MessagesService) {
         //create an http link
         const http = httpLink.create({
-          uri: environment.graphqlHTTPUri,
+          uri: `http://${environment.host}:${environment.appPort}/${environment.graphql}`,
           //required for upload files
           extractFiles: (body) => {
             return extractFiles(body, isExtractableFile) as any;
@@ -217,7 +224,7 @@ import { LanguageComponent } from './languages/language/language.component';
         //create a websocket link (if it's needed for subscriptions)
         const ws = new GraphQLWsLink(
           createClient({
-            url: environment.graphqlWSUri
+            url: `ws://${environment.host}:${environment.appPort}/${environment.graphql}`
           })
         );
         //add authentication token to the headers

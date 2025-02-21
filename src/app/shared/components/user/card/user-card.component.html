@@ -1,0 +1,110 @@
+<div class="card bg-dark-subtle" (resized)="masonry?.layout()">
+  <div *ngIf="loading" class="overlay d-flex align-items-center text-center text-body rounded">
+    <fa-icon class="flex-fill" [icon]="'spinner'" [animation]="'spin-pulse'" size="2x"></fa-icon>
+  </div>
+  <div class="card-body">
+    <div class="card-text">
+      <div class="d-flex flex-row">
+        <div class="flex-shrink-0">
+          <img class="me-3 img-thumbnail rounded-circle profile-img" [src]="user.profile?.avatar"
+            onerror="this.src='assets/images/default-user.png'" />
+        </div>
+        <div class="flex-fill d-flex flex-column text-break">
+          <span class="small" *ngIf="user.profile?.name">{{ user.profile?.name }}</span>
+          <span [ngClass]="user.profile?.name ? 'text-muted small' : ''">{{ user.username }}</span>
+        </div>
+        <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
+          <a class="btn p-0 text-body">
+            <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
+          </a>
+          <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
+            <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteUser($event, user)" [requiredPassword]="true"
+              requiredPasswordMessage="Please enter your password to continue." [confirmTemplate]="delete_message"
+              confirmActionButton="Delete">
+              <fa-icon [icon]="'user-slash'"></fa-icon> Delete user
+            </a>
+            <ng-template #delete_message>
+              <p>
+                Are you sure you want to delete the user:
+              </p>
+              <user-mini [user]="user"></user-mini>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 small text-break-all" *ngVar="{ emailsCollapsed: true } as emailsSettings">
+        <a [ngClass]="user.emails?.length && user.emails?.length! > 1 ? 'pe-pointer dropdown-toggle text-body' : ''"
+          style="white-space: break-spaces !important;"
+          (click)="user.emails?.length && user.emails?.length! > 1 ? emailsCollapse.toggle() : null"
+          [attr.aria-expanded]="!emailsSettings.emailsCollapsed">
+          <verified-mark [verified]="user.primaryEmail?.verified" [markNotVerified]="true" />&nbsp;<span
+            class="text-muted">{{ user.primaryEmail?.address }}</span>
+        </a>
+        <div #emailsCollapse="ngbCollapse" [(ngbCollapse)]="emailsSettings.emailsCollapsed">
+          <div *ngFor="let email of user.emails | filter: { id: { $not: user.primaryEmail?.id } }">
+            <verified-mark [verified]="email.verified" [markNotVerified]="true" color="success" />&nbsp;<span
+              class="text-muted">{{ email.address }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 small" *ngVar="{ bioCollapsed: true } as profileSettings">
+        <a [ngClass]="user.profile?.bio ? 'pe-pointer dropdown-toggle text-body' : ''"
+          (click)="user.profile?.bio ? bioCollapse.toggle() : null"
+          [attr.aria-expanded]="!profileSettings.bioCollapsed">
+          <b>Bio</b>
+          <span *ngIf="!user.profile?.bio" class="text-muted">&nbsp;empty</span>
+        </a>
+        <div #bioCollapse="ngbCollapse" [(ngbCollapse)]="profileSettings.bioCollapsed">
+          <div class="card">
+            <div class="card-body p-2">
+              {{ user.profile?.bio }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-1 small d-flex flex-row">
+        <fa-icon class="me-1" [icon]="'location-dot'"></fa-icon>
+        <div class="text-break">
+          {{ user.profile?.location }}
+          <span *ngIf="!user.profile?.location" class="text-muted">empty</span>
+        </div>
+      </div>
+      <div class="mt-1 small d-flex flex-row">
+        <fa-icon class="me-1" [icon]="'link'"></fa-icon>
+        <div class="text-break">
+          <a href="{{ user.profile?.url }}" target="_blank">{{ user.profile?.url }}</a>
+          <span *ngIf="!user.profile?.url" class="text-muted">empty</span>
+        </div>
+      </div>
+      <div class="mt-1 small d-flex flex-row-reverse">
+        <span class="text-success ms-2" *ngIf="user.id == auth.user?.id">
+          <fa-icon [icon]="'circle-check'"></fa-icon> You
+        </span>
+        <span class="text-info ms-2" *ngIf="user.role == 'admin'">
+          <fa-icon [icon]="'user-tie'"></fa-icon> Admin
+        </span>
+      </div>
+      <div class="mt-1 pt-1 small border-top">
+        <b>Created at:</b> {{ user.createdAt | amLocal | amDateFormat:'LLL' }}
+      </div>
+      <div class="mt-1 small" *ngVar="{ devicesCollapsed: true } as devicesSettings">
+        <a class="pe-pointer dropdown-toggle text-body" (click)="devicesCollapse.toggle()"
+          [attr.aria-expanded]="!devicesSettings.devicesCollapsed">
+          <b>Devices</b>
+        </a>
+        <div #devicesCollapse="ngbCollapse" [(ngbCollapse)]="devicesSettings.devicesCollapsed">
+          <div class="card" style="min-height: 35px;">
+            <div class="card-body p-2" style="max-height: 200px; overflow-y: auto;">
+              <div *ngFor="let session of user.sessions; first as isFirst">
+                <div [ngClass]="!isFirst ? 'mt-1 pt-1 border-top' : ''">
+                  <session-mini [session]="session" [(loading)]="loading"
+                    (onClose)="onSessionClose.emit($event)"></session-mini>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
