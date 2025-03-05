@@ -61,7 +61,7 @@
       <ng-container *ngIf="node">
         <fa-icon [icon]="jsonModel.getNodeIcon(node)"></fa-icon> <span class="opacity-50"
           *ngIf="jsonModel.getNodeKey(path)">
-          {{ jsonModel.getNodeKey(path) }}:</span> {{node.type }}<br>
+          {{ jsonModel.getNodeKey(path) }}:</span> {{ jsonModel.getNodeLabel(node) }}<br>
         <span class="small opacity-50">
           {{ jsonModel.getNodeDescriptor(node) }}
         </span>
@@ -84,7 +84,7 @@
           <ng-container *ngFor="let type of jsonModel.getNodeTypes()">
             <div class="dropdown-divider m-1"></div>
             <a ngbDropdownItem class="small pe-pointer" (click)="onNodeAdd(path, type)">
-              <fa-icon [icon]="jsonModel.getNodeTypeIcon(type)"></fa-icon> {{ type }}
+              <fa-icon [icon]="jsonModel.getNodeTypeIcon(type)"></fa-icon> {{ jsonModel.getNodeTypeLabel(type) }}
             </a>
           </ng-container>
         </div>

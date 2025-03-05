@@ -4,11 +4,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import {
   AModelElementSchema,
   AModelObjectSchema,
+  Type as AModelType,
+  DynamicTypes,
   LanguageElement,
   LanguageElementType,
   RefreshModelOperation
 } from '@dynamic-glsp/protocol';
-import { CenterAction, GModelElementSchema } from '@eclipse-glsp/protocol';
+import { CenterAction, DefaultTypes, GModelElementSchema } from '@eclipse-glsp/protocol';
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -136,7 +138,9 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
     this.defaultModel = this.element ? _.cloneDeep(this.element.defaultModel) : {};
 
     const gModelElement = (
-      this.element?.gModel ? _.cloneDeep(this.element.gModel) : { type: this.type, children: [] }
+      this.element?.gModel
+        ? _.cloneDeep(this.element.gModel)
+        : { type: this.type, layout: 'vbox', layoutOptions: { vAlign: 'center', hAlign: 'center' }, children: [] }
     ) as GModelElementSchema;
 
     // create an instance of JsonModel with the gModel and config
@@ -144,20 +148,50 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
     this.gModelTree = new JsonModel(gModelElement, {
       defaultIcon: 'circle',
       nodes: {
-        node: {
-          icon: 'circle',
-          descriptor: 'layout',
+        [DefaultTypes.NODE]: {
+          icon: 'vector-square',
+          descriptor: (node: any) => (node.layout == 'vbox' ? 'vertical' : 'horizontal'),
           children: 'children',
-          default: { layout: 'vbox' },
+          default: { layout: 'vbox', layoutOptions: { vAlign: 'center', hAlign: 'center' } },
           aModel: {
             type: 'object',
             properties: [
               { key: 'type', type: 'string', readOnly: true },
-              { key: 'layout', type: 'string', enum: ['vbox', 'hbox'] }
+              {
+                key: 'layout',
+                label: 'Content orientation',
+                type: 'string',
+                style: 'radio',
+                enum: [
+                  { title: 'vertical', const: 'vbox' },
+                  { title: 'horizontal', const: 'hbox' }
+                ]
+              },
+              {
+                key: 'layoutOptions',
+                label: 'Layout',
+                type: 'object',
+                properties: [
+                  {
+                    key: 'vAlign',
+                    label: 'Vertical Align',
+                    type: 'string',
+                    enum: ['top', 'center', 'bottom'],
+                    default: 'center'
+                  },
+                  {
+                    key: 'hAlign',
+                    label: 'Horizontal Align',
+                    type: 'string',
+                    enum: ['left', 'center', 'right'],
+                    default: 'center'
+                  }
+                ]
+              }
             ]
           }
         },
-        edge: {
+        [DefaultTypes.EDGE]: {
           icon: 'arrows-left-right',
           children: 'children',
           aModel: {
@@ -165,7 +199,74 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             properties: [{ key: 'type', type: 'string', readOnly: true }]
           }
         },
-        label: {
+        [DynamicTypes.SHAPE]: {
+          icon: (node?: any) => {
+            if (!node) return 'shapes';
+            switch (node.args?.shape) {
+              case 'circle':
+              case 'ellipse':
+                return 'circle';
+              case 'diamond':
+                return 'diamond';
+              case 'rectangle':
+              default:
+                return 'square';
+            }
+          },
+          label: 'shape',
+          descriptor: (node: any) => node.args?.shape + (node.args?.fill ? ` (${node.args.fill})` : ''),
+          children: 'children',
+          default: {
+            args: { shape: 'rectangle', fill: 'white', stroke: 'black', strokeWidth: 1 },
+            layoutOptions: {
+              absolute: true,
+              relWidth: '100%',
+              relHeight: '100%',
+              relX: '0',
+              relY: '0'
+            }
+          },
+          aModel: {
+            type: 'object',
+            properties: [
+              { key: 'type', type: 'string', readOnly: true },
+              {
+                key: 'args',
+                label: 'Styling',
+                type: 'object',
+                properties: [
+                  {
+                    key: 'shape',
+                    type: 'string',
+                    enum: [
+                      { title: 'Rectangle', const: 'rectangle' },
+                      { title: 'Circle', const: 'circle' },
+                      { title: 'Ellipse', const: 'ellipse' },
+                      { title: 'Diamond', const: 'diamond' }
+                    ],
+                    default: 'rectangle'
+                  },
+                  { key: 'fill', label: 'Background Color', type: 'string', format: 'color' },
+                  { key: 'stroke', label: 'Border Color', type: 'string', format: 'color' },
+                  { key: 'strokeWidth', label: 'Border Width', type: 'integer', default: 1 }
+                ]
+              },
+              {
+                key: 'layoutOptions',
+                label: 'Layout',
+                type: 'object',
+                properties: [
+                  { key: 'absolute', type: 'boolean', default: true },
+                  { key: 'relWidth', label: 'Width', type: 'string', default: '100%' },
+                  { key: 'relHeight', label: 'Height', type: 'string', default: '100%' },
+                  { key: 'relX', label: 'Left', type: 'string', default: '0' },
+                  { key: 'relY', label: 'Top', type: 'string', default: '0' }
+                ]
+              }
+            ]
+          }
+        },
+        [DefaultTypes.LABEL]: {
           icon: 'tag',
           descriptor: 'text',
           default: { text: 'Text' },
@@ -210,20 +311,62 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             ]
           }
         },
-        comp: {
+        [DefaultTypes.COMPARTMENT]: {
           icon: 'box-open',
-          descriptor: 'layout',
+          descriptor: (node: any) => (node.layout == 'vbox' ? 'vertical' : 'horizontal'),
           children: 'children',
-          default: { layout: 'vbox' },
+          default: {
+            layout: 'vbox',
+            layoutOptions: {
+              vAlign: 'center',
+              hAlign: 'center',
+              absolute: false
+            }
+          },
           aModel: {
             type: 'object',
             properties: [
               { key: 'type', type: 'string', readOnly: true },
-              { key: 'layout', type: 'string', enum: ['vbox', 'hbox'] }
+              {
+                key: 'layout',
+                label: 'Content orientation',
+                type: 'string',
+                style: 'radio',
+                enum: [
+                  { title: 'vertical', const: 'vbox' },
+                  { title: 'horizontal', const: 'hbox' }
+                ]
+              },
+              {
+                key: 'layoutOptions',
+                label: 'Layout',
+                type: 'object',
+                properties: [
+                  {
+                    key: 'vAlign',
+                    label: 'Vertical Align',
+                    type: 'string',
+                    enum: ['top', 'center', 'bottom'],
+                    default: 'center'
+                  },
+                  {
+                    key: 'hAlign',
+                    label: 'Horizontal Align',
+                    type: 'string',
+                    enum: ['left', 'center', 'right'],
+                    default: 'center'
+                  },
+                  { key: 'absolute', type: 'boolean', default: true },
+                  { key: 'relWidth', label: 'Width', type: 'string', default: '100%' },
+                  { key: 'relHeight', label: 'Height', type: 'string', default: '100%' },
+                  { key: 'relX', label: 'Left', type: 'string', default: '0' },
+                  { key: 'relY', label: 'Top', type: 'string', default: '0' }
+                ]
+              }
             ]
           }
         },
-        decision: {
+        [DynamicTypes.DECISION]: {
           icon: 'arrows-turn-to-dots',
           fields: ['then', 'else'],
           aModel: {
@@ -234,7 +377,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             ]
           }
         },
-        iteration: {
+        [DynamicTypes.ITERATION]: {
           icon: 'arrows-rotate',
           descriptor: (node: any) => (node.iterable ?? '·') + ' -> ' + (node.iterand ?? '·'),
           fields: ['template'],
@@ -280,7 +423,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
     this.aModelTree = new JsonModel(aModelElement, {
       defaultIcon: 'file',
       nodes: {
-        object: {
+        [AModelType.OBJECT]: {
           icon: 'list',
           descriptor: 'label',
           children: 'properties',
@@ -293,7 +436,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             ]
           }
         },
-        array: {
+        [AModelType.ARRAY]: {
           icon: 'bars',
           descriptor: 'label',
           fields: ['items'],
@@ -305,7 +448,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             ]
           }
         },
-        string: {
+        [AModelType.STRING]: {
           icon: 'font',
           descriptor: 'label',
           defaultKey: 'data',
@@ -343,7 +486,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             ]
           }
         },
-        integer: {
+        [AModelType.INTEGER]: {
           icon: 'hashtag',
           descriptor: 'label',
           defaultKey: 'data',
@@ -359,7 +502,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             ]
           }
         },
-        boolean: {
+        [AModelType.BOOLEAN]: {
           icon: 'circle-half-stroke',
           descriptor: 'label',
           defaultKey: 'data',

@@ -8,7 +8,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AModelToJSONForms } from './amodel-to-json-forms';
 
 export interface JsonModelElementConfig {
-  icon?: IconName;
+  icon?: IconName | ((node?: any) => IconName);
+  label?: string;
   descriptor?: string | ((node: any) => string);
   children?: string;
   childrenKey?: string;
@@ -210,7 +211,19 @@ export class JsonModel<ModelType = any> {
    * Returns the icon of the given node.
    */
   getNodeIcon(node: any): IconName {
-    return this.config.nodes?.[node.type]?.icon || this.config.defaultIcon || 'circle';
+    // if node icon is function, call it with the node
+    if (typeof this.config.nodes?.[node.type]?.icon === 'function') {
+      return (this.config.nodes?.[node.type]?.icon as (node: any) => IconName)(node);
+    } else {
+      return (this.config.nodes?.[node.type]?.icon as IconName) || this.config.defaultIcon || 'circle';
+    }
+  }
+
+  /**
+   * Returns the label of the given node.
+   */
+  getNodeLabel(node: any): string {
+    return this.config.nodes?.[node.type]?.label || node.type;
   }
 
   /**
@@ -272,7 +285,19 @@ export class JsonModel<ModelType = any> {
    * Returns the icon of the given node type.
    */
   getNodeTypeIcon(type: string): IconName {
-    return this.config.nodes?.[type]?.icon || this.config.defaultIcon || 'circle';
+    // if node type icon is function, call it with the without node
+    if (typeof this.config.nodes?.[type]?.icon === 'function') {
+      return (this.config.nodes?.[type]?.icon as (node?: any) => IconName)();
+    } else {
+      return (this.config.nodes?.[type]?.icon as IconName) || this.config.defaultIcon || 'circle';
+    }
+  }
+
+  /**
+   * Returns the label of the given node type.
+   */
+  getNodeTypeLabel(type: string): string {
+    return this.config.nodes?.[type]?.label || type;
   }
 
   /**

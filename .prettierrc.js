@@ -17,5 +17,5 @@ module.exports = {
   ],
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
-  importOrderParserPlugins: ['typescript', 'decorators-legacy']
+  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy']
 };

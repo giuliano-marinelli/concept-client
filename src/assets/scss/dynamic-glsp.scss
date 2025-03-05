@@ -27,14 +27,6 @@ html[data-bs-theme='dark'] .sprotty {
 }
 
 .sprotty-graph {
-  .node > .sprotty-node {
-    fill: $body-bg-dark;
-  }
-
-  .node > .sprotty-node:not(.selected) {
-    stroke: $body-bg-dark;
-  }
-
   .node .label {
     fill: $body-bg;
   }
@@ -50,14 +42,6 @@ html[data-bs-theme='dark'] .sprotty {
 }
 
 html[data-bs-theme='dark'] .sprotty-graph {
-  .node > .sprotty-node {
-    fill: $body-bg;
-  }
-
-  .node > .sprotty-node:not(.selected) {
-    stroke: $body-bg;
-  }
-
   .node .label {
     fill: $body-bg-dark;
   }

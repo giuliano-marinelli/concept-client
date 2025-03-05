@@ -8,7 +8,11 @@ import { RankedTester, StatePropsOfControl, isEnumControl, isOneOfEnumControl, o
   template: `
     <div class="form-floating mb-1" [style.display]="hidden ? 'none' : ''">
       <select class="form-select" [id]="id" [formControl]="form" (change)="onChange($event)">
-        <option *ngFor="let option of options" [value]="option.const" [selected]="option.const === data">
+        <option
+          *ngFor="let option of options; trackBy: optionTrack"
+          [value]="option.const"
+          [selected]="option.const === data"
+        >
           {{ option.title }}
         </option>
       </select>
@@ -22,6 +26,10 @@ import { RankedTester, StatePropsOfControl, isEnumControl, isOneOfEnumControl, o
 export class SelectControlRenderer extends JsonFormsControl {
   options!: { const: string | number | boolean; title: string | number | boolean }[];
 
+  optionTrack(index: number, item: any) {
+    return item.const;
+  }
+
   override getEventValue = (event: any) => {
     if (this.scopedSchema.type === 'boolean') return event.target.value === 'true';
     if (this.scopedSchema.type === 'number') return Number(event.target.value);
@@ -31,10 +39,10 @@ export class SelectControlRenderer extends JsonFormsControl {
   override mapAdditionalProps(props: StatePropsOfControl) {
     this.options = props.schema.oneOf
       ? (props.schema.oneOf as { const: string | number | boolean; title: string | number | boolean }[])
-      : props.schema.enum?.map((option: string | number | boolean) => ({
+      : (props.schema.enum?.map((option: string | number | boolean) => ({
           const: option,
           title: option
-        })) ?? [];
+        })) ?? []);
   }
 }
 
