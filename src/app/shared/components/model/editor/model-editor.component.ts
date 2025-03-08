@@ -1,8 +1,12 @@
 import { AfterViewInit, Component, Input, NgZone, ViewContainerRef } from '@angular/core';
 
 import {
+  DynamicDiagramLoader,
   DynamicGLSPWebSocketProvider,
-  ExternalServices,
+  DynamicInspector,
+  DynamicLanguageSpecification,
+  DynamicSvgExporter,
+  IDynamicDiagramOptions,
   initializeDynamicDiagramContainer
 } from '@dynamic-glsp/client';
 import { AModelElementSchema, AModelRootSchema, Language, LanguageElement } from '@dynamic-glsp/protocol';
@@ -10,12 +14,11 @@ import {
   Action,
   BaseJsonrpcGLSPClient,
   ConnectionProvider,
-  DiagramLoader,
   GLSPActionDispatcher,
   GLSPClient,
-  IDiagramOptions,
   MessageAction,
   StatusAction,
+  TYPES,
   ViewerOptions
 } from '@eclipse-glsp/client';
 import { JsonForms } from '@jsonforms/angular';
@@ -42,13 +45,11 @@ export class ModelEditorComponent implements AfterViewInit {
   diagramType: string = 'dynamic';
 
   clientId: string = 'sprotty';
-  webSocketUrl: string = `ws://${environment.host}:${environment.glspPort}/${environment.glsp}`;
+  wsUrl: string = `ws://${environment.host}:${environment.glspPort}/${environment.glsp}`;
 
   glspClient!: GLSPClient;
-  container!: Container;
-  wsProvider?: DynamicGLSPWebSocketProvider;
-
-  services: ExternalServices = {};
+  glspContainer!: Container;
+  glspWSProvider?: DynamicGLSPWebSocketProvider;
 
   constructor(
     public auth: AuthService,
@@ -60,32 +61,20 @@ export class ModelEditorComponent implements AfterViewInit {
     this.ngZone.runOutsideAngular(() => {
       let self = this;
 
-      // define services for language specification
-      this.services.language = this.language;
-      this.services.showcaseMode = this.showcaseMode;
-
-      // define services for the inspector
-      this.services.inspectorCreateElement = (
-        container: HTMLElement,
-        elementId: string,
-        elementAModel: AModelRootSchema,
-        elementModel: any
-      ) => {
-        self.createJsonForms(container, elementId, elementAModel, elementModel);
-      };
-
       // create a new custom WebSocket provider for the GLSP client, which sends authentication headers as protocol messages
-      this.wsProvider = new DynamicGLSPWebSocketProvider(this.webSocketUrl, this.auth.getToken() || undefined);
+      this.glspWSProvider = new DynamicGLSPWebSocketProvider(this.wsUrl, this.auth.getToken() || undefined);
 
       async function glspOnConnection(connectionProvider: ConnectionProvider, isReconnecting = false): Promise<void> {
         // create GLSP client for the JSON RPC communication with server
         self.glspClient = new BaseJsonrpcGLSPClient({ id: environment.glsp, connectionProvider });
 
-        const diagramOptions: IDiagramOptions = {
+        const diagramOptions: IDynamicDiagramOptions = {
           clientId: self.clientId,
           diagramType: self.diagramType,
           sourceUri: self.sourceUri,
           editMode: self.editMode,
+          showcaseMode: self.showcaseMode,
+          language: self.language,
           glspClientProvider: async () => self.glspClient
         };
 
@@ -94,10 +83,21 @@ export class ModelEditorComponent implements AfterViewInit {
         // create the diagram container which use the clientId to find the DOM element to render the diagram
         // and the diagramType to find the correct diagram configuration in the GLSP server
         // and the glspClient to communicate via JSON RPC with the GLSP server
-        self.container = initializeDynamicDiagramContainer(diagramOptions, viewerOptions, self.services);
+        self.glspContainer = initializeDynamicDiagramContainer(diagramOptions, viewerOptions);
 
-        const actionDispatcher = self.container.get(GLSPActionDispatcher);
-        const diagramLoader = self.container.get(DiagramLoader);
+        // set inspector event listener for create json forms on element selection changed
+        // and update inspector element on json forms data change
+        const inspector = self.glspContainer.get(DynamicInspector);
+        inspector.onElementChange.on(
+          'select',
+          (container: HTMLElement, elementId: string, elementAModel: AModelRootSchema, elementModel: any) => {
+            self.createJsonForms(container, elementId, elementAModel, elementModel);
+          }
+        );
+
+        const actionDispatcher = self.glspContainer.get(GLSPActionDispatcher);
+
+        const diagramLoader = self.glspContainer.get(DynamicDiagramLoader);
 
         await diagramLoader.load({
           requestModelOptions: {
@@ -124,24 +124,21 @@ export class ModelEditorComponent implements AfterViewInit {
         glspOnConnection(connectionProvider, true);
       }
 
-      this.wsProvider.listen({ onConnection: glspOnConnection, onReconnect: glspOnReconnect, logger: console });
+      this.glspWSProvider.listen({ onConnection: glspOnConnection, onReconnect: glspOnReconnect, logger: console });
     });
   }
 
   async sendAction(action: Action): Promise<void> {
-    await this.services.actionDispatcher?.dispatch(action);
+    await this.glspContainer?.get(GLSPActionDispatcher).dispatch(action);
   }
 
-  async reloadLanguage(language?: string | Language | LanguageElement): Promise<void> {
-    if (language) {
-      this.language = language;
-      this.services.language = language;
-    }
-    await this.services.reloadLanguage?.();
+  async loadLanguage(language?: string | Language | LanguageElement): Promise<void> {
+    if (language) this.language = language;
+    await this.glspContainer?.get(DynamicLanguageSpecification).sendLoadLanguageSpecificationAction(language);
   }
 
   getSVG(): string {
-    return this.services.getSVG?.() || '';
+    return (this.glspContainer?.get(TYPES.SvgExporter) as DynamicSvgExporter).getSvg() || '';
   }
 
   createJsonForms(container: HTMLElement, elementId: string, elementAModel: AModelRootSchema, elementModel: any): void {
@@ -160,8 +157,8 @@ export class ModelEditorComponent implements AfterViewInit {
     // to avoid firing the change event before the component is initialized
     setTimeout(() => {
       componentRef.instance.dataChange.subscribe((event: any) => {
-        // send the new model to the GLSP external services so it can be used by the inspector
-        this.services.inspectorElementChanged?.(elementId, event);
+        // call update element on inspector with the new model and elementId
+        this.glspContainer.get(DynamicInspector).updateElement(elementId, event);
       });
     }, 0);
   }

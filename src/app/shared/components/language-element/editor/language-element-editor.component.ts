@@ -6,6 +6,7 @@ import {
   AModelObjectSchema,
   Type as AModelType,
   DynamicTypes,
+  LanguageConstraint,
   LanguageElement,
   LanguageElementType,
   RefreshModelOperation
@@ -35,6 +36,11 @@ import { JsonModel, JsonModelConfig } from '../../../global/json-model';
 import { ModelEditorComponent } from '../../model/editor/model-editor.component';
 
 import { MessagesService } from '../../../../services/messages.service';
+
+export interface LanguageConstraintsTree {
+  type: 'constraints';
+  constraints: LanguageConstraint[];
+}
 
 @Component({
   selector: 'language-element-editor',
@@ -84,6 +90,20 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
 
   aModelJsonSchema!: JsonSchema;
   aModelUISchema!: UISchemaElement;
+
+  constraintsTree!: JsonModel<LanguageConstraintsTree>;
+
+  constraints!: LanguageConstraint[];
+  constraintsSubscription?: Subscription;
+
+  constraintsSelectedNodePath?: string;
+  constraintsSelectedNodePathSubscription?: Subscription;
+
+  constraintsSelectedNode?: any;
+  constraintsSelectedNodeSubscription?: Subscription;
+
+  constraintsSelectedNodeConfig?: any;
+  constraintsSelectedNodeConfigSubscription?: Subscription;
 
   defaultModel: any;
 
@@ -140,19 +160,31 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
     const gModelElement = (
       this.element?.gModel
         ? _.cloneDeep(this.element.gModel)
-        : { type: this.type, layout: 'vbox', layoutOptions: { vAlign: 'center', hAlign: 'center' }, children: [] }
+        : {
+            type: this.type,
+            layout: 'vbox',
+            layoutOptions: { resizable: true, vAlign: 'center', hAlign: 'center' },
+            children: []
+          }
     ) as GModelElementSchema;
 
     // create an instance of JsonModel with the gModel and config
     // for manage the access and modification of the gModel
     this.gModelTree = new JsonModel(gModelElement, {
       defaultIcon: 'circle',
+      defaultChildrenTypes: [
+        DynamicTypes.SHAPE,
+        DefaultTypes.LABEL,
+        DefaultTypes.COMPARTMENT,
+        DynamicTypes.DECISION,
+        DynamicTypes.ITERATION
+      ],
       nodes: {
         [DefaultTypes.NODE]: {
           icon: 'vector-square',
           descriptor: (node: any) => (node.layout == 'vbox' ? 'vertical' : 'horizontal'),
           children: 'children',
-          default: { layout: 'vbox', layoutOptions: { vAlign: 'center', hAlign: 'center' } },
+          default: { layout: 'vbox', layoutOptions: { resizable: true, vAlign: 'center', hAlign: 'center' } },
           aModel: {
             type: 'object',
             properties: [
@@ -172,6 +204,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
                 label: 'Layout',
                 type: 'object',
                 properties: [
+                  { key: 'resizable', type: 'boolean', default: true },
                   {
                     key: 'vAlign',
                     label: 'Vertical Align',
@@ -529,8 +562,6 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
       this.aModelJsonSchema = schema;
       this.aModelUISchema = uiSchema;
 
-      console.log(this.aModel, this.aModelJsonSchema, this.aModelUISchema);
-
       // validate the default model with the schema for apply validations and filter the unused data
       this.ajv.validate(schema, this.defaultModel);
 
@@ -552,6 +583,73 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
       .getSelectedNodeConfig()
       .subscribe((newAModelSelectedNodeConfig: any) => (this.aModelSelectedNodeConfig = newAModelSelectedNodeConfig));
 
+    const constraintsElement = (
+      this.element?.constraints
+        ? { type: 'constraints', constraints: _.cloneDeep(this.element.constraints) }
+        : { type: 'constraints', constraints: [] }
+    ) as LanguageConstraintsTree;
+
+    // create an instance of JsonModel with the constraints and config
+    // for manage the access and modification of the constraints
+    this.constraintsTree = new JsonModel(constraintsElement, {
+      nodes: {
+        constraints: {
+          icon: 'list',
+          children: 'constraints',
+          childrenTypes: ['constraint'],
+          aModel: {
+            type: 'object',
+            properties: []
+          }
+        },
+        constraint: {
+          icon: 'arrow-down-up-across-line',
+          default: { source: [], target: [] },
+          aModel: {
+            type: 'object',
+            properties: [
+              {
+                key: 'source',
+                type: 'array',
+                items: { type: 'string', label: 'Node type' }
+              },
+              {
+                key: 'target',
+                type: 'array',
+                items: { type: 'string', label: 'Node type' }
+              }
+            ]
+          }
+        }
+      }
+    } as JsonModelConfig);
+
+    // subscribe to the constraints changes
+    this.constraintsSubscription = this.constraintsTree.getClearModel().subscribe((newConstraints: any) => {
+      this.constraints = newConstraints.constraints;
+      console.log(this.constraints);
+    });
+
+    // subscribe to the constraints selected node path changes
+    this.constraintsSelectedNodePathSubscription = this.constraintsTree
+      .getSelectedNodePath()
+      .subscribe(
+        (newConstraintsSelectedNodePath: string) => (this.constraintsSelectedNodePath = newConstraintsSelectedNodePath)
+      );
+
+    // subscribe to the constraints selected node changes
+    this.constraintsSelectedNodeSubscription = this.constraintsTree
+      .getSelectedNode()
+      .subscribe((newConstraintsSelectedNode: any) => (this.constraintsSelectedNode = newConstraintsSelectedNode));
+
+    // subscribe to the constraints selected node config changes
+    this.constraintsSelectedNodeConfigSubscription = this.constraintsTree
+      .getSelectedNodeConfig()
+      .subscribe(
+        (newConstraintsSelectedNodeConfig: any) =>
+          (this.constraintsSelectedNodeConfig = newConstraintsSelectedNodeConfig)
+      );
+
     this.elementLoading = false;
   }
 
@@ -565,6 +663,11 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
     this.aModelSelectedNodePathSubscription?.unsubscribe();
     this.aModelSelectedNodeSubscription?.unsubscribe();
     this.aModelSelectedNodeConfigSubscription?.unsubscribe();
+
+    this.constraintsSubscription?.unsubscribe();
+    this.constraintsSelectedNodePathSubscription?.unsubscribe();
+    this.constraintsSelectedNodeSubscription?.unsubscribe();
+    this.constraintsSelectedNodeConfigSubscription?.unsubscribe();
   }
 
   onGModelNodeChange(event: any): void {
@@ -573,6 +676,10 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
 
   onAModelNodeChange(event: any): void {
     this.aModelTree.setNode(this.aModelSelectedNodePath!, event);
+  }
+
+  onConstraintsNodeChange(event: any): void {
+    this.constraintsTree.setNode(this.constraintsSelectedNodePath!, event);
   }
 
   onDefaultModelChange(event: any): void {
@@ -591,7 +698,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
     };
 
     // send action for reload the language of the showcase
-    await this.showcase?.reloadLanguage(this.showcaseLanguageElement);
+    await this.showcase?.loadLanguage(this.showcaseLanguageElement);
 
     // send action for request the model of the showcase
     // this allow to update the showcase element render
@@ -614,6 +721,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
             gModel: this.gModel,
             aModel: this.aModel,
             defaultModel: this.defaultModel,
+            constraints: this.constraints,
             preview: this.showcase?.getSVG()
           })
         })

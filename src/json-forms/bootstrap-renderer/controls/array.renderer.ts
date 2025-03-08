@@ -8,6 +8,7 @@ import {
   OwnPropsOfRenderer,
   Paths,
   RankedTester,
+  Scopable,
   StatePropsOfArrayLayout,
   UISchemaElement,
   UISchemaTester,
@@ -135,6 +136,11 @@ export class ArrayControlRenderer extends JsonFormsAbstractControl<StatePropsOfA
       unsetReadonly(uischema);
     } else {
       setReadonly(uischema);
+    }
+
+    // this allow array items to be primitive types
+    if (uischema.type === 'Control') {
+      (uischema as Scopable).scope = '#';
     }
 
     return {

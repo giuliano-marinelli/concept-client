@@ -13,6 +13,7 @@ export interface JsonModelElementConfig {
   descriptor?: string | ((node: any) => string);
   children?: string;
   childrenKey?: string;
+  childrenTypes?: string[];
   defaultKey?: string;
   fields?: string[];
   default?: any;
@@ -21,6 +22,7 @@ export interface JsonModelElementConfig {
 
 export interface JsonModelConfig {
   defaultIcon?: IconName;
+  defaultChildrenTypes?: string[];
   nodes?: {
     [key: string]: JsonModelElementConfig;
   };
@@ -205,6 +207,16 @@ export class JsonModel<ModelType = any> {
    */
   getNodeChildrenField(node: any): string | undefined {
     return this.config.nodes?.[node.type]?.children;
+  }
+
+  /**
+   * Returns the children types of the given node.
+   *
+   * If the node doesn't have children types defined, it returns the default children types defined in the config.
+   * If the default children types are not defined, it returns all node types.
+   */
+  getNodeChildrenTypes(node: any): string[] {
+    return this.config.nodes?.[node?.type]?.childrenTypes || this.config.defaultChildrenTypes || this.getNodeTypes();
   }
 
   /**

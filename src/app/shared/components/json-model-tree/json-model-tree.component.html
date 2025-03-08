@@ -81,7 +81,7 @@
           <span class="d-block p-3 pt-0 pb-0 small text-muted">
             Add node
           </span>
-          <ng-container *ngFor="let type of jsonModel.getNodeTypes()">
+          <ng-container *ngFor="let type of jsonModel.getNodeChildrenTypes(node)">
             <div class="dropdown-divider m-1"></div>
             <a ngbDropdownItem class="small pe-pointer" (click)="onNodeAdd(path, type)">
               <fa-icon [icon]="jsonModel.getNodeTypeIcon(type)"></fa-icon> {{ jsonModel.getNodeTypeLabel(type) }}
