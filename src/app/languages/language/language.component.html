@@ -1,89 +1,64 @@
-<div class="row mt-3 text-center" *ngIf="languageLoading && !language">
+<div class="row mt-3 text-center" *ngIf="language.loading() && !language.value()">
   <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
 </div>
-<div class="mt-4" [class.loading]="languageLoading" *ngIf="language">
-  <div class="d-flex flex-row" style="margin-left: 1.5rem; margin-top: 2.25rem">
-    <div class="flex-shrink-0 logo-container">
-      <img class="me-3 img-thumbnail rounded-circle logo-img" [src]="language.logo"
-        onerror="this.src='assets/images/default-language.png'" />
-    </div>
-    <div class="flex-fill py-1 border-start border-top border-bottom rounded-start border-info-container">
-      <div class="d-flex flex-column flex-md-row info-container">
-        <div class="d-flex flex-column mb-3 mb-sm-0">
-          <h2>{{ language.name }}</h2>
-          <h4 class="text-muted">{{ language.tag }}&#64;{{ language.version}}</h4>
-        </div>
-        <div class="flex-fill d-flex flex-column flex-lg-row ms-md-4 border-start-md">
-          <div class="flex-fill pe-4 pe-lg-0 ps-md-4 text-break text-hyphens desc-container">
-            <span *ngIf="language.description">{{ language.description }}</span>
-            <span *ngIf="!language.description" class="text-muted fst-italic">No description</span>
-          </div>
-          <div class="flex-shrink-0 align-self-end">
-            <a class="btn btn-sm btn-theme me-1" (click)="editLanguage()">
-              <fa-icon [icon]="'pen'"></fa-icon> Edit
-            </a>
-            <a class="btn btn-sm btn-theme" (confirm)="deleteLanguage()" [confirmTemplate]="delete_message"
-              confirmActionButton="Delete">
-              <fa-icon [icon]="'trash'"></fa-icon>
-            </a>
-            <ng-template #delete_message>
-              <p>
-                Are you sure you want to delete the language:
-              </p>
-              <div class="mb-3">
-                <language-mini [language]="language"></language-mini>
-              </div>
-              <p class="mb-0 fw-bold text-danger text-center">
-                <fa-icon [icon]="'warning'"></fa-icon> This action cannot be reverted
-              </p>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="d-flex flex-column" *ngIf="!language.loading() && language.value()">
+  <div class="language-separator d-none d-md-block">
+    <div class="border-bottom language-separator-border"></div>
   </div>
-  <div class="pt-4 row">
-    <div class="col-12 col-md-6 mb-2">
-      <h3>Nodes</h3>
-      <div class="col-12 col-lg-12 mb-2">
-        <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.NODE)"
-          style="cursor: pointer;">
-          <div class="card-body d-flex align-items-center justify-content-center p-1">
-            <fa-icon [icon]="'plus'" size="2x"></fa-icon>
+  <div class="row language-content">
+    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-3 order-md-1">
+      <div class="d-flex flex-row flex-md-column align-items-center align-items-md-baseline">
+        <img
+          class="mb-0 mb-md-3 me-3 me-md-0 img-thumbnail rounded-4 language-img align-self-md-center border-secondary flex-shrink-0"
+          [src]="language.value()?.logo" onerror="this.src='assets/images/default-language.png'" />
+        <div class="d-flex flex-column w-100">
+          <div class="d-flex flex-row">
+            <h2 class="mb-md-0 flex-fill text-break-word text-hyphens" *ngIf="language.value()?.name">{{
+              language.value()?.name }}
+              <!-- <verified-mark [verified]="language.verified" /> -->
+            </h2>
+            <a class="btn btn-lg py-1 px-0 mx-2"
+              *ngIf="language.value()?.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
+              (click)="editLanguage()">
+              <fa-icon [icon]="'gear'"></fa-icon>
+            </a>
           </div>
+          <h3 class="d-block d-md-none" [class.text-muted]="language.value()?.name">{{ language.value()?.tag }}
+            <!-- <verified-mark *ngIf="language.name" [verified]="language.verified" /> -->
+          </h3>
         </div>
       </div>
-      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
-        class="row g-2" [class.loading]="languageLoading"
-        *ngIf="filter(language.metaElements, { type: LanguageElementType.NODE })?.length">
-        <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
-          *ngFor="let node of language.metaElements | filter: { type: LanguageElementType.NODE }">
-          <language-element-card [language]="language" [element]="node" [masonry]="masonry"
-            [loading]="submitLoading.includes(node.id)" (onEdit)="getLanguage()" (onDelete)="getLanguage()">
-          </language-element-card>
-        </div>
-      </ngx-masonry>
+      <div class="text-md-pre-wrap text-break-all mt-2" *ngIf="language.value()?.description">{{
+        language.value()?.description }}</div>
+      <div class="mt-3 d-flex flex-row" *ngIf="language.value()?.tags">
+        <a class="btn btn-secondary badge rounded-pill pb-2 me-1" *ngFor="let tag of language.value()?.tags">
+          {{ tag }}
+        </a>
+      </div>
     </div>
-    <div class="col-12 col-md-6">
-      <h3>Edges</h3>
-      <div class="col-12 col-lg-12 mb-2">
-        <div class="card text-center btn btn-theme" (click)="newElement(LanguageElementType.EDGE)"
-          style="cursor: pointer;">
-          <div class="card-body d-flex align-items-center justify-content-center p-1">
-            <fa-icon [icon]="'plus'" size="2x"></fa-icon>
-          </div>
-        </div>
+    <div class="col-sm-12 col-md-8 col-lg-8 col-xl-9 order-md-0">
+      <div class="mt-3 mt-sm-2">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link text-center pe-pointer text-body" routerLink="./design" routerLinkActive="active">
+              <fa-icon [icon]="'object-group'"></fa-icon> Design
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-center pe-pointer text-body" routerLink="./versions" routerLinkActive="active">
+              <fa-icon [icon]="'code-fork'"></fa-icon> Versions
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="language.value()?.owner?.id == auth.user?.id || auth.user?.role == 'admin'">
+            <a class="nav-link text-center pe-pointer text-body" routerLink="./settings" routerLinkActive="active">
+              <fa-icon [icon]="'gear'"></fa-icon> Settings
+            </a>
+          </li>
+        </ul>
       </div>
-      <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true"
-        class="row g-2" [class.loading]="languageLoading"
-        *ngIf="filter(language.metaElements, { type: LanguageElementType.EDGE })?.length">
-        <div ngxMasonryItem class="col-6 col-sm-4 col-md-6 col-lg-4 masonry-item"
-          *ngFor="let edge of language.metaElements | filter: { type: LanguageElementType.EDGE }">
-          <language-element-card [language]="language" [element]="edge" [masonry]="masonry"
-            [loading]="submitLoading.includes(edge.id)" (onEdit)="getLanguage()" (onDelete)="getLanguage()">
-          </language-element-card>
-        </div>
-      </ngx-masonry>
+      <div>
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </div>

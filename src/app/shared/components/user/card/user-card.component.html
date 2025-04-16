@@ -18,6 +18,9 @@
             <fa-icon class="no-dropdown-arrow" [icon]="'ellipsis-vertical'" ngbDropdownToggle></fa-icon>
           </a>
           <div class="dropdown-menu shadow-sm" ngbDropdownMenu>
+            <a ngbDropdownItem class="small pe-pointer" routerLink="/{{user.username}}">
+              <fa-icon [icon]="'user'"></fa-icon> Go to profile
+            </a>
             <a ngbDropdownItem class="small pe-pointer" (confirm)="deleteUser($event, user)" [requiredPassword]="true"
               requiredPasswordMessage="Please enter your password to continue." [confirmTemplate]="delete_message"
               confirmActionButton="Delete">

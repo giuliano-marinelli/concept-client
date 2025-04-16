@@ -5,6 +5,28 @@ import { ApolloError } from '@apollo/client';
 
 declare var iziToast: any;
 
+interface Options {
+  target?: any;
+  container?: string;
+  onlyOne?: boolean;
+  close?: boolean;
+  icon?: string;
+  displayMode?: string;
+  timeout?: number;
+  drag?: boolean;
+  class?: string;
+  message?: any;
+  position?: string;
+}
+
+enum ToastType {
+  show = 'show',
+  success = 'success',
+  error = 'error',
+  warning = 'warning',
+  info = 'info'
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,15 +40,15 @@ export class MessagesService {
     });
   }
 
-  show(message: string, options?: any): void {
-    this.send(message, 'show', options);
+  show(message: string, options?: Options): void {
+    this.send(message, ToastType.show, options);
   }
 
-  success(message: string, options?: any): void {
-    this.send(message, 'success', options);
+  success(message: string, options?: Options): void {
+    this.send(message, ToastType.success, options);
   }
 
-  error(message: string | any, options: any = {}): void {
+  error(message: string | any, options: Options = {}): void {
     if (Array.isArray(message)) {
       message = message
         .map((msj: any) => {
@@ -35,18 +57,18 @@ export class MessagesService {
         .join('<hr>');
     }
     options.timeout = 0;
-    this.send(message, 'error', options);
+    this.send(message, ToastType.error, options);
   }
 
-  warning(message: string, options?: any): void {
-    this.send(message, 'warning', options);
+  warning(message: string, options?: Options): void {
+    this.send(message, ToastType.warning, options);
   }
 
-  info(message: string, options?: any): void {
-    this.send(message, 'info', options);
+  info(message: string, options?: Options): void {
+    this.send(message, ToastType.info, options);
   }
 
-  private send(message: any, type: any, options?: any): void {
+  private send(message: any, type: ToastType, options?: Options): void {
     if (options?.target && options.target.nativeElement && !options.target.nativeElement.id)
       options.target.nativeElement.id = 'message-container';
     if (options?.icon) options.icon = 'iziToast-icon-config ' + options.icon;
@@ -75,6 +97,7 @@ export class MessagesService {
       case 'info':
         iziToast.info(toastOptions);
         break;
+      case 'show':
       default:
         iziToast.show(toastOptions);
         break;

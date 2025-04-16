@@ -32,7 +32,7 @@ export class SettingsAccountComponent implements OnInit {
   username = new FormControl(
     '',
     [Validators.required, Validators.minLength(4), Validators.maxLength(30), Validators.pattern('[a-zA-Z0-9_-]*')],
-    [ExtraValidators.usernameExists(this._usernameExists)]
+    [ExtraValidators.usernameExists(this._checkUsernameExists)]
   );
   constructor(
     public auth: AuthService,
@@ -40,19 +40,10 @@ export class SettingsAccountComponent implements OnInit {
     public messages: MessagesService,
     public formBuilder: FormBuilder,
     private _findUser: FindUser,
-    private _usernameExists: CheckUserUsernameExists,
+    private _checkUsernameExists: CheckUserUsernameExists,
     private _updateUser: UpdateUser,
     private _deleteUser: DeleteUser
   ) {}
-
-  @HostListener('window:beforeunload', ['$event'])
-  canDeactivate(): Observable<boolean> | boolean {
-    return !this.hasChanges();
-  }
-
-  hasChanges(): boolean {
-    return this.usernameForm.dirty;
-  }
 
   ngOnInit(): void {
     this.usernameForm = this.formBuilder.group({

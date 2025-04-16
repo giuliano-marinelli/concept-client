@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
@@ -8,11 +8,9 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent {
   constructor(
     public auth: AuthService,
     public router: Router
   ) {}
-
-  ngOnInit(): void {}
 }

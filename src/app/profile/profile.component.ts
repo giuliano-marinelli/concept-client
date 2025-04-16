@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { FindUsers, User } from '../shared/entities/user.entity';
 
 import { AuthService } from '../services/auth.service';
+import { ProfileService } from '../services/profile.service';
 import { TitleService } from '../services/title.service';
 
 @Component({
@@ -11,11 +12,7 @@ import { TitleService } from '../services/title.service';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
-  userLoading: boolean = true;
-
-  user?: User;
-
+export class ProfileComponent implements OnInit, OnDestroy {
   //router params
   username!: string;
 
@@ -25,41 +22,31 @@ export class ProfileComponent implements OnInit {
     public router: Router,
     public titleService: TitleService,
     public changeDetector: ChangeDetectorRef,
-    private _findUsers: FindUsers
+    public profile: ProfileService
   ) {
-    this.route.params.subscribe((params) => {
-      this.username = params['username'];
+    effect(() => {
+      const user = this.profile.user();
+      if (user) {
+        if (user.username) this.titleService.setParam('username', user.username);
+        if (user.profile?.name) this.titleService.setParam('profilename', user.profile.name);
+      }
     });
   }
 
-  ngOnInit(): void {
-    if (!this.username) this.router.navigate(['/']);
-    this.getUser();
+  async ngOnInit(): Promise<void> {
+    this.route.params.subscribe(async (params) => {
+      this.username = params['username'];
+
+      if (!this.username) this.router.navigate(['/']);
+      try {
+        await this.profile.fetchUser(this.username);
+      } catch (error) {
+        this.router.navigate(['not-found']);
+      }
+    });
   }
 
-  getUser(): void {
-    this.userLoading = true;
-    this._findUsers
-      .fetch({ where: { username: { eq: this.username } } })
-      .subscribe({
-        next: ({ data, errors }) => {
-          if (errors) {
-            this.router.navigate(['not-found']);
-            return;
-          }
-          if (data?.users?.set) {
-            this.user = data.users.set[0] ?? null;
-            if (this.user) {
-              if (this.user.username) this.titleService.setParam('username', this.user.username);
-              if (this.user.profile?.name) this.titleService.setParam('profilename', this.user.profile.name);
-            } else {
-              this.router.navigate(['not-found']);
-            }
-          }
-        }
-      })
-      .add(() => {
-        this.userLoading = false;
-      });
+  ngOnDestroy(): void {
+    this.profile.reset();
   }
 }

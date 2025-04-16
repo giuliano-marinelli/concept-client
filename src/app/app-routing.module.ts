@@ -2,10 +2,12 @@
 //angular
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-//services
+//guards
 import { AuthLoginGuard } from './shared/guards/auth-login.guard';
 import { AuthAdminGuard } from './shared/guards/auth-admin.guard';
 import { LeaveGuard } from './shared/guards/leave.guard';
+import { UserExistsGuard } from './shared/guards/user-exists.guard';
+import { MetaModelExistsGuard } from './shared/guards/meta-model-exists.guard';
 //components
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AboutComponent } from './about/about.component';
@@ -27,40 +29,13 @@ import { AdminUsersComponent } from './admin/users/admin-users.component';
 import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
+import { LanguageDesignComponent } from './languages/language/design/language-design.component';
+import { LanguageVersionsComponent } from './languages/language/versions/language-versions.component';
+import { LanguageSettingsComponent } from './languages/language/settings/language-settings.component';
+import { LanguageSettingsGeneralComponent } from './languages/language/settings/general/language-settings-general.component';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: 'Welcome', breadcrumb: 'Home' } },
-  {
-    path: 'user/:username',
-    component: ProfileComponent,
-    data: {
-      title: (params: { [key: string]: string }) => {
-        if (!params['username']) return '...';
-        return params['username'] + (params['profilename'] ? ' · ' + params['profilename'] : '');
-      },
-      breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username']) return '...';
-        return params['username'];
-      }
-    },
-    children: [
-      {
-        path: 'overview',
-        component: ProfileOverviewComponent
-      },
-      {
-        path: 'languages',
-        component: ProfileLanguagesComponent,
-        data: { title: 'Languages' }
-      },
-      {
-        path: 'models',
-        component: ProfileModelsComponent,
-        data: { title: 'Models' }
-      },
-      { path: '**', redirectTo: 'overview' }
-    ]
-  },
   { path: 'login', component: LoginComponent, data: { title: 'Sign in' } },
   { path: 'register', component: RegisterComponent, data: { title: 'Sign up' }, canDeactivate: [LeaveGuard] },
   {
@@ -88,8 +63,8 @@ const routes: Routes = [
       {
         path: 'account',
         component: SettingsAccountComponent,
-        data: { title: 'Account' },
-        canDeactivate: [LeaveGuard]
+        data: { title: 'Account' }
+        // canDeactivate: [LeaveGuard]
       },
       {
         path: 'emails',
@@ -119,25 +94,76 @@ const routes: Routes = [
   },
   // { path: 'graphql' },
   { path: 'languages', component: LanguagesComponent, data: { title: 'Languages', breadcrumb: 'Languages' } },
-  {
-    path: 'language/:language',
-    component: LanguageComponent,
-    data: {
-      title: (params: { [key: string]: string }) => {
-        if (!params['languagetag']) return '...';
-        return params['languagetag'] + '@' + params['languageversion'] + ' · ' + params['languagename'];
-      },
-      breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['languagetag']) return '...';
-        return params['languagetag'] + '@' + params['languageversion'];
-      }
-    }
-  },
+
   {
     path: 'models',
     component: ModelsComponent,
     data: { title: 'Models', breadcrumb: 'Models' }
     // children: [{ path: 'editor', component: ModelEditorComponent, data: { title: 'Models > Editor' } }]
+  },
+  {
+    path: ':username/:language',
+    component: LanguageComponent,
+    canMatch: [MetaModelExistsGuard],
+    data: {
+      title: (params: { [key: string]: string }) => {
+        if (!params['languagetag']) return '';
+        return params['languagetag'] + '@' + params['languageversion'] + ' · ' + params['languagename'];
+      },
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username'] || !params['languagetag'] || !params['languageversion']) return '';
+        return [
+          { path: params['username'] + '/languages', title: params['username'] },
+          { title: params['languagetag'] + '@' + params['languageversion'] }
+        ];
+      }
+    },
+    children: [
+      { path: 'design', component: LanguageDesignComponent },
+      { path: 'versions', component: LanguageVersionsComponent, data: { title: 'Versions' } },
+      {
+        path: 'settings',
+        component: LanguageSettingsComponent,
+        data: { title: 'Settings' },
+        children: [
+          { path: 'general', component: LanguageSettingsGeneralComponent },
+          { path: '**', redirectTo: 'general' }
+        ]
+      },
+      { path: '**', redirectTo: 'design' }
+    ]
+  },
+  {
+    path: ':username',
+    component: ProfileComponent,
+    canMatch: [UserExistsGuard],
+    data: {
+      title: (params: { [key: string]: string }) => {
+        if (!params['username']) return '';
+        return params['username'] + (params['profilename'] ? ' · ' + params['profilename'] : '');
+      },
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username']) return '';
+        return params['username'];
+      }
+    },
+    children: [
+      {
+        path: 'overview',
+        component: ProfileOverviewComponent
+      },
+      {
+        path: 'languages',
+        component: ProfileLanguagesComponent,
+        data: { title: 'Languages' }
+      },
+      {
+        path: 'models',
+        component: ProfileModelsComponent,
+        data: { title: 'Models' }
+      },
+      { path: '**', redirectTo: 'overview' }
+    ]
   },
   { path: 'notfound', component: NotFoundComponent, data: { title: 'Page not found' } },
   { path: '**', redirectTo: '/notfound' }

@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { TippyDirective } from '@ngneat/helipopper';
 
+import _ from 'lodash';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -67,6 +68,13 @@ export interface Attribute {
   categoryColor?: TextColor;
 }
 
+export interface FixedAttribute {
+  name: string;
+  criteria: Criteria;
+  value: string | boolean | null | undefined;
+  enabled?: boolean;
+}
+
 export interface SearchAttribute {
   id: string;
   attribute: Attribute;
@@ -83,12 +91,14 @@ export interface SearchAttribute {
 export class SearchComponent implements OnInit {
   //search input attributes
   @Input() attributes: Attribute[] = [];
+  @Input() fixedAttributes?: FixedAttribute[] = [];
   //options
   @Input() advanced: boolean = true;
   @Input() startAdvanced: boolean = false;
   @Input() continuousSearching: boolean = false;
   @Input() continuousSearchingOnlySimple: boolean = false;
   @Input() useLikeWildcard: boolean = true;
+  @Input() firstSearch: boolean = false;
   //style configurations
   @Input() searchClass: string = '';
   @Input() searchInputClass: string = '';
@@ -114,6 +124,7 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.advancedCollapsed = !this.startAdvanced;
+    if (this.firstSearch) this.onSearch(false);
   }
 
   addSearchAttribute(attribute: Attribute): void {
@@ -241,6 +252,43 @@ export class SearchComponent implements OnInit {
     }
   }
 
+  applyFixedAttributes(whereInput: any): any {
+    console.log('applyFixedAttributes', whereInput, this.fixedAttributes);
+
+    // if no fixed attributes, return the where input
+    if (!this.fixedAttributes?.length) return whereInput;
+
+    // create an AND object with the all fixed attributes
+    const fixedAttributesAndObject = this.fixedAttributes?.reduce((and: any, fixedAttribute) => {
+      if (!fixedAttribute.enabled) return and;
+      return _.merge(
+        and,
+        this.attrPathToWhereInput(fixedAttribute.name, {
+          [fixedAttribute.criteria]: fixedAttribute.value
+        })
+      );
+    }, {});
+
+    console.log('fixedAttributesAndObject', fixedAttributesAndObject);
+
+    // if whereInput is null, return the fixed attributes
+    if (!whereInput) return fixedAttributesAndObject;
+
+    if (this.fixedAttributes?.length) {
+      // if whereInput is an array, add the fixed attributes to each element
+      if (Array.isArray(whereInput)) {
+        whereInput = whereInput.map((where: any) => {
+          return _.merge(where, fixedAttributesAndObject);
+        });
+      } else {
+        // if whereInput is an object, add the fixed attributes to the object
+        whereInput = _.merge(whereInput, fixedAttributesAndObject);
+      }
+    }
+
+    return whereInput;
+  }
+
   onSearch(isContinuous: boolean): void {
     if (this.advancedCollapsed) {
       if (!isContinuous || this.continuousSearching || this.continuousSearchingOnlySimple) {
@@ -254,6 +302,8 @@ export class SearchComponent implements OnInit {
             );
           }
         });
+        whereInput = this.applyFixedAttributes(whereInput);
+
         this.searchChange.emit({ where: whereInput });
       }
     } else {
@@ -281,7 +331,10 @@ export class SearchComponent implements OnInit {
           }
           if (searchAttribute.sort) resultSearch.order.push({ [searchAttribute.attribute.name]: searchAttribute.sort });
         });
-        if (!this.searchAttributes?.length) resultSearch = null;
+        if (!this.searchAttributes?.length && !this.fixedAttributes?.length) resultSearch = null;
+
+        resultSearch.where = this.applyFixedAttributes(resultSearch.where);
+
         this.searchChange.emit(resultSearch);
       }
     }

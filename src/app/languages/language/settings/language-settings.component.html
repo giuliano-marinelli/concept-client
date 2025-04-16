@@ -1,0 +1,36 @@
+<div class="ps-0 ps-sm-3" *ngVar="{ collapsed: true, logoHover: false } as navbarSettings">
+  <div class="row mt-md-3 text-center" *ngIf="auth.loading">
+    <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
+  </div>
+  <div class="row" *ngIf="!auth.loading && auth.user?.role == 'admin'">
+    <button class="btn d-sm-none flex-fill no-outline p-0"
+      (click)="navbarSettings.collapsed = !navbarSettings.collapsed">
+      <fa-icon [icon]="navbarSettings.collapsed ? 'chevron-down' : 'chevron-up'"></fa-icon>
+    </button>
+  </div>
+  <div class="row mt-sm-3">
+    <div class="col-sm-4 col-md-3 navbar ps-2 pe-2 pe-sm-0 align-items-baseline">
+      <nav class="navbar-collapse collapse d-sm-block" [ngbCollapse]="navbarSettings.collapsed">
+        <ul class="navbar-nav">
+          <li class="nav-item d-flex rounded">
+            <a class="pe-pointer flex-fill p-2 text-body text-sm rounded" routerLink="./general"
+              routerLinkActive="active" (click)="navbarSettings.collapsed = true">
+              <fa-icon [icon]="'gear'"></fa-icon> General
+            </a>
+          </li>
+          <hr class="mx-2 mt-1 mb-2">
+          <span class="flex-fill ps-3 text-muted text-sm rounded">Access</span>
+          <li class="nav-item d-flex rounded">
+            <a class="pe-pointer flex-fill p-2 text-body text-sm rounded" routerLink="./collaborators"
+              routerLinkActive="active" (click)="navbarSettings.collapsed = true" disabled>
+              <fa-icon [icon]="'user-group'"></fa-icon> Collaborators
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="content col-sm-8 col-md-9">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

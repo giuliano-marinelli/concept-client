@@ -5,11 +5,12 @@
     { name: 'tag', title: 'Tag', type: 'string', simple: true },
     { name: 'version', title: 'Version', type: 'string', simple: true },
     { name: 'createdAt', title: 'Created at', type: 'Date' },
-    { name: 'owner.username', title: 'Owner', type: 'string', simple: true },
     { name: 'metaElements.tag', title: 'Element', type: 'string', simple: true }
-  ]" [(search)]="languagesSearch" (searchChange)="getLanguages()" [advanced]="false"></search>
+  ]" [fixedAttributes]="[
+    { name: 'owner.username', criteria: 'eq', value: profile.user()?.username, enabled: profile.user() !== null },
+  ]" [(search)]="languagesSearch" (searchChange)="getLanguages()" [advanced]="false" [firstSearch]="true"></search>
   </div>
-  <div *ngIf="!auth.loading && auth.user" class="flex-shrink-0 ms-3">
+  <div *ngIf="profile.user() && profile.user()?.id == auth.user?.id" class="flex-shrink-0 ms-3">
     <button class="btn btn-sm btn-success" (click)="newLanguage()">
       <fa-icon [icon]="'book'"></fa-icon> New
     </button>
@@ -19,11 +20,13 @@
   <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
   <p class="mt-2">No languages found</p>
 </div>
-<ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true" class="row mt-3"
+<ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true" class="row"
   [class.loading]="languagesLoading" *ngIf="languages.length > 0">
-  <div ngxMasonryItem class="col-12 col-md-6 col-lg-4 mb-4 masonry-item" *ngFor="let language of languages">
-    <language-card [language]="language" [masonry]="masonry" [loading]="submitLoading.includes(language.id!)"
-      (onDelete)="getLanguages()"></language-card>
+  <div ngxMasonryItem class="col-12 masonry-item" *ngFor="let language of languages">
+    <div class="p-3 border-bottom">
+      <language-card [language]="language" [masonry]="masonry" [loading]="submitLoading.includes(language.id!)"
+        (onDelete)="getLanguages()"></language-card>
+    </div>
   </div>
 </ngx-masonry>
 <ngb-pagination *ngIf="languagesCount > 0" class="d-flex justify-content-center mt-3" [(page)]="languagesPage"

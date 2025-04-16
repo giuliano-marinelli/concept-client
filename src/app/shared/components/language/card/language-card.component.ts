@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { DeleteMetaModel, MetaModel } from '../../../entities/meta-model.entity';
+import { MetaModel } from '../../../entities/meta-model.entity';
 import { NgxMasonryComponent } from 'ngx-masonry';
 
 import { AuthService } from '../../../../services/auth.service';
@@ -20,34 +20,6 @@ export class LanguageCardComponent {
 
   constructor(
     public auth: AuthService,
-    public messages: MessagesService,
-    private _deleteMetaModel: DeleteMetaModel
+    public messages: MessagesService
   ) {}
-
-  deleteLanguage({ password, verificationCode }: any, language: MetaModel): void {
-    if (!language) return;
-    this.loading = true;
-    this._deleteMetaModel
-      .mutate({ id: language.id, password: password })
-      .subscribe({
-        next: ({ data, errors }) => {
-          if (errors) {
-            this.messages.error(errors, {
-              onlyOne: true,
-              displayMode: 'replace'
-            });
-          }
-          if (data?.deleteMetaModel) {
-            this.messages.success('Language successfully deleted.', {
-              onlyOne: true,
-              displayMode: 'replace'
-            });
-            this.onDelete.emit(data?.deleteMetaModel);
-          }
-        }
-      })
-      .add(() => {
-        this.loading = false;
-      });
-  }
 }

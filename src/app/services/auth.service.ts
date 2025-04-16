@@ -8,7 +8,9 @@ import { Observable, ReplaySubject } from 'rxjs';
 
 import { MessagesService } from './messages.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   user?: User;
   loading: boolean = true;

@@ -1,8 +1,8 @@
 <div class="modal-content">
-  <form [class.loading]="languageLoading" [formGroup]="languageForm">
+  <form [class.loading]="language.loading()" [formGroup]="languageForm">
     <div class="modal-header">
       <h5 class="modal-title">
-        <fa-icon [icon]="'pen-to-square'"></fa-icon> {{ language ? 'Edit' : 'New' }} Language
+        <fa-icon [icon]="'pen-to-square'"></fa-icon> {{ language.value() ? 'Edit' : 'New' }} Language
       </h5>
       <button type="button" class="btn-close" [disabled]="submitLoading" aria-label="Close"
         (click)="activeModal.dismiss('Cross click')"></button>
@@ -13,18 +13,9 @@
           cropLabel="Crop your logo picture" saveLabel="Save new logo picture"
           defaultImage="assets/images/default-language.png"></picture-input>
       </div>
-      <div class="mb-3">
+      <div class="mb-3" *ngIf="!language.value()">
         <label class="form-label">
-          Name
-        </label>
-        <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name" autocomplete="off"
-          [ngClass]="setValid(name, true)" />
-        <invalid-feedback [control]="name" name="Name"
-          [messages]="{ pattern: 'Name only can have characters and numbers' }"></invalid-feedback>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">
-          Tag
+          Tag <span class="text-muted small">(it's used for url)</span>
         </label>
         <div class="input-spinner">
           <input class="form-control bg-dark-subtle" type="text" name="tag" formControlName="tag" autocomplete="off"
@@ -33,6 +24,15 @@
           <invalid-feedback [control]="tag" name="Tag"
             [messages]="{ pattern: 'Tag only can have lower case alphanumeric' }"></invalid-feedback>
         </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">
+          Name
+        </label>
+        <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name" autocomplete="off"
+          [ngClass]="setValid(name, true)" />
+        <invalid-feedback [control]="name" name="Name"
+          [messages]="{ pattern: 'Name only can have characters and numbers' }"></invalid-feedback>
       </div>
       <div>
         <label class="form-label">
@@ -48,7 +48,7 @@
       <button type="button" ngbAutofocus class="btn btn-default" [disabled]="submitLoading"
         (click)="activeModal.dismiss('Close click')">Close</button>
       <button type="button" class="btn btn-success" [disabled]="!languageForm.valid || submitLoading"
-        (click)="language ? updateLanguage() : createLanguage()">
+        (click)="language.value() ? updateLanguage() : createLanguage()">
         Save <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
       </button>
     </div>

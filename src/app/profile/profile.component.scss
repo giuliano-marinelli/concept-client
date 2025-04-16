@@ -9,6 +9,13 @@
 
 .profile-separator {
   height: 4rem;
+  width: calc(100vw - 1px);
+  margin-left: calc(-50vw + 50%);
+  background-color: rgba($body-secondary-bg, 0.7);
+}
+
+::ng-deep html[data-bs-theme='dark'] .profile-separator {
+  background-color: rgba($body-secondary-bg-dark, 0.8);
 }
 
 .profile-separator-border {

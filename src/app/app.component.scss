@@ -139,3 +139,50 @@
 .container-full {
   max-width: 100% !important;
 }
+
+.my-breadcrumb {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  padding: 0;
+
+  flex-wrap: nowrap; /* Prevent wrapping of breadcrumb items */
+  overflow: hidden; /* Hide overflowing content */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  white-space: nowrap; /* Prevent text from wrapping */
+  min-width: 0;
+}
+
+.my-breadcrumb > li:not(:last-child)::after {
+  content: '/';
+  font-weight: 100;
+  font-size: 17px;
+  margin: 0px 5px;
+}
+
+.my-breadcrumb > li > * {
+  font-weight: bold;
+}
+
+@include media-breakpoint-down(md) {
+  .my-breadcrumb {
+    flex-direction: column;
+  }
+
+  .my-breadcrumb > li:not(:last-child)::after {
+    font-size: 12px;
+  }
+
+  .my-breadcrumb > li {
+    line-height: 12px;
+  }
+
+  .my-breadcrumb > li > * {
+    font-size: 12px;
+    padding: 0px;
+  }
+
+  .my-breadcrumb > li:first-child:not(:last-child) > * {
+    font-weight: lighter;
+  }
+}

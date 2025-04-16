@@ -1,0 +1,58 @@
+<div class="pt-4 row">
+  <div class="col-12 col-lg-6 mb-3">
+    <div class="d-flex flex-row justify-content-between mb-2 border-bottom">
+      <h3><fa-icon [icon]="'vector-square'"></fa-icon> Nodes</h3>
+      <div *ngIf="language.value()?.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
+        class="flex-shrink-0 ms-3">
+        <button class="btn btn-sm btn-success" (click)="newElement(LanguageElementType.NODE)">
+          <fa-icon [icon]="'plus'"></fa-icon> Node
+        </button>
+      </div>
+    </div>
+    <div class="text-center mt-3"
+      *ngIf="!filter(language.value()?.metaElements, { type: LanguageElementType.NODE })?.length">
+      <p class="mt-2">No nodes created yet</p>
+    </div>
+    <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true" class="row g-2"
+      [class.loading]="language.loading()"
+      *ngIf="filter(language.value()?.metaElements, { type: LanguageElementType.NODE })?.length">
+      <div ngxMasonryItem class="col-12 masonry-item m-0"
+        *ngFor="let node of language.value()?.metaElements | filter: { type: LanguageElementType.NODE }">
+        <div class="p-2 border-bottom hoverable">
+          <language-element-card [language]="language.value()!" [element]="node" [masonry]="masonry"
+            [loading]="submitLoading.includes(node.id)" (onEdit)="this.language.refetchLanguage()"
+            (onDelete)="this.language.refetchLanguage()">
+          </language-element-card>
+        </div>
+      </div>
+    </ngx-masonry>
+  </div>
+  <div class="col-12 col-lg-6 mb-3">
+    <div class="d-flex flex-row justify-content-between mb-2 border-bottom">
+      <h3><fa-icon [icon]="'arrows-left-right'"></fa-icon> Edges</h3>
+      <div *ngIf="language.value()?.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
+        class="flex-shrink-0 ms-3">
+        <button class="btn btn-sm btn-success" (click)="newElement(LanguageElementType.EDGE)">
+          <fa-icon [icon]="'plus'"></fa-icon> Edge
+        </button>
+      </div>
+    </div>
+    <div class="text-center mt-3"
+      *ngIf="!filter(language.value()?.metaElements, { type: LanguageElementType.EDGE })?.length">
+      <p class="mt-2">No edges created yet</p>
+    </div>
+    <ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true" class="row g-2"
+      [class.loading]="language.loading()"
+      *ngIf="filter(language.value()?.metaElements, { type: LanguageElementType.EDGE })?.length">
+      <div ngxMasonryItem class="col-12 masonry-item m-0"
+        *ngFor="let edge of language.value()?.metaElements | filter: { type: LanguageElementType.EDGE }">
+        <div class="p-2 border-bottom hoverable">
+          <language-element-card [language]="language.value()!" [element]="edge" [masonry]="masonry"
+            [loading]="submitLoading.includes(edge.id)" (onEdit)="this.language.refetchLanguage()"
+            (onDelete)="this.language.refetchLanguage()">
+          </language-element-card>
+        </div>
+      </div>
+    </ngx-masonry>
+  </div>
+</div>

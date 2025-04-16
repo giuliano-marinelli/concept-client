@@ -412,8 +412,21 @@ a {
   word-break: break-all;
 }
 
+.text-break-word {
+  word-break: break-word;
+}
+
 .text-hyphens {
   hyphens: auto;
+}
+
+/* Add max-width 100% as a class */
+.mw-100 {
+  max-width: 100% !important;
+}
+
+.hoverable:hover {
+  background-color: $table-hover-bg !important;
 }
 
 /* Base style for izitoasts */

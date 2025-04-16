@@ -11,6 +11,7 @@ import { NgxMasonryComponent } from 'ngx-masonry';
 import { LanguageElementEditorComponent } from '../editor/language-element-editor.component';
 
 import { AuthService } from '../../../../services/auth.service';
+import { LanguageService } from '../../../../services/language.service';
 import { MessagesService } from '../../../../services/messages.service';
 
 @Component({

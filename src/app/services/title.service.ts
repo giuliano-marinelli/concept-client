@@ -96,7 +96,18 @@ export class TitleService {
 
     // process the breadcrumb if it is a function call it with params else use it as is
     this.breadcrumb.forEach((b: any) => {
-      breadcrumb.push({ path: b.path, title: typeof b.title === 'function' ? b.title(this.params) : b.title });
+      // check if the breadcrumb is a function
+      const breadcrumbResult = typeof b.title === 'function' ? b.title(this.params) : b.title;
+
+      // if result is a string then add it to the breadcrumb with the path
+      if (typeof breadcrumbResult === 'string') {
+        breadcrumb.push({ path: b.path, title: breadcrumbResult });
+      } else if (Array.isArray(breadcrumbResult)) {
+        // if result is an array then add each item to the breadcrumb with their custom path
+        breadcrumbResult.forEach((item) => {
+          breadcrumb.push({ path: item.path ?? b.path, title: item.title });
+        });
+      }
     });
 
     this.breadcrumbSubject.next(breadcrumb);

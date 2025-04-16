@@ -1,51 +1,51 @@
 //this allow the use of bootstrap and bootstrap dark variables, functions, utilities, mixins and custom variables
 @import '../../../assets/scss/variables.scss';
 
-.logo-img {
+.language-img {
   width: 80px;
   height: 80px;
   padding: 2px !important;
-  transform: scale(1.5);
 }
 
-.logo-img-mini {
-  width: 50px;
-  height: 50px;
+.language-separator {
+  height: 4rem;
+  width: calc(100vw - 1px);
+  margin-left: calc(-50vw + 50%);
+  background-color: rgba($body-secondary-bg, 0.7);
 }
 
-.element-img {
-  width: 40px;
-  height: 40px;
-  padding: 2px !important;
+::ng-deep html[data-bs-theme='dark'] .language-separator {
+  background-color: rgba($body-secondary-bg-dark, 0.8);
 }
 
-.logo-container {
-  margin-right: -60px;
+.language-separator-border {
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  top: 7.7rem;
+  z-index: -1;
 }
 
-.info-container {
-  margin-left: 80px;
+.language-content {
+  margin-top: 1rem;
 }
 
-@include media-breakpoint-down(sm) {
-  .logo-img {
-    width: 70px;
-    height: 70px;
+@include media-breakpoint-up(sm) {
+  .language-img {
+    width: 100px;
+    height: 100px;
+    padding: 2px !important;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .language-img {
+    width: 200px;
+    height: 200px;
+    padding: 0.25rem !important;
   }
 
-  .logo-container {
-    margin-right: -40px;
-  }
-
-  .border-info-container {
-    margin-left: -35px;
-  }
-
-  .info-container {
-    margin-left: 90px;
-  }
-
-  .desc-container {
-    margin-left: -75px;
+  .language-content {
+    margin-top: -3rem;
   }
 }

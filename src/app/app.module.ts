@@ -31,7 +31,7 @@ import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { NgxMasonryModule } from 'ngx-masonry';
 import { AngularResizeEventModule } from 'angular-resize-event-package';
-import { JsonFormsAngularService, JsonFormsModule } from '@jsonforms/angular';
+import { JsonFormsModule } from '@jsonforms/angular';
 import { JsonFormsBootstrapModule } from '../json-forms/bootstrap-renderer/module';
 //environment
 import { environment } from '../environments/environment';
@@ -40,7 +40,6 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 //services
-import { AuthService } from './services/auth.service';
 import { MessagesService } from './services/messages.service';
 //directives
 import { VarDirective } from './shared/directives/var.directive';
@@ -88,6 +87,11 @@ import { AdminUsersComponent } from './admin/users/admin-users.component';
 import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
+import { LanguageDesignComponent } from './languages/language/design/language-design.component';
+import { LanguageVersionsComponent } from './languages/language/versions/language-versions.component';
+import { LanguageSettingsComponent } from './languages/language/settings/language-settings.component';
+import { LanguageSettingsGeneralComponent } from './languages/language/settings/general/language-settings-general.component';
+
 @NgModule({
   declarations: [
     //directives
@@ -135,7 +139,11 @@ import { LanguageComponent } from './languages/language/language.component';
     AdminUsersComponent,
     ModelsComponent,
     LanguagesComponent,
-    LanguageComponent
+    LanguageComponent,
+    LanguageDesignComponent,
+    LanguageVersionsComponent,
+    LanguageSettingsComponent,
+    LanguageSettingsGeneralComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -305,11 +313,7 @@ import { LanguageComponent } from './languages/language/language.component';
       },
       deps: [HttpLink, MessagesService]
     },
-    //services
-    MessagesService,
-    AuthService,
-    provideHttpClient(withInterceptorsFromDi()),
-    JsonFormsAngularService
+    provideHttpClient(withInterceptorsFromDi())
   ]
 })
 export class AppModule {

@@ -4,109 +4,120 @@
     (click)="navbarSettings.collapsed = true"></a>
   <nav class="navbar navbar-expand-md fixed-top p-0 align-items-stretch navbar-custom">
     <div class="container-fluid container-xl p-0 mx-xl-3 align-items-stretch container-transition container-full">
-      <button class="navbar-toggler no-outline border-0 py-2" [class.collapsed]="navbarSettings.collapsed" type="button"
-        (click)="navbarSettings.collapsed = !navbarSettings.collapsed">
-        <span class="icon-bar top-bar"></span>
-        <span class="icon-bar middle-bar"></span>
-        <span class="icon-bar bottom-bar"></span>
-      </button>
-      <a class="navbar-brand ps-0 ps-md-2 p-2 m-0" routerLink="/">
-        <fa-icon class="logo-icon" [icon]="'dice-d6'" size="2x"></fa-icon>
-      </a>
-      <div class="flex-grow-1 flex-md-grow-0 align-self-center">
-        <ol class="breadcrumb m-0">
-          <li *ngFor="let route of breadcrumb" class="breadcrumb-item fw-bold btn btn-outline-theme no-outline">
-            <a class="text-body" [routerLink]="route.path">{{ route.title }}</a>
-          </li>
-        </ol>
-      </div>
-      <div class="flex-shrink-0 order-md-1 d-flex flex-row align-items-center px-2 ps-md-0 py-2 py-md-0">
-        <ul class="navbar-nav flex-row align-items-center">
-          <li class="nav-item me-2" *ngIf="isDevelopment">
-            <a class="btn btn-outline-oposite-theme opacity-50 p-1" href="/graphql"
-              (click)="navbarSettings.collapsed = true" tp="API" tpVariation="no_arrow">
-              <fa-icon [icon]="'globe'"></fa-icon>
-            </a>
-          </li>
-          <li class="nav-item me-2">
-            <a class="btn btn-outline-oposite-theme opacity-50 p-1" (click)="darkmodeService.toggleTheme()"
-              [tp]="darkmodeService.isDarkMode() ? 'Light mode' : 'Dark mode'" tpVariation="no_arrow">
-              <fa-icon [icon]="darkmodeService.isDarkMode() ? 'moon' : 'sun'"></fa-icon>
-            </a>
-          </li>
-          <li class="nav-item me-2" *ngIf="!auth.loading && !auth.user">
-            <a class="btn btn-theme opacity-50 p-1" routerLink="/login" routerLinkActive="active">
-              <fa-icon [icon]="'sign-in'"></fa-icon><span class="d-none d-md-inline"> Sign in</span>
-            </a>
-          </li>
-          <li class="nav-item me-2" *ngIf="!auth.loading && !auth.user">
-            <a class="btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/register" routerLinkActive="active">
-              <fa-icon [icon]="'user-plus'"></fa-icon><span class="d-none d-md-inline"> Sign up</span>
-            </a>
-          </li>
-          <li class="nav-item text-body align-self-center" *ngIf="auth.loading">
-            <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
-          </li>
-          <li class="nav-item" *ngIf="!auth.loading && auth.user">
-            <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
-              <a class="nav-link pe-pointer p-0 dropdown-toggle-no-arrow" ngbDropdownToggle>
-                <img class="img-thumbnail bg-secondary rounded-circle profile-img" [src]="auth.user.profile?.avatar"
-                  onerror="this.src='assets/images/default-user.png'" />
+      <div class="d-flex flex-row flex-nowrap flex-grow-1">
+        <button class="navbar-toggler no-outline border-0 py-2" [class.collapsed]="navbarSettings.collapsed"
+          type="button" (click)="navbarSettings.collapsed = !navbarSettings.collapsed">
+          <span class="icon-bar top-bar"></span>
+          <span class="icon-bar middle-bar"></span>
+          <span class="icon-bar bottom-bar"></span>
+        </button>
+        <a class="navbar-brand ps-0 ps-md-2 p-2 m-0" routerLink="/">
+          <fa-icon class="logo-icon" [icon]="'dice-d6'" size="2x"></fa-icon>
+        </a>
+        <div class="flex-shrink-1 align-self-center overflow-hidden">
+          <ol class="my-breadcrumb m-0">
+            <li *ngFor="let route of breadcrumb" class="my-breadcrumb-item">
+              <a class="text-body btn btn-outline-theme no-outline mw-100" [routerLink]="route.path">
+                <div class="text-ellipsis">{{ route.title }}</div>
               </a>
-              <div class="dropdown-menu dropdown-menu-arrow shadow-sm" ngbDropdownMenu>
-                <a class="d-block p-3 pt-0 pb-0 small text-body" routerLink="/user/{{ auth.user.username }}">
-                  Signed in as <b>{{ auth.user.username }}</b>
+            </li>
+          </ol>
+        </div>
+        <div
+          class="flex-grow-1 flex-shrink-0 justify-content-end order-md-1 d-flex flex-row align-items-center px-2 ps-md-0 py-2 py-md-0">
+          <ul class="navbar-nav flex-row align-items-center">
+            <li class="d-none d-md-block nav-item me-2">
+              <a class="btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/languages" routerLinkActive="active"
+                tp="Languages" tpVariation="no_arrow" (click)="navbarSettings.collapsed = true">
+                <fa-icon [icon]="'book'"></fa-icon>
+              </a>
+            </li>
+            <li class="d-none d-md-block nav-item me-2">
+              <a class="btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/models" routerLinkActive="active"
+                tp="Models" tpVariation="no_arrow">
+                <fa-icon [icon]="'diagram-project'"></fa-icon>
+              </a>
+            </li>
+            <li class="d-none d-md-block nav-item me-2" *ngIf="!auth.loading && auth.user?.role == 'admin'">
+              <a class="btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/admin" routerLinkActive="active"
+                tp="Admin" tpVariation="no_arrow" (click)="navbarSettings.collapsed = true">
+                <fa-icon [icon]="'screwdriver-wrench'"></fa-icon>
+              </a>
+            </li>
+            <li class="nav-item me-2" *ngIf="isDevelopment">
+              <a class="btn btn-outline-oposite-theme opacity-50 p-1" href="/graphql"
+                (click)="navbarSettings.collapsed = true" tp="API" tpVariation="no_arrow">
+                <fa-icon [icon]="'globe'"></fa-icon>
+              </a>
+            </li>
+            <li class="nav-item me-2">
+              <a class="btn btn-outline-oposite-theme opacity-50 p-1" (click)="darkmodeService.toggleTheme()"
+                [tp]="darkmodeService.isDarkMode() ? 'Light mode' : 'Dark mode'" tpVariation="no_arrow">
+                <fa-icon [icon]="darkmodeService.isDarkMode() ? 'moon' : 'sun'"></fa-icon>
+              </a>
+            </li>
+            <li class="nav-item me-2" *ngIf="!auth.loading && !auth.user">
+              <a class="btn btn-theme opacity-50 p-1" routerLink="/login" routerLinkActive="active">
+                <fa-icon [icon]="'sign-in'"></fa-icon><span class="d-none d-md-inline"> Sign in</span>
+              </a>
+            </li>
+            <li class="nav-item me-2" *ngIf="!auth.loading && !auth.user">
+              <a class="btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/register" routerLinkActive="active">
+                <fa-icon [icon]="'user-plus'"></fa-icon><span class="d-none d-md-inline"> Sign up</span>
+              </a>
+            </li>
+            <li class="nav-item text-body align-self-center" *ngIf="auth.loading">
+              <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
+            </li>
+            <li class="nav-item" *ngIf="!auth.loading && auth.user">
+              <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
+                <a class="nav-link pe-pointer p-0 dropdown-toggle-no-arrow" ngbDropdownToggle>
+                  <img class="img-thumbnail bg-secondary rounded-circle profile-img" [src]="auth.user.profile?.avatar"
+                    onerror="this.src='assets/images/default-user.png'" />
                 </a>
-                <div class="dropdown-divider m-1"></div>
-                <a ngbDropdownItem class="small" routerLink="/user/{{ auth.user.username }}">
-                  <fa-icon [icon]="'user'"></fa-icon> Your profile
-                </a>
-                <a ngbDropdownItem class="small" routerLink="/user/{{ auth.user.username }}/languages">
-                  <fa-icon [icon]="'book'"></fa-icon> Your languages
-                </a>
-                <a ngbDropdownItem class="small" routerLink="/user/{{ auth.user.username }}/models">
-                  <fa-icon [icon]="'diagram-project'"></fa-icon> Your models
-                </a>
-                <div class="dropdown-divider m-1"></div>
-                <a ngbDropdownItem class="small" routerLink="/settings">
-                  <fa-icon [icon]="'gears'"></fa-icon> Settings
-                </a>
-                <div class="dropdown-divider m-1"></div>
-                <a ngbDropdownItem class="small pe-pointer" (click)="logout()">
-                  <fa-icon [icon]="'sign-out'"></fa-icon> Sign out
-                </a>
+                <div class="dropdown-menu dropdown-menu-arrow shadow-sm" ngbDropdownMenu>
+                  <a class="d-block p-3 pt-0 pb-0 small text-body" routerLink="/{{ auth.user.username }}">
+                    Signed in as <b>{{ auth.user.username }}</b>
+                  </a>
+                  <div class="dropdown-divider m-1"></div>
+                  <a ngbDropdownItem class="small" routerLink="/{{ auth.user.username }}">
+                    <fa-icon [icon]="'user'"></fa-icon> Your profile
+                  </a>
+                  <a ngbDropdownItem class="small" routerLink="/{{ auth.user.username }}/languages">
+                    <fa-icon [icon]="'book'"></fa-icon> Your languages
+                  </a>
+                  <a ngbDropdownItem class="small" routerLink="/{{ auth.user.username }}/models">
+                    <fa-icon [icon]="'diagram-project'"></fa-icon> Your models
+                  </a>
+                  <div class="dropdown-divider m-1"></div>
+                  <a ngbDropdownItem class="small" routerLink="/settings">
+                    <fa-icon [icon]="'gears'"></fa-icon> Settings
+                  </a>
+                  <div class="dropdown-divider m-1"></div>
+                  <a ngbDropdownItem class="small pe-pointer" (click)="logout()">
+                    <fa-icon [icon]="'sign-out'"></fa-icon> Sign out
+                  </a>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="collapse navbar-collapse justify-content-end" [ngbCollapse]="navbarSettings.collapsed">
-        <ul class="navbar-nav ms-2">
+      <div class="collapse navbar-collapse flex-grow-0" [ngbCollapse]="navbarSettings.collapsed">
+        <ul class="navbar-nav ms-2 d-md-none">
           <li class="nav-item border-top border-md-0 me-2">
-            <a class="d-none d-md-block btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/languages"
-              routerLinkActive="active" tp="Languages" tpVariation="no_arrow" (click)="navbarSettings.collapsed = true">
-              <fa-icon [icon]="'book'"></fa-icon>
-            </a>
             <a class="d-md-none nav-link " routerLink="/languages" routerLinkActive="active"
               (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'book'"></fa-icon> Languages
             </a>
           </li>
           <li class="nav-item border-top border-md-0 me-2">
-            <a class="d-none d-md-block btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/models"
-              routerLinkActive="active" tp="Models" tpVariation="no_arrow">
-              <fa-icon [icon]="'diagram-project'"></fa-icon>
-            </a>
             <a class="d-md-none nav-link " routerLink="/models" routerLinkActive="active"
               (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'diagram-project'"></fa-icon> Models
             </a>
           </li>
           <li class="nav-item border-top border-md-0 me-2" *ngIf="!auth.loading && auth.user?.role == 'admin'">
-            <a class="d-none d-md-block btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/admin"
-              routerLinkActive="active" tp="Admin" tpVariation="no_arrow" (click)="navbarSettings.collapsed = true">
-              <fa-icon [icon]="'screwdriver-wrench'"></fa-icon>
-            </a>
             <a class="d-md-none nav-link " routerLink="/admin" routerLinkActive="active"
               (click)="navbarSettings.collapsed = true">
               <fa-icon [icon]="'screwdriver-wrench'"></fa-icon> Admin
