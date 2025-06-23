@@ -21,7 +21,7 @@ export class AppComponent {
 
   isDevelopment: boolean = !environment.production;
 
-  stretchComponents: string[] = ['/models'];
+  stretchComponents: string[] = ['^/[^/]+/model/[^/]+$', '^/[^/]+/model/new', '^/[^/]+/model/new/[^/]+$'];
   stretch = false;
 
   breadcrumb: { path: string; title: string }[] = [];
@@ -51,7 +51,10 @@ export class AppComponent {
     // get the current route and check if the navbar should be full
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        this.stretch = this.stretchComponents.includes(this.router.url);
+        this.stretch = this.stretchComponents.some((routePattern) => {
+          const regex = new RegExp(routePattern);
+          return regex.test(this.router.url);
+        });
       }
     });
   }

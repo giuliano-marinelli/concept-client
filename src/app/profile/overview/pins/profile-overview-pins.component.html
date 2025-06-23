@@ -1,0 +1,57 @@
+<div class="modal-content">
+  <form [class.loading]="profile.loading()" [formGroup]="pinsForm"></form>
+  <div class="modal-header border-bottom-0">
+    <h5 class="modal-title">
+      Edit pinned items
+    </h5>
+    <button type="button" class="btn-close" [disabled]="submitLoading" aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body pt-0">
+    <p class="text-muted">
+      Select up to six public languages or models you'd like to show to anyone.
+    </p>
+    <search #search_input searchPlaceholder="Find languages or models..." [attributes]="[
+    { name: 'name', title: 'Name', type: 'string', simple: true },
+    { name: 'tag', title: 'Tag', type: 'string', simple: true },
+    { name: 'version', title: 'Version', type: 'string', simple: true }
+  ]" [fixedAttributes]="[
+    { name: 'owner.username', criteria: 'eq', value: profile.user()?.username, enabled: profile.user() !== null },
+  ]" [(search)]="resourcesSearch" (searchChange)="getResources()" [advanced]="false" [firstSearch]="true"
+      [continuousSearching]="true">
+    </search>
+    <p class="ms-2 my-2 small text-danger" [class.text-muted]="pinnedResources.length < pinsLimit">
+      {{ pinsLimit - pinnedResources.length }} remaining
+    </p>
+    <hr class="my-0">
+    <div class="list-group list-group-flush overflow-y-auto" style="max-height: calc(100vh - 350px)">
+      <a *ngFor="let resource of pinnedResources" class="list-group-item list-group-item-action"
+        (click)="togglePin(resource)">
+        <ng-container [ngTemplateOutlet]="pin" [ngTemplateOutletContext]="{ resource: resource }"></ng-container>
+      </a>
+      <a *ngFor="let resource of unpinnedResources" class="list-group-item list-group-item-action"
+        (click)="togglePin(resource)">
+        <ng-container [ngTemplateOutlet]="pin" [ngTemplateOutletContext]="{ resource: resource }"></ng-container>
+      </a>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" ngbAutofocus class="btn btn-default" [disabled]="submitLoading"
+      (click)="activeModal.dismiss('Close click')">Close</button>
+    <button type="button" class="btn btn-success" [disabled]="!pinsForm.valid || submitLoading"
+      (click)="updatePinnedResources()">
+      Save pins <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
+    </button>
+  </div>
+</div>
+
+<ng-template #pin let-resource="resource">
+  <input class="form-check-input me-1" type="checkbox" [checked]="isToggledPin(resource)"
+    [disabled]="submitLoading || (!isToggledPin(resource) && pinnedResources.length >= pinsLimit)"
+    (change)="togglePin(resource)" />
+  <label class="form-check-label ms-1" for="firstCheckbox">
+    <fa-icon [icon]="resource.type == 'lang' ? 'book' : 'diagram-project'" class="me-1"></fa-icon>
+    <b>{{ resource.name }}</b><br>
+    <span class="text-muted small">{{ resource.tag }}&#64;{{ resource.version }}</span>
+  </label>
+</ng-template>

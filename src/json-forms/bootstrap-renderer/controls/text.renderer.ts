@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { JsonFormsAngularService, JsonFormsControl } from '@jsonforms/angular';
+import { JsonFormsControl } from '@jsonforms/angular';
 import { RankedTester, isStringControl, rankWith } from '@jsonforms/core';
 
 @Component({
@@ -41,8 +41,8 @@ export class TextControlRenderer extends JsonFormsControl {
   getTypeByFormat(): string {
     const format = this.uischema?.options?.['format']
       ? this.uischema.options['format']
-      : this.scopedSchema?.format ?? 'text';
-    return this.basicFormats.includes(format) ? format : this.extraFormats[format] ?? 'text';
+      : (this.scopedSchema?.format ?? 'text');
+    return this.basicFormats.includes(format) ? format : (this.extraFormats[format] ?? 'text');
   }
 
   override getEventValue = (event: any) => {

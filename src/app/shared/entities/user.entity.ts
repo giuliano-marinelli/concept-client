@@ -5,6 +5,8 @@ import { SelectionField, SelectionType } from 'apollo-dynamic';
 import { DynamicMutation, DynamicQuery } from 'apollo-dynamic-angular';
 
 import { Email } from './email.entity';
+import { MetaModel } from './meta-model.entity';
+import { Model } from './model.entity';
 import { Profile } from './profile.entity';
 import { Session } from './session.entity';
 
@@ -44,6 +46,18 @@ export class User {
   emails?: Email[];
   @SelectionField(() => Session)
   sessions?: Session[];
+  @SelectionField(() => MetaModel)
+  ownMetaModels?: MetaModel[];
+  @SelectionField(() => MetaModel)
+  collabMetaModels?: MetaModel[];
+  @SelectionField(() => MetaModel)
+  pinnedMetaModels?: MetaModel[];
+  @SelectionField(() => Model)
+  ownModels?: Model[];
+  @SelectionField(() => Model)
+  collabModels?: Model[];
+  @SelectionField(() => Model)
+  pinnedModels?: Model[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -124,6 +138,21 @@ export class UpdateUserPrimaryEmail extends DynamicMutation<{ updateUserPrimaryE
   override document = gql`
     mutation UpdateUserPrimaryEmail($id: UUID!, $password: String!, $code: String!, $email: EmailRefInput!) {
       updateUserPrimaryEmail(id: $id, password: $password, code: $code, email: $email) {
+        User
+      }
+    }
+  `;
+}
+
+@Injectable({ providedIn: 'root' })
+export class UpdateUserPinnedResources extends DynamicMutation<{ updateUserPinnedResources: User }> {
+  override document = gql`
+    mutation UpdateUserPinnedResources(
+      $id: UUID!
+      $pinnedMetaModels: [MetaModelRefInput!]
+      $pinnedModels: [ModelRefInput!]
+    ) {
+      updateUserPinnedResources(id: $id, pinnedMetaModels: $pinnedMetaModels, pinnedModels: $pinnedModels) {
         User
       }
     }

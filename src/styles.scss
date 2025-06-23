@@ -241,12 +241,42 @@ $utilities: map-merge(
   }
 }
 
+/* Enable responsive for width sizes (w-25, w-50, w-75, w-100, w-auto) */
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    .w-#{$breakpoint}-25 {
+      width: 25%;
+    }
+
+    .w-#{$breakpoint}-50 {
+      width: 50%;
+    }
+
+    .w-#{$breakpoint}-75 {
+      width: 75%;
+    }
+
+    .w-#{$breakpoint}-100 {
+      width: 100%;
+    }
+
+    .w-#{$breakpoint}-auto {
+      width: auto !important;
+    }
+
+    .w-#{$breakpoint}-unset {
+      width: unset !important;
+    }
+  }
+}
+
 @import 'bootstrap/scss/utilities/api';
 
 /* This is the spinner style for pending state icon */
 .input-spinner {
   position: relative;
 }
+
 .input-spinner > .form-control ~ fa-icon {
   position: absolute;
   margin-top: 7px;
@@ -277,6 +307,10 @@ $utilities: map-merge(
 
 .no-outline:active {
   border-color: transparent !important;
+}
+
+.smaller {
+  font-size: 0.75rem;
 }
 
 .sprotty svg {
@@ -353,6 +387,7 @@ a {
 .input-button {
   position: relative;
 }
+
 .input-button > input {
   padding-right: 3rem;
 }
@@ -425,8 +460,16 @@ a {
   max-width: 100% !important;
 }
 
-.hoverable:hover {
+:not(a).hoverable:hover {
   background-color: $table-hover-bg !important;
+}
+
+a.hoverable {
+  opacity: 0.9;
+}
+
+a.hoverable:hover {
+  opacity: 1;
 }
 
 /* Base style for izitoasts */

@@ -16,7 +16,6 @@ import { LanguageService } from '../../../services/language.service';
   styleUrl: './language-design.component.scss'
 })
 export class LanguageDesignComponent {
-  JSON: any = JSON;
   filter: any = Global.filter;
   LanguageElementType = LanguageElementType;
 

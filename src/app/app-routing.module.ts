@@ -8,6 +8,7 @@ import { AuthAdminGuard } from './shared/guards/auth-admin.guard';
 import { LeaveGuard } from './shared/guards/leave.guard';
 import { UserExistsGuard } from './shared/guards/user-exists.guard';
 import { MetaModelExistsGuard } from './shared/guards/meta-model-exists.guard';
+import { ModelExistsGuard } from './shared/guards/model-exists.guard';
 //components
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AboutComponent } from './about/about.component';
@@ -26,13 +27,15 @@ import { ProfileModelsComponent } from './profile/models/profile-models.componen
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminUsersComponent } from './admin/users/admin-users.component';
-import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
 import { LanguageDesignComponent } from './languages/language/design/language-design.component';
 import { LanguageVersionsComponent } from './languages/language/versions/language-versions.component';
 import { LanguageSettingsComponent } from './languages/language/settings/language-settings.component';
 import { LanguageSettingsGeneralComponent } from './languages/language/settings/general/language-settings-general.component';
+import { ModelsComponent } from './models/models.component';
+import { ModelComponent } from './models/model/model.component';
+import path from 'path';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: 'Welcome', breadcrumb: 'Home' } },
@@ -102,7 +105,7 @@ const routes: Routes = [
     // children: [{ path: 'editor', component: ModelEditorComponent, data: { title: 'Models > Editor' } }]
   },
   {
-    path: ':username/:language',
+    path: ':username/lang/:language',
     component: LanguageComponent,
     canMatch: [MetaModelExistsGuard],
     data: {
@@ -132,6 +135,51 @@ const routes: Routes = [
       },
       { path: '**', redirectTo: 'design' }
     ]
+  },
+  {
+    path: ':username/model/new',
+    component: ModelComponent,
+    canActivate: [AuthLoginGuard],
+    canDeactivate: [LeaveGuard],
+    data: {
+      title: 'New Model',
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username']) return '';
+        return [{ path: params['username'] + '/models', title: params['username'] }, { title: 'new-model' }];
+      }
+    }
+  },
+  {
+    path: ':username/model/new/:language',
+    component: ModelComponent,
+    canActivate: [AuthLoginGuard],
+    canDeactivate: [LeaveGuard],
+    data: {
+      title: 'New Model',
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username']) return '';
+        return [{ path: params['username'] + '/models', title: params['username'] }, { title: 'new-model' }];
+      }
+    }
+  },
+  {
+    path: ':username/model/:model',
+    component: ModelComponent,
+    canMatch: [ModelExistsGuard],
+    canDeactivate: [LeaveGuard],
+    data: {
+      title: (params: { [key: string]: string }) => {
+        if (!params['modeltag']) return '';
+        return params['modeltag'] + '@' + params['modelversion'] + ' · ' + params['languagename'];
+      },
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username'] || !params['modeltag'] || !params['modelversion']) return '';
+        return [
+          { path: params['username'] + '/models', title: params['username'] },
+          { title: params['modeltag'] + '@' + params['modelversion'] }
+        ];
+      }
+    }
   },
   {
     path: ':username',

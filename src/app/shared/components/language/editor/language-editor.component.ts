@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -36,9 +37,10 @@ export class LanguageEditorComponent implements OnInit {
   ]);
   tag: FormControl = new FormControl(
     this.language.value()?.tag,
-    [Validators.required, Validators.minLength(1), Validators.maxLength(30), Validators.pattern('[a-z0-9]*')],
+    [Validators.required, Validators.minLength(1), Validators.maxLength(30), Validators.pattern('[a-z0-9_-]*')],
     [ExtraValidators.metaModelTagExists(this._checkMetaModelTagExists, this.language.value()?.id)]
   );
+  tags: FormControl = new FormControl(this.language.value()?.tags);
   description: FormControl = new FormControl(this.language.value()?.description, [Validators.maxLength(200)]);
   logo = new FormControl(this.language.value()?.logo, []);
   logoFile = new FormControl<Blob | null>(null, []);
@@ -46,6 +48,7 @@ export class LanguageEditorComponent implements OnInit {
   constructor(
     public auth: AuthService,
     public messages: MessagesService,
+    public router: Router,
     public activeModal: NgbActiveModal,
     public formBuilder: FormBuilder,
     public language: LanguageService,
@@ -134,6 +137,9 @@ export class LanguageEditorComponent implements OnInit {
           displayMode: 'replace'
         });
         this.activeModal.dismiss('Success');
+        this.router.navigate([
+          `/${this.language.value()?.owner?.username}/lang/${this.language.value()?.tag}@${this.language.value()?.version}`
+        ]);
       }
 
       this.submitLoading = false;

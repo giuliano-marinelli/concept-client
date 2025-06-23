@@ -5,6 +5,8 @@ import {
   ArrayControlRendererTester,
   CheckboxControlRenderer,
   CheckboxControlTester,
+  ConditionControlRenderer,
+  ConditionControlRendererTester,
   NumberControlRenderer,
   NumberControlRendererTester,
   ObjectControlRenderer,
@@ -53,6 +55,7 @@ export const bootstrapRenderers: {
   { tester: RadioControlTester, renderer: RadioControlRenderer },
   { tester: ObjectControlRendererTester, renderer: ObjectControlRenderer },
   { tester: ArrayControlRendererTester, renderer: ArrayControlRenderer },
+  { tester: ConditionControlRendererTester, renderer: ConditionControlRenderer },
   // layouts
   { tester: VerticalLayoutTester, renderer: VerticalLayoutRenderer },
   { tester: HorizontalLayoutTester, renderer: HorizontalLayoutRenderer },

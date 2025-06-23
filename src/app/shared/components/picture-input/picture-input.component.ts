@@ -26,6 +26,7 @@ export class PictureInputComponent {
 
   @Input() uploadIcon: IconProp = 'camera';
   @Input() removeIcon: IconProp = 'trash-can';
+  @Input() rounded: boolean = true;
 
   @Input() compression: boolean = true;
   @Input() compressionQuality: number = 50;

@@ -14,6 +14,8 @@ import {
   Action,
   BaseJsonrpcGLSPClient,
   ConnectionProvider,
+  DirtyStateChange,
+  EditorContextService,
   GLSPActionDispatcher,
   GLSPClient,
   MessageAction,
@@ -37,9 +39,11 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class ModelEditorComponent implements AfterViewInit {
   @Input() sourceUri: string = '';
-  @Input() language: string | Language | LanguageElement = '96cc12d7-41e0-4e06-b097-1d97a57da87b';
+  @Input() language?: string | Language | LanguageElement;
   @Input() editMode: 'readonly' | 'editable' = 'editable';
   @Input() showcaseMode: boolean = false; // only works with language element
+
+  dirty: boolean = false; // to be used in the parent component to check if the model is dirty
 
   // diagramType for the GLSP server (it's always dynamic)
   diagramType: string = 'dynamic';
@@ -99,6 +103,8 @@ export class ModelEditorComponent implements AfterViewInit {
 
         const diagramLoader = self.glspContainer.get(DynamicDiagramLoader);
 
+        const editorContext = self.glspContainer.get(EditorContextService);
+
         await diagramLoader.load({
           requestModelOptions: {
             isReconnecting
@@ -117,6 +123,11 @@ export class ModelEditorComponent implements AfterViewInit {
 
           return;
         }
+
+        // check if the model is dirty and set the dirty state
+        editorContext.onDirtyStateChanged((event: DirtyStateChange) => {
+          self.dirty = event.isDirty;
+        });
       }
 
       async function glspOnReconnect(connectionProvider: ConnectionProvider): Promise<void> {

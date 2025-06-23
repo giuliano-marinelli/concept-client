@@ -64,4 +64,4 @@ export class ObjectControlRenderer extends JsonFormsControlWithDetail {
     }
   }
 }
-export const ObjectControlRendererTester: RankedTester = rankWith(2, isObjectControl);
+export const ObjectControlRendererTester: RankedTester = rankWith(1, isObjectControl);

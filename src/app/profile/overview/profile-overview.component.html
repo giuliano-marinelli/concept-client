@@ -1,0 +1,26 @@
+<div class="border-bottom mt-2">
+  <h6>Publications</h6>
+</div>
+<div class="text-center mt-3 mb-3 d-flex flew-row justify-content-center gap-2"
+  *ngIf="!publicationsLoading && publications.length <= 0">
+  <fa-icon class="fa-fade" [icon]="'comments'" size="4x"></fa-icon>
+  <p class="align-self-center" style="max-width: 200px;">
+    <b>{{ !auth.loading && auth.user?.id === profile.user()?.id ? 'You' : profile.user()?.profile?.name }}</b> {{
+    !auth.loading && auth.user?.id === profile.user()?.id ? 'have not' : 'has not' }}
+    published anything yet
+  </p>
+</div>
+<div class="border-bottom mt-2 d-flex justify-content-between align-items-baseline">
+  <h6>Pinned</h6>
+  <a *ngIf="!auth.loading && auth.user?.id === profile.user()?.id" class="small pe-pointer" (click)="editPins()">
+    Customize your pins
+  </a>
+</div>
+<div class="d-flex flex-wrap justify-content-between mt-2" *ngIf="pinnedResources().length > 0">
+  <div class="col-12 col-lg-6 mb-2 mb-lg-3" *ngFor="let resource of pinnedResources(); let even = even;"
+    [class.pe-lg-3]="even">
+    <div class="card h-100">
+      <resource-card class="h-100" [resource]="resource"></resource-card>
+    </div>
+  </div>
+</div>

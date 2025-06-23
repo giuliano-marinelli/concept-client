@@ -124,7 +124,9 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.advancedCollapsed = !this.startAdvanced;
-    if (this.firstSearch) this.onSearch(false);
+    setTimeout(() => {
+      if (this.firstSearch) this.onSearch(false);
+    }, 0);
   }
 
   addSearchAttribute(attribute: Attribute): void {
@@ -253,8 +255,6 @@ export class SearchComponent implements OnInit {
   }
 
   applyFixedAttributes(whereInput: any): any {
-    console.log('applyFixedAttributes', whereInput, this.fixedAttributes);
-
     // if no fixed attributes, return the where input
     if (!this.fixedAttributes?.length) return whereInput;
 
@@ -268,8 +268,6 @@ export class SearchComponent implements OnInit {
         })
       );
     }, {});
-
-    console.log('fixedAttributesAndObject', fixedAttributesAndObject);
 
     // if whereInput is null, return the fixed attributes
     if (!whereInput) return fixedAttributesAndObject;

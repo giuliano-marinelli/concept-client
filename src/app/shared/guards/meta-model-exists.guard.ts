@@ -8,7 +8,7 @@ export const MetaModelExistsGuard: CanMatchFn = (route: Route, segments: UrlSegm
   const _findMetaModels = inject(FindMetaModels);
 
   const username = segments[0].path; // assuming the user is the first segment of the path
-  const language = segments[1].path; // assuming the language is the second segment of the path (it must be of form tag@version)
+  const language = segments[2].path; // assuming the language is the third segment of the path (it must be of form tag@version)
 
   // check if the language is of form tag@version (only has one @)
   if (language.split('@').length !== 2) return false;

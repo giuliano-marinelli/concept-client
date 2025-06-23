@@ -3,13 +3,10 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 
 import { CustomValidators } from '@narik/custom-validators';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { createMask } from '@ngneat/input-mask';
 
 import { FindUser, UpdateUser, User } from '../../shared/entities/user.entity';
 import { Global } from '../../shared/global/global';
-import { NgxImageCompressService } from 'ngx-image-compress';
-import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../../services/auth.service';

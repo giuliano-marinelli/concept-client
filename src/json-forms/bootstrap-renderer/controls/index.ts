@@ -8,3 +8,4 @@ export * from './radio.renderer';
 export * from './select.renderer';
 export * from './object.renderer';
 export * from './array.renderer';
+export * from './condition.renderer';

@@ -59,13 +59,15 @@ import { UserCardComponent } from './shared/components/user/card/user-card.compo
 import { UserMiniComponent } from './shared/components/user/mini/user-mini.component';
 import { SessionCardComponent } from './shared/components/session/card/session-card.component';
 import { SessionMiniComponent } from './shared/components/session/mini/session-mini.component';
-import { ModelEditorComponent } from './shared/components/model/editor/model-editor.component';
 import { LanguageCardComponent } from './shared/components/language/card/language-card.component';
 import { LanguageMiniComponent } from './shared/components/language/mini/language-mini.component';
 import { LanguageEditorComponent } from './shared/components/language/editor/language-editor.component';
 import { LanguageElementCardComponent } from './shared/components/language-element/card/language-element-card.component';
 import { LanguageElementMiniComponent } from './shared/components/language-element/mini/language-element-mini.component';
 import { LanguageElementEditorComponent } from './shared/components/language-element/editor/language-element-editor.component';
+import { ModelCardComponent } from './shared/components/model/card/model-card.component';
+import { ModelEditorComponent } from './shared/components/model/editor/model-editor.component';
+import { ResourceCardComponent } from './shared/components/resource/card/resource-card.component';
 //components
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -74,6 +76,7 @@ import { RegisterComponent } from './register/register.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileOverviewComponent } from './profile/overview/profile-overview.component';
+import { ProfileOverviewPinsComponent } from './profile/overview/pins/profile-overview-pins.component';
 import { ProfileLanguagesComponent } from './profile/languages/profile-languages.component';
 import { ProfileModelsComponent } from './profile/models/profile-models.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -84,13 +87,14 @@ import { SettingsSecurityComponent } from './settings/security/settings-security
 import { SettingsDevicesComponent } from './settings/devices/settings-devices.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminUsersComponent } from './admin/users/admin-users.component';
-import { ModelsComponent } from './models/models.component';
 import { LanguagesComponent } from './languages/languages.component';
 import { LanguageComponent } from './languages/language/language.component';
 import { LanguageDesignComponent } from './languages/language/design/language-design.component';
 import { LanguageVersionsComponent } from './languages/language/versions/language-versions.component';
 import { LanguageSettingsComponent } from './languages/language/settings/language-settings.component';
 import { LanguageSettingsGeneralComponent } from './languages/language/settings/general/language-settings-general.component';
+import { ModelsComponent } from './models/models.component';
+import { ModelComponent } from './models/model/model.component';
 
 @NgModule({
   declarations: [
@@ -112,13 +116,15 @@ import { LanguageSettingsGeneralComponent } from './languages/language/settings/
     UserMiniComponent,
     SessionCardComponent,
     SessionMiniComponent,
-    ModelEditorComponent,
     LanguageCardComponent,
     LanguageMiniComponent,
     LanguageEditorComponent,
     LanguageElementCardComponent,
     LanguageElementMiniComponent,
     LanguageElementEditorComponent,
+    ModelCardComponent,
+    ModelEditorComponent,
+    ResourceCardComponent,
     //components
     AppComponent,
     NotFoundComponent,
@@ -127,6 +133,7 @@ import { LanguageSettingsGeneralComponent } from './languages/language/settings/
     PasswordResetComponent,
     ProfileComponent,
     ProfileOverviewComponent,
+    ProfileOverviewPinsComponent,
     ProfileLanguagesComponent,
     ProfileModelsComponent,
     SettingsComponent,
@@ -137,13 +144,14 @@ import { LanguageSettingsGeneralComponent } from './languages/language/settings/
     SettingsDevicesComponent,
     AdminComponent,
     AdminUsersComponent,
-    ModelsComponent,
     LanguagesComponent,
     LanguageComponent,
     LanguageDesignComponent,
     LanguageVersionsComponent,
     LanguageSettingsComponent,
-    LanguageSettingsGeneralComponent
+    LanguageSettingsGeneralComponent,
+    ModelsComponent,
+    ModelComponent
   ],
   bootstrap: [AppComponent],
   imports: [

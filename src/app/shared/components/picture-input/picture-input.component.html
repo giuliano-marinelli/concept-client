@@ -1,6 +1,7 @@
 <div ngbDropdown display="dynamic" placement="bottom-end" autoClose="true">
-  <img class="img-thumbnail rounded-circle pe-pointer picture-view" [src]="control.value" #picture_view
-    (error)="pictureView.nativeElement.src = defaultImage" ngbDropdownToggle [ngClass]="viewClass" />
+  <img class="img-thumbnail pe-pointer picture-view" [class.rounded-circle]="rounded" [class.rounded-4]="!rounded"
+    [src]="control.value" #picture_view (error)="pictureView.nativeElement.src = defaultImage" ngbDropdownToggle
+    [ngClass]="viewClass" />
   <input [hidden]="true" type="file" accept="image/*" [formTarget]="fileControl"
     (change)="onChangePicture($event, crop_picture)" #pictureInputFile>
   <div class="dropdown-menu shadow" ngbDropdownMenu>
@@ -21,7 +22,7 @@
   </div>
   <div class="modal-body">
     <image-cropper #image_cropper output="base64" [imageChangedEvent]="pictureChange" [maintainAspectRatio]="true"
-      [aspectRatio]="1 / 1" format="png" (imageCropped)="onCroppedPicture($event)" [roundCropper]="true"
+      [aspectRatio]="1 / 1" format="png" (imageCropped)="onCroppedPicture($event)" [roundCropper]="rounded"
       [autoCrop]="false"></image-cropper>
   </div>
   <div class="modal-footer">

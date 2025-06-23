@@ -18,12 +18,6 @@ import { TitleService } from '../../services/title.service';
   styleUrl: './language.component.scss'
 })
 export class LanguageComponent implements OnInit, OnDestroy {
-  JSON: any = JSON;
-  filter: any = Global.filter;
-  LanguageElementType = LanguageElementType;
-
-  submitLoading: string[] = [];
-
   //router params
   tag!: string;
   version!: string;

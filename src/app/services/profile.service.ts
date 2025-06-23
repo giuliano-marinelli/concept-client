@@ -17,7 +17,26 @@ export class ProfileService {
 
   async fetchUser(username: string): Promise<void> {
     this.loading.set(true);
-    const result = await lastValueFrom(this._findUsers.fetch({ where: { username: { eq: username } } }));
+    const result = await lastValueFrom(
+      (
+        this._findUsers({
+          relations: {
+            profile: {
+              publicEmail: true
+            },
+            primaryEmail: true,
+            ownMetaModels: true,
+            pinnedMetaModels: {
+              owner: true
+            },
+            ownModels: true,
+            pinnedModels: {
+              owner: true
+            }
+          }
+        }) as FindUsers
+      ).fetch({ where: { username: { eq: username } } })
+    );
     if (result.errors) throw result.errors;
     if (result.data?.users?.set?.[0]) this.user.set(result.data.users.set[0]);
     this.loading.set(false);
@@ -25,7 +44,22 @@ export class ProfileService {
 
   async fetchUserById(id: string): Promise<void> {
     this.loading.set(true);
-    const result = await lastValueFrom(this._findUser.fetch({ id: id }));
+    const result = await lastValueFrom(
+      (
+        this._findUser({
+          relations: {
+            profile: {
+              publicEmail: true
+            },
+            primaryEmail: true,
+            ownMetaModels: true,
+            pinnedMetaModels: true,
+            ownModels: true,
+            pinnedModels: true
+          }
+        }) as FindUser
+      ).fetch({ id: id })
+    );
     if (result.errors) throw result.errors;
     if (result.data?.user) this.user.set(result.data?.user);
     this.loading.set(false);

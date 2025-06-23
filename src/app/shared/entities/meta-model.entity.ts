@@ -5,6 +5,7 @@ import { SelectionField, SelectionType } from 'apollo-dynamic';
 import { DynamicMutation, DynamicQuery } from 'apollo-dynamic-angular';
 
 import { MetaElement } from './meta-element.entity';
+import { Model } from './model.entity';
 import { User } from './user.entity';
 
 @SelectionType('MetaModel', {
@@ -53,6 +54,10 @@ export class MetaModel {
   collaborators?: User[];
   @SelectionField(() => MetaElement)
   metaElements?: MetaElement[];
+  @SelectionField(() => Model)
+  models?: Model[];
+  @SelectionField(() => User)
+  pinnedIn?: User[];
 }
 
 @Injectable({ providedIn: 'root' })

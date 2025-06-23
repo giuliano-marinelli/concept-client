@@ -11,6 +11,7 @@ import { JsonFormsModule } from '@jsonforms/angular';
 import {
   ArrayControlRenderer,
   CheckboxControlRenderer,
+  ConditionControlRenderer,
   NumberControlRenderer,
   ObjectControlRenderer,
   RadioControlRenderer,
@@ -42,6 +43,7 @@ import {
     RadioControlRenderer,
     ObjectControlRenderer,
     ArrayControlRenderer,
+    ConditionControlRenderer,
     VerticalLayoutRenderer,
     HorizontalLayoutRenderer,
     GroupLayoutRenderer,

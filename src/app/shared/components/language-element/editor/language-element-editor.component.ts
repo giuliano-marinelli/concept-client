@@ -401,6 +401,7 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
         },
         [DynamicTypes.DECISION]: {
           icon: 'arrows-turn-to-dots',
+          descriptor: 'condition',
           fields: ['then', 'else'],
           aModel: {
             type: 'object',

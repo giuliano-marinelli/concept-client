@@ -6,46 +6,41 @@
     <div class="card-text">
       <div class="d-flex flex-row gap-3">
         <div class="flex-shrink-0">
-          <img class="img-thumbnail logo-img" [src]="language.logo"
-            onerror="this.src='assets/images/default-language.png'" />
+          <!-- <img class="img-thumbnail logo-img" [src]="model.preview"
+            onerror="this.src='assets/images/default-model.png'" /> -->
         </div>
         <div class="d-flex flex-column flex-fill gap-2">
           <div class="d-flex flex-row justify-content-between flex-wrap flex-sm-nowrap gap-2 flex-shrink-1">
             <div class="d-flex flex-column">
-              <a routerLink="/{{language.owner?.username}}/lang/{{ language.tag }}@{{ language.version }}">
+              <a routerLink="/{{model.owner?.username}}/model/{{ model.tag }}@{{ model.version }}">
                 <h3 class="m-0 text-break-word text-hyphens">
-                  {{ language.name }}
+                  {{ model.name }}
                 </h3>
               </a>
-              <span [ngClass]="language.name ? 'text-muted small' : ''">
-                {{ language.tag }}&#64;{{ language.version}}
+              <span [ngClass]="model.name ? 'text-muted small' : ''">
+                {{ model.tag }}&#64;{{ model.version}}
               </span>
             </div>
             <div class="d-flex flex-row justify-content-end align-items-baseline gap-2 flex-shrink-0 ms-auto">
-              <div *ngIf="!auth.loading && auth.user">
-                <a class="btn btn-sm btn-secondary" routerLink="/{{auth.user.username}}/model/new/{{ language.id}}">
-                  <fa-icon [icon]="'diagram-project'"></fa-icon> New Model
-                </a>
-              </div>
               <div>
-                <a routerLink="/{{language.owner?.username}}">
-                  <img class="img-thumbnail mini-profile-img rounded-circle" [src]="language.owner?.profile?.avatar"
+                <a routerLink="/{{model.owner?.username}}">
+                  <img class="img-thumbnail mini-profile-img rounded-circle" [src]="model.owner?.profile?.avatar"
                     onerror="this.src='assets/images/default-user.png'"
-                    [tp]="language.owner?.profile?.name ?? language.owner?.username" tpPlacement="bottom" />
+                    [tp]="model.owner?.profile?.name ?? model.owner?.username" tpPlacement="bottom" />
                 </a>
               </div>
             </div>
           </div>
-          <div class="text-md-pre-wrap text-break-word text-hyphens" *ngIf="language.description">{{
-            language.description }}</div>
+          <div class="text-md-pre-wrap text-break-word text-hyphens" *ngIf="model.description">{{
+            model.description }}</div>
           <div class="d-flex flex-row flex-wrap justify-content-between gap-2">
             <div class="d-flex flex-row gap-1">
-              <a class="btn btn-secondary badge rounded-pill" *ngFor="let tag of language.tags">
+              <a class="btn btn-secondary badge rounded-pill" *ngFor="let tag of model.tags">
                 {{ tag }}
               </a>
             </div>
             <div class="align-self-end text-muted small ms-auto">
-              Updated {{ language.updatedAt | amLocal | amTimeAgo }}
+              Updated {{ model.updatedAt | amLocal | amTimeAgo }}
             </div>
           </div>
         </div>

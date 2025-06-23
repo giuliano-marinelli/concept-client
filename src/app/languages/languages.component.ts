@@ -1,10 +1,9 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { FindMetaModels, MetaModel } from '../shared/entities/meta-model.entity';
-import { CloseSession } from '../shared/entities/session.entity';
 import { Global } from '../shared/global/global';
 import _ from 'lodash';
 import { Observable } from 'rxjs';
@@ -38,8 +37,7 @@ export class LanguagesComponent {
     public modalService: NgbModal,
     public messages: MessagesService,
     public profile: ProfileService,
-    public _findMetaModels: FindMetaModels,
-    public _closeSession: CloseSession
+    public _findMetaModels: FindMetaModels
   ) {}
 
   @HostListener('window:beforeunload', ['$event'])
