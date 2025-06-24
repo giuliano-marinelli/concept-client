@@ -30,8 +30,8 @@
       </div>
       <div class="text-md-pre-wrap text-break-all mt-2" *ngIf="language.value()?.description">{{
         language.value()?.description }}</div>
-      <div class="mt-3 d-flex flex-row" *ngIf="language.value()?.tags">
-        <a class="btn btn-secondary badge rounded-pill pb-2 me-1" *ngFor="let tag of language.value()?.tags">
+      <div class="mt-3 d-flex flex-row flex-wrap gap-1" *ngIf="language.value()?.tags">
+        <a class="btn btn-secondary badge rounded-pill pb-2" *ngFor="let tag of language.value()?.tags">
           {{ tag }}
         </a>
       </div>

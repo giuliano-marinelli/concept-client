@@ -1,15 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import {
-  CheckMetaModelTagExists,
-  CreateMetaModel,
-  MetaModel,
-  UpdateMetaModel
-} from '../../../entities/meta-model.entity';
+import { CheckMetaModelTagExists, CreateMetaModel, UpdateMetaModel } from '../../../entities/meta-model.entity';
 import { Global } from '../../../global/global';
 import { ExtraValidators } from '../../../validators/validators';
 import { lastValueFrom } from 'rxjs';
@@ -40,7 +35,11 @@ export class LanguageEditorComponent implements OnInit {
     [Validators.required, Validators.minLength(1), Validators.maxLength(30), Validators.pattern('[a-z0-9_-]*')],
     [ExtraValidators.metaModelTagExists(this._checkMetaModelTagExists, this.language.value()?.id)]
   );
-  tags: FormControl = new FormControl(this.language.value()?.tags);
+  tagsValidators = [Validators.minLength(1), Validators.maxLength(15), Validators.pattern('[a-z0-9_-]*')];
+  tags: FormArray = new FormArray(
+    (this.language.value()?.tags || []).map((tag: string) => new FormControl(tag, this.tagsValidators)),
+    [Validators.maxLength(5)]
+  );
   description: FormControl = new FormControl(this.language.value()?.description, [Validators.maxLength(200)]);
   logo = new FormControl(this.language.value()?.logo, []);
   logoFile = new FormControl<Blob | null>(null, []);
@@ -61,6 +60,7 @@ export class LanguageEditorComponent implements OnInit {
     this.languageForm = this.formBuilder.group({
       name: this.name,
       tag: this.tag,
+      tags: this.tags,
       description: this.description,
       logo: this.logo
     });

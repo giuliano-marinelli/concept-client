@@ -47,8 +47,18 @@
         <label class="form-label">
           Tags <span class="text-muted small">(separate with spaces)</span>
         </label>
-
-        <invalid-feedback [control]="tags" name="Tags"></invalid-feedback>
+        <div ngbTags formArrayName="tags" [tagsValidators]="tagsValidators" class="bg-dark-subtle"
+          [ngClass]="setValid(tags, true)">
+          <ng-template ngbTag let-tag="tag" let-i="i">
+            <span class="badge d-flex align-items-center rounded-pill bg-secondary"
+              [ngClass]="setValid(tags.at(i), true)">
+              {{ tag }}
+              <button ngbTagRemove type="button" class="btn-close-white"></button>
+            </span>
+          </ng-template>
+          <input ngbTagsInput placeholder="Add tag..." />
+        </div>
+        <invalid-feedback [control]="tags" name="Tags" itemsName="tags"></invalid-feedback>
       </div>
     </div>
     <div class="modal-footer">

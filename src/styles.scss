@@ -207,6 +207,26 @@ $utilities: map-merge(
   )
 );
 
+div.form-control {
+  @each $state, $data in $form-validation-states {
+    @include form-validation-state-selector($state) {
+      @if $enable-validation-icons {
+        padding-right: $input-height-inner;
+        background-position: top $input-height-inner-quarter right $input-height-inner-quarter;
+      }
+    }
+  }
+}
+
+.badge {
+  @each $state, $data in $form-validation-states {
+    @include form-validation-state-selector($state) {
+      border: 1.5px solid map-get($data, 'border-color');
+      color: map-get($data, 'color');
+    }
+  }
+}
+
 /* Enable responsive for text-break, text-break-all, text-wrap, text-nowrap, text-pre-wrap */
 @each $breakpoint in map-keys($grid-breakpoints) {
   @include media-breakpoint-up($breakpoint) {

@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import _ from 'lodash';
@@ -70,15 +70,14 @@ export class Global {
       u8arr[n] = bstr.charCodeAt(n);
     }
 
-    return new File([u8arr], filename, { type: mime });
+    return new File([u8arr as any], filename, { type: mime });
   }
 
-  static setValid(control: FormControl, onlyInvalid: boolean = false): object {
-    return {
-      'is-invalid': !control.pending && control.dirty && !control.valid,
-      'is-valid': !control.pending && control.dirty && control.valid && !onlyInvalid,
-      'is-pending': control.pending
-    };
+  static setValid(control: AbstractControl, onlyInvalid: boolean = false): string {
+    if (!control.pending && control.dirty && !control.valid) return 'is-invalid';
+    if (!control.pending && control.dirty && control.valid && !onlyInvalid) return 'is-valid';
+    if (control.pending) return 'is-pending';
+    else return '';
   }
 
   static filter(items: any[], filter: any): any {

@@ -22,6 +22,7 @@ import isExtractableFile from 'extract-files/isExtractableFile.mjs';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTagsModule } from '../ng-bootstrap/tags/tags.module';
 import { provideTippyConfig, TippyDirective } from '@ngneat/helipopper';
 import { InputMaskModule } from '@ngneat/input-mask';
 import { FontAwesomeModule, FaIconLibrary, FaConfig } from '@fortawesome/angular-fontawesome';
@@ -167,6 +168,7 @@ import { ModelComponent } from './models/model/model.component';
     //modules
     AppRoutingModule,
     NgbModule,
+    NgbTagsModule,
     FontAwesomeModule,
     ImageCropperModule,
     NarikCustomValidatorsModule,
