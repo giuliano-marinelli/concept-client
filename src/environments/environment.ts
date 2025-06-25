@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  host: '127.0.0.1',
+  host: '192.168.1.39',
   appPort: 3000,
   glspPort: 3001,
   glsp: 'dynamic',

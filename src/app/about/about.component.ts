@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { environment } from '../../environments/environment';
+
 import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
 
@@ -10,6 +12,9 @@ import { MessagesService } from '../services/messages.service';
 })
 export class AboutComponent implements OnInit {
   JSON = JSON;
+
+  graphqlUrl: string = `http://${environment.host}:${environment.appPort}/${environment.graphql}`;
+  glspUrl: string = `ws://${environment.host}:${environment.glspPort}/${environment.glsp}`;
 
   constructor(
     public messages: MessagesService,

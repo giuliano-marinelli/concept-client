@@ -7,13 +7,13 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnDestroy,
   Optional,
   Output,
   QueryList,
   Renderer2,
   SkipSelf,
-  TemplateRef,
-  ViewContainerRef
+  TemplateRef
 } from '@angular/core';
 import { ControlContainer, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
@@ -47,10 +47,14 @@ export class NgbTagRemove {
   selector: '[ngbTagsInput]',
   standalone: true
 })
-export class NgbTagsInput {
-  private tagsHost!: NgbTags;
+export class NgbTagsInput implements OnDestroy {
+  @Input() lowercase = false;
 
+  @Input() addKeys: string[] = ['Enter', ',', ';', 'Tab'];
+
+  private tagsHost!: NgbTags;
   private container: HTMLElement;
+  private inputListenerCleanup?: () => void;
 
   constructor(
     public el: ElementRef<HTMLInputElement>,
@@ -64,19 +68,37 @@ export class NgbTagsInput {
     this.renderer.setStyle(this.container, 'outline', 'none');
     this.renderer.setStyle(this.container, 'min-width', '100px');
     this.renderer.setStyle(this.container, 'background', 'transparent');
+
+    //listen to input events
+    this.inputListenerCleanup = this.renderer.listen(this.el.nativeElement, 'input', (event: Event) =>
+      this.handleSpace(event)
+    );
+  }
+
+  ngOnDestroy() {
+    this.inputListenerCleanup?.();
   }
 
   bind(host: NgbTags) {
     this.tagsHost = host;
   }
 
-  @HostListener('keydown', ['$event'])
-  handleKey(event: KeyboardEvent) {
+  // handle space key to add tag (because this can't be detected in mobile with keydown)
+  handleSpace(event: Event) {
     const input = this.el.nativeElement;
+    const value = input.value;
+    if (value.endsWith(' ')) {
+      this.tagsHost.addTag(this.lowercase ? value.trim().toLowerCase() : value.trim());
+      input.value = '';
+    }
+  }
 
-    if (event.key === ' ') {
+  @HostListener('window:keydown', ['$event'])
+  handleBackspace(event: KeyboardEvent) {
+    const input = this.el.nativeElement;
+    if (this.addKeys.includes(event.key)) {
       event.preventDefault();
-      this.tagsHost.addTag(input.value);
+      this.tagsHost.addTag(this.lowercase ? input.value.trim().toLowerCase() : input.value.trim());
       input.value = '';
     } else if (event.key === 'Backspace' && input.value === '') {
       const tags = this.tagsHost.getTagList();
@@ -115,8 +137,6 @@ export class NgbTags implements AfterContentInit {
     this.renderer.addClass(this.container, 'd-flex');
     this.renderer.addClass(this.container, 'flex-wrap');
     this.renderer.addClass(this.container, 'gap-1');
-    this.renderer.addClass(this.container, 'ps-1');
-    this.renderer.addClass(this.container, 'py-1');
     this.renderer.setStyle(this.container, 'min-height', '40px');
   }
 

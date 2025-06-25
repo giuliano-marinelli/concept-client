@@ -13,19 +13,20 @@
           [src]="language.value()?.logo" onerror="this.src='assets/images/default-language.png'" />
         <div class="d-flex flex-column w-100">
           <div class="d-flex flex-row">
-            <h2 class="mb-md-0 flex-fill text-break-word text-hyphens" *ngIf="language.value()?.name">{{
-              language.value()?.name }}
+            <h4 class="mb-md-0 flex-fill text-break-word text-hyphens" *ngIf="language.value()?.name">
+              <span>{{ language.value()?.name }}</span>
               <!-- <verified-mark [verified]="language.verified" /> -->
-            </h2>
+            </h4>
             <a class="btn btn-lg py-1 px-0 mx-2 align-self-baseline border-0 hoverable"
               *ngIf="language.value()?.owner?.id == auth.user?.id || auth.user?.role == 'admin'"
               (click)="editLanguage()">
               <fa-icon [icon]="'gear'"></fa-icon>
             </a>
           </div>
-          <h3 class="d-block d-md-none" [class.text-muted]="language.value()?.name">{{ language.value()?.tag }}
+          <h5 class="d-block d-md-none" [class.text-muted]="language.value()?.name">
+            <span>{{ language.value()?.tag }}</span>
             <!-- <verified-mark *ngIf="language.name" [verified]="language.verified" /> -->
-          </h3>
+          </h5>
         </div>
       </div>
       <div class="text-md-pre-wrap text-break-all mt-2" *ngIf="language.value()?.description">{{

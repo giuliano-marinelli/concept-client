@@ -56,7 +56,7 @@
               <button ngbTagRemove type="button" class="btn-close-white"></button>
             </span>
           </ng-template>
-          <input ngbTagsInput placeholder="Add tag..." />
+          <input ngbTagsInput placeholder="add tag..." [lowercase]="true" />
         </div>
         <invalid-feedback [control]="tags" name="Tags" itemsName="tags"></invalid-feedback>
       </div>

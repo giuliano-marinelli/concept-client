@@ -2,8 +2,8 @@
   (window:resize)="navbarSettings.collapsed = true" (window:mousewheel)="navbarSettings.collapsed = true">
   <a class="close-navbar-toggler collapsed" [class.collapsed]="navbarSettings.collapsed"
     (click)="navbarSettings.collapsed = true"></a>
-  <nav class="navbar navbar-expand-md fixed-top p-0 align-items-stretch navbar-custom">
-    <div class="container-fluid container-xl p-0 mx-xl-3 align-items-stretch container-transition container-full">
+  <nav class="navbar navbar-expand-md navbar-custom fixed-top p-0 justify-content-center">
+    <div class="container-transition w-100 p-0 mx-xl-3">
       <div class="d-flex flex-row flex-nowrap flex-grow-1">
         <button class="navbar-toggler no-outline border-0 py-2" [class.collapsed]="navbarSettings.collapsed"
           type="button" (click)="navbarSettings.collapsed = !navbarSettings.collapsed">
@@ -11,20 +11,19 @@
           <span class="icon-bar middle-bar"></span>
           <span class="icon-bar bottom-bar"></span>
         </button>
-        <a class="navbar-brand ps-0 ps-md-2 p-2 m-0" routerLink="/">
+        <a class="flex-shrink-0 navbar-brand ps-0 ps-md-2 p-2 m-0" routerLink="/">
           <fa-icon class="logo-icon" [icon]="'dice-d6'" size="2x"></fa-icon>
         </a>
-        <div class="flex-shrink-1 align-self-center overflow-hidden">
+        <div class="align-self-center text-ellipsis">
           <ol class="my-breadcrumb m-0">
             <li *ngFor="let route of breadcrumb" class="my-breadcrumb-item">
-              <a class="text-body btn btn-outline-theme no-outline mw-100" [routerLink]="route.path">
-                <div class="text-ellipsis">{{ route.title }}</div>
+              <a class="text-body btn btn-outline-theme no-outline" [routerLink]="route.path">
+                <div>{{ route.title }}</div>
               </a>
             </li>
           </ol>
         </div>
-        <div
-          class="flex-grow-1 flex-shrink-0 justify-content-end order-md-1 d-flex flex-row align-items-center px-2 ps-md-0 py-2 py-md-0">
+        <div class="flex-shrink-0 order-md-1 ms-auto d-flex flex-row align-items-center px-2 py-2 py-md-0">
           <ul class="navbar-nav flex-row align-items-center">
             <li class="d-none d-md-block nav-item me-2">
               <a class="btn btn-outline-oposite-theme opacity-50 p-1" routerLink="/languages" routerLinkActive="active"
@@ -136,7 +135,7 @@
 </main>
 
 <footer class="footer mt-auto py-3">
-  <div class="container text-end pe-4 container-transition container-full">
+  <div class="container-transition w-100 pe-4 text-end">
     <span class="text-muted"> <fa-icon [icon]="'dice-d6'"></fa-icon> {{ title }} © {{ currentYear }} </span>
   </div>
 </footer>

@@ -136,20 +136,16 @@
   transition: 0.5s max-width;
 }
 
-.container-full {
-  max-width: 100% !important;
-}
-
 .my-breadcrumb {
   display: flex;
   flex-direction: row;
   list-style-type: none;
   padding: 0;
 
-  flex-wrap: nowrap; /* Prevent wrapping of breadcrumb items */
-  overflow: hidden; /* Hide overflowing content */
-  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
-  white-space: nowrap; /* Prevent text from wrapping */
+  flex-wrap: nowrap; /* prevent wrapping of breadcrumb items */
+  overflow: hidden; /* hide overflowing content */
+  text-overflow: ellipsis; /* add ellipsis for overflowing text */
+  white-space: nowrap; /* prevent text from wrapping */
   min-width: 0;
 }
 

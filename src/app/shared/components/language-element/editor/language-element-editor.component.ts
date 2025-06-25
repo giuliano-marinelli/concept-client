@@ -302,12 +302,34 @@ export class LanguageElementEditorComponent implements OnInit, OnDestroy {
         [DefaultTypes.LABEL]: {
           icon: 'tag',
           descriptor: 'text',
-          default: { text: 'Text' },
+          default: { text: 'Text', edgePlacement: { rotate: true, side: 'top', position: 0.5, offset: 0 } },
           aModel: {
             type: 'object',
             properties: [
               { key: 'type', type: 'string', readOnly: true },
-              { key: 'text', type: 'string' }
+              { key: 'text', type: 'string' },
+              {
+                key: 'edgePlacement',
+                label: 'Placement (for edges)',
+                type: 'object',
+                properties: [
+                  { key: 'rotate', type: 'boolean', default: true },
+                  {
+                    key: 'side',
+                    type: 'string',
+                    enum: [
+                      { title: 'Left', const: 'left' },
+                      { title: 'Right', const: 'right' },
+                      { title: 'Top', const: 'top' },
+                      { title: 'Bottom', const: 'bottom' },
+                      { title: 'On', const: 'on' }
+                    ],
+                    default: 'bottom'
+                  },
+                  { key: 'position', type: 'integer', style: 'range', default: 0, minimum: 0, maximum: 1 },
+                  { key: 'offset', type: 'integer', default: 0 }
+                ]
+              }
               // test: {
               //   type: 'object',
               //   properties: {

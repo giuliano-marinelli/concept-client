@@ -8,7 +8,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.html\" \"src/**/*.scss\"",
     "test": "ng test",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "watch:all": "concurrently --names \"watch:cli,watch:pro,client,@dynamic-glsp/client,@dynamic-glsp/protocol\" --prefix-colors \"green\" --hide \"watch:cli,watch:pro\" \"pnpm watch:@dynamic-glsp/client\" \"pnpm watch:@dynamic-glsp/protocol\" \"pnpm chokidar:main\" \"pnpm chokidar:@dynamic-glsp/client\" \"pnpm chokidar:@dynamic-glsp/protocol\"",

@@ -11,13 +11,15 @@
         <img
           class="mb-0 mb-md-3 me-3 me-md-0 img-thumbnail rounded-circle profile-img align-self-md-center border-secondary flex-shrink-0"
           [src]="profile.user()?.profile?.avatar" #avatar_img onerror="this.src='assets/images/default-user.png'" />
-        <div class="d-flex flex-column">
-          <h2 *ngIf="profile.user()?.profile?.name">{{ profile.user()?.profile?.name }}
-            <verified-mark [verified]="profile.user()?.primaryEmail?.verified" />
-          </h2>
-          <h3 [class.text-muted]="profile.user()?.profile?.name">{{ profile.user()?.username }}
+        <div class="d-flex flex-column w-100">
+          <h4 class="d-flex flex-row gap-1" *ngIf="profile.user()?.profile?.name">
+            <span>{{ profile.user()?.profile?.name }}</span>
+            <verified-mark class="flex-shrink-0" [verified]="profile.user()?.primaryEmail?.verified" />
+          </h4>
+          <h5 class="d-flex flex-row gap-1" [class.text-muted]="profile.user()?.profile?.name">
+            <span>{{ profile.user()?.username }}</span>
             <verified-mark *ngIf="!profile.user()?.profile?.name" [verified]="profile.user()?.primaryEmail?.verified" />
-          </h3>
+          </h5>
         </div>
       </div>
       <div class="text-md-pre-wrap text-break-all mt-3" *ngIf="profile.user()?.profile?.bio">{{
