@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  host: '192.168.1.39',
-  appPort: 3000,
-  glspPort: 3001,
+  host: '192.168.1.40', // use your local IP for test on LAN devices
+  appPort: 4000,
+  glspPort: 4001,
   glsp: 'dynamic',
   graphql: 'graphql'
 };

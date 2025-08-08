@@ -25,7 +25,7 @@ concept
 
 Run `pnpm start`: execute [ng serve](https://angular.io/cli/serve) that makes a virtual server on memory and host Angular page at [localhost:4200](http://localhost:4200). Any change automatically creates a new bundle and restart client. _(**Note:** with this command you will not be able to do queries to [concept-server](https://github.com/giuliano-marinelli/concept-server) because this won't generate **dist** folder to be served by [concept-server](https://github.com/giuliano-marinelli/concept-server) and so the projects will not be at same path)_
 
-Run `pnpm watch`: execute [ng build](https://angular.io/cli/build) with Watch mode, it generates **dist** folder at the project root folder. You need to execute [concept-server](https://github.com/giuliano-marinelli/concept-server) too for see Angular page hosted by it at [localhost:3000](http://localhost:3000). Any change automatically creates a new bundle and restart client.
+Run `pnpm watch`: execute [ng build](https://angular.io/cli/build) with Watch mode, it generates **dist** folder at the project root folder. You need to execute [concept-server](https://github.com/giuliano-marinelli/concept-server) too for see Angular page hosted by it at [localhost:4000](http://localhost:4000). Any change automatically creates a new bundle and restart client.
 
 ### Development of [@dynamic-glsp](https://www.npmjs.com/settings/dynamic-glsp/packages) all-in-one
 

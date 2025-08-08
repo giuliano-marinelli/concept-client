@@ -178,7 +178,7 @@ import { ModelComponent } from './models/model/model.component';
     JwtModule.forRoot({
       config: {
         tokenGetter: (): string | null => localStorage.getItem('token')
-        // whitelistedDomains: ['localhost:3000', 'localhost:4200']
+        // whitelistedDomains: ['localhost:4000', 'localhost:4200']
       }
     }),
     InputMaskModule.forRoot({

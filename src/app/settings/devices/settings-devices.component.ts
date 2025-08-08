@@ -21,7 +21,7 @@ export class SettingsDevicesComponent implements OnInit {
   sessionsLoading: boolean = true;
   submitLoading: string[] = [];
 
-  sessions: Session[] = [];
+  sessions?: Session[];
   sessionsPage: number = 1;
   sessionsPageSize: number = 10;
   sessionsCount: number = 0;

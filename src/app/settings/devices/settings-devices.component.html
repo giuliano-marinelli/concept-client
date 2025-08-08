@@ -1,33 +1,51 @@
-<div class="border-bottom">
-  <h2>
-    Devices
-    <a class="btn p-0 text-muted border-0" (click)="getSessions()" [class.disabled]="sessionsLoading">
-      <fa-icon [icon]="'rotate-right'" size="lg" [animation]="sessionsLoading ? 'spin-pulse' : undefined"></fa-icon>
-    </a>
-  </h2>
+<div class="row mt-3 text-center" *ngIf="sessionsLoading && !sessions">
+  <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
 </div>
-<div #message_container></div>
-<div class="text-center mt-3" *ngIf="!sessionsLoading && !sessions?.length">
-  <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
-  <p class="mt-2">No devices found</p>
-</div>
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-0" [class.loading]="sessionsLoading"
-  *ngIf="filter(sessions, { blockedAt: null, closedAt: null })?.length">
-  <div class="col" *ngFor="let session of sessions | filter: { blockedAt: null, closedAt: null }">
-    <session-card [session]="session" [loading]="submitLoading.includes(session.id)"
-      (onClose)="getSessions()"></session-card>
+<div *ngIf="sessions">
+  <div class="border-bottom">
+    <h2>
+      Devices
+      <a class="btn p-0 text-muted border-0" (click)="getSessions()" [class.disabled]="sessionsLoading">
+        <fa-icon [icon]="'rotate-right'" size="lg" [animation]="sessionsLoading ? 'spin-pulse' : undefined"></fa-icon>
+      </a>
+    </h2>
   </div>
-</div>
-<div [class.loading]="sessionsLoading"
-  *ngIf="filter(sessions, { $or: { blockedAt: { $not: null }, closedAt: { $not: null } } })?.length">
-  <div class="mt-3 border-bottom">
-    <h4>Closed sessions</h4>
+  <div #message_container></div>
+  <div class="text-center mt-3" *ngIf="!sessionsLoading && !sessions?.length">
+    <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
+    <p class="mt-2">No devices found</p>
   </div>
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-0">
-    <div class="col"
-      *ngFor="let session of sessions | filter: { $or: { blockedAt: { $not: null }, closedAt: { $not: null } } }">
-      <session-card [session]="session" [loading]="submitLoading.includes(session.id)"
-        (onClose)="getSessions()"></session-card>
+  <div
+    class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-0"
+    [class.loading]="sessionsLoading"
+    *ngIf="filter(sessions, { blockedAt: null, closedAt: null })?.length"
+  >
+    <div class="col" *ngFor="let session of sessions | filter: { blockedAt: null, closedAt: null }">
+      <session-card
+        [session]="session"
+        [loading]="submitLoading.includes(session.id)"
+        (onClose)="getSessions()"
+      ></session-card>
+    </div>
+  </div>
+  <div
+    [class.loading]="sessionsLoading"
+    *ngIf="filter(sessions, { $or: { blockedAt: { $not: null }, closedAt: { $not: null } } })?.length"
+  >
+    <div class="mt-3 border-bottom">
+      <h4>Closed sessions</h4>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-0">
+      <div
+        class="col"
+        *ngFor="let session of sessions | filter: { $or: { blockedAt: { $not: null }, closedAt: { $not: null } } }"
+      >
+        <session-card
+          [session]="session"
+          [loading]="submitLoading.includes(session.id)"
+          (onClose)="getSessions()"
+        ></session-card>
+      </div>
     </div>
   </div>
 </div>
