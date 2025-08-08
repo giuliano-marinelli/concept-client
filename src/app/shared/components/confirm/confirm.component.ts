@@ -98,7 +98,7 @@ export class ConfirmComponent {
   }
 
   openVerificationCode() {
-    this.modal = this.modalService.open(this.contentVerificationCode);
+    this.modal = this.modalService.open(this.contentVerificationCode, { backdrop: 'static' });
     this.verificationCodeForm = this.formBuilder.group({
       verificationCode: this.verificationCode
     });

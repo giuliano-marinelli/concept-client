@@ -531,7 +531,12 @@ html[data-bs-theme='dark'] .dropdown-menu-arrow:after {
   display: none;
 }
 
-// scrollbar styling
+/* OTP styling */
+.n-o-c {
+  justify-content: center;
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 2px;
   height: 2px;

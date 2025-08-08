@@ -6,15 +6,15 @@
   <p class="mt-2">No account found</p>
 </div>
 <div *ngIf="user">
+  <div class="border-bottom">
+    <h2>
+      Emails
+      <a class="btn p-0 text-muted border-0" [hidden]="!userLoading" [class.disabled]="userLoading">
+        <fa-icon [icon]="'rotate-right'" size="lg" [animation]="userLoading ? 'spin-pulse' : undefined"></fa-icon>
+      </a>
+    </h2>
+  </div>
   <div [class.loading]="userLoading">
-    <div class="border-bottom">
-      <h2>
-        Emails
-        <a class="btn p-0 text-muted border-0" [hidden]="!userLoading" [class.disabled]="userLoading">
-          <fa-icon [icon]="'rotate-right'" size="lg" [animation]="userLoading ? 'spin-pulse' : undefined"></fa-icon>
-        </a>
-      </h2>
-    </div>
     <div #message_container></div>
     <ul class="list-group mt-3 col-12">
       <li class="list-group-item py-4" *ngFor="let email of user.emails">
