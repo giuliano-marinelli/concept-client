@@ -35,7 +35,8 @@ import { LanguageSettingsComponent } from './languages/language/settings/languag
 import { LanguageSettingsGeneralComponent } from './languages/language/settings/general/language-settings-general.component';
 import { ModelsComponent } from './models/models.component';
 import { ModelComponent } from './models/model/model.component';
-import path from 'path';
+
+const loading: string = '⟳';
 
 const routes: Routes = [
   { path: '', component: AboutComponent, data: { title: 'Welcome', breadcrumb: 'Home' } },
@@ -97,7 +98,6 @@ const routes: Routes = [
   },
   // { path: 'graphql' },
   { path: 'languages', component: LanguagesComponent, data: { title: 'Languages', breadcrumb: 'Languages' } },
-
   {
     path: 'models',
     component: ModelsComponent,
@@ -110,11 +110,11 @@ const routes: Routes = [
     canMatch: [MetaModelExistsGuard],
     data: {
       title: (params: { [key: string]: string }) => {
-        if (!params['languagetag']) return '';
+        if (!params['languagetag']) return loading;
         return params['languagetag'] + '@' + params['languageversion'] + ' · ' + params['languagename'];
       },
       breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username'] || !params['languagetag'] || !params['languageversion']) return '';
+        if (!params['username'] || !params['languagetag'] || !params['languageversion']) return loading;
         return [
           { path: params['username'] + '/languages', title: params['username'] },
           { title: params['languagetag'] + '@' + params['languageversion'] }
@@ -144,7 +144,7 @@ const routes: Routes = [
     data: {
       title: 'New Model',
       breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username']) return '';
+        if (!params['username']) return loading;
         return [{ path: params['username'] + '/models', title: params['username'] }, { title: 'new-model' }];
       }
     }
@@ -157,7 +157,7 @@ const routes: Routes = [
     data: {
       title: 'New Model',
       breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username']) return '';
+        if (!params['username']) return loading;
         return [{ path: params['username'] + '/models', title: params['username'] }, { title: 'new-model' }];
       }
     }
@@ -169,11 +169,11 @@ const routes: Routes = [
     canDeactivate: [LeaveGuard],
     data: {
       title: (params: { [key: string]: string }) => {
-        if (!params['modeltag']) return '';
+        if (!params['modeltag']) return loading;
         return params['modeltag'] + '@' + params['modelversion'] + ' · ' + params['languagename'];
       },
       breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username'] || !params['modeltag'] || !params['modelversion']) return '';
+        if (!params['username'] || !params['modeltag'] || !params['modelversion']) return loading;
         return [
           { path: params['username'] + '/models', title: params['username'] },
           { title: params['modeltag'] + '@' + params['modelversion'] }
@@ -187,11 +187,11 @@ const routes: Routes = [
     canMatch: [UserExistsGuard],
     data: {
       title: (params: { [key: string]: string }) => {
-        if (!params['username']) return '';
+        if (!params['username']) return loading;
         return params['username'] + (params['profilename'] ? ' · ' + params['profilename'] : '');
       },
       breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username']) return '';
+        if (!params['username']) return loading;
         return params['username'];
       }
     },

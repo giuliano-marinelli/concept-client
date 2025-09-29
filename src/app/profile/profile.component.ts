@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FindUsers, User } from '../shared/entities/user.entity';
-
 import { AuthService } from '../services/auth.service';
 import { ProfileService } from '../services/profile.service';
 import { TitleService } from '../services/title.service';

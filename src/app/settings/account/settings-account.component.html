@@ -53,6 +53,7 @@
       class="btn btn-outline-danger"
       (confirm)="deleteUser($event)"
       [requiredPassword]="true"
+      [requiredVerificationCode]="true"
       [disabled]="updateSubmitLoading || deleteSubmitLoading"
     >
       Delete your account <fa-icon *ngIf="deleteSubmitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"> </fa-icon>

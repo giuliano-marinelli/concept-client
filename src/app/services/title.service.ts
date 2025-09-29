@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
-import { BehaviorSubject, Observable, ReplaySubject, filter, map } from 'rxjs';
+import { Observable, ReplaySubject, filter, map } from 'rxjs';
 
 export interface Breadcrumb {
   path: string;
