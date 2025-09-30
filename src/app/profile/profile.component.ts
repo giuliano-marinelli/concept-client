@@ -46,5 +46,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.profile.reset();
+    this.titleService.resetParams();
   }
 }

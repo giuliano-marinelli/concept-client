@@ -72,6 +72,12 @@ export class TitleService {
     this.updateBreadcrumb();
   }
 
+  resetParams(): void {
+    this.params = {};
+    this.updateTitle();
+    this.updateBreadcrumb();
+  }
+
   getBreadcrumb(): Observable<Breadcrumb[]> {
     return this.breadcrumbSubject.asObservable();
   }

@@ -1,0 +1,65 @@
+<div class="modal-content">
+  <form>
+    <div class="modal-header border-bottom-0">
+      <h5 class="modal-title"><fa-icon [icon]="'pen-to-square'"></fa-icon> New Model</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body pt-0">
+      <p class="text-muted">Select a Language in which your new model will based:</p>
+      <search
+        #search_input
+        searchPlaceholder="Find languages..."
+        [attributes]="[
+          { name: 'name', title: 'Name', type: 'string', simple: true },
+          { name: 'tag', title: 'Tag', type: 'string', simple: true },
+          { name: 'version', title: 'Version', type: 'string', simple: true },
+          { name: 'createdAt', title: 'Created at', type: 'Date' },
+          { name: 'metaElements.tag', title: 'Element', type: 'string', simple: true }
+        ]"
+        [(search)]="languagesSearch"
+        [(searchString)]="languagesSearchString"
+        (searchChange)="getLanguages()"
+        [advanced]="false"
+        [firstSearch]="true"
+      ></search>
+      <p class="ms-2 my-2 small text-muted" *ngIf="!languagesLoading">
+        {{ !languagesSearchString ? 'Your languages' : languages.length + ' search result(s)' }}
+      </p>
+      <div *ngIf="!languagesLoading && languages.length > 0">
+        <hr class="my-0" />
+        <div class="list-group list-group-flush overflow-y-auto" style="max-height: calc(100vh - 350px)">
+          <a
+            *ngFor="let language of languages"
+            class="list-group-item list-group-item-action"
+            (click)="selectedLanguage = language"
+            [class.active]="selectedLanguage?.id === language.id"
+          >
+            <ng-container [ngTemplateOutlet]="pin" [ngTemplateOutletContext]="{ language: language }"></ng-container>
+          </a>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-3" *ngIf="languagesLoading">
+        <fa-icon [icon]="'spinner'" [animation]="'spin-pulse'" size="3x"></fa-icon>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" ngbAutofocus class="btn btn-default" (click)="activeModal.dismiss('Close click')">
+        Close
+      </button>
+      <button type="button" class="btn btn-success" [disabled]="!selectedLanguage" (click)="openModelEditor()">
+        Create New
+      </button>
+    </div>
+  </form>
+</div>
+
+<ng-template #pin let-language="language">
+  <label class="form-check-label ms-1" for="firstCheckbox">
+    <fa-icon [icon]="'book'" class="me-1"></fa-icon>
+    <b>{{ language.name }}</b>
+    <br />
+    <span class="text-muted small">
+      &#64;{{ language.owner.username }}/{{ language.tag }}&#64;{{ language.version }}
+    </span>
+  </label>
+</ng-template>

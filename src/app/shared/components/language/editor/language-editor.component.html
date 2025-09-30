@@ -1,57 +1,93 @@
 <div class="modal-content">
   <form [class.loading]="language.loading()" [formGroup]="languageForm">
-    <div class="modal-header">
+    <div class="modal-header border-bottom-0">
       <h5 class="modal-title">
         <fa-icon [icon]="'pen-to-square'"></fa-icon> {{ language.value() ? 'Edit' : 'New' }} Language
       </h5>
-      <button type="button" class="btn-close" [disabled]="submitLoading" aria-label="Close"
-        (click)="activeModal.dismiss('Cross click')"></button>
+      <button
+        type="button"
+        class="btn-close"
+        [disabled]="submitLoading"
+        aria-label="Close"
+        (click)="activeModal.dismiss('Cross click')"
+      ></button>
     </div>
     <div class="modal-body">
       <div class="text-center mb-3">
-        <picture-input [control]="logo" [fileControl]="logoFile" [rounded]="false" uploadLabel="Upload logo..."
-          removeLabel="Remove logo" cropLabel="Crop your logo picture" saveLabel="Save new logo picture"
-          defaultImage="assets/images/default-language.png"></picture-input>
+        <picture-input
+          [control]="logo"
+          [fileControl]="logoFile"
+          [rounded]="false"
+          uploadLabel="Upload logo..."
+          removeLabel="Remove logo"
+          cropLabel="Crop your logo picture"
+          saveLabel="Save new logo picture"
+          defaultImage="assets/images/default-language.png"
+        ></picture-input>
       </div>
       <div class="mb-3">
-        <label class="form-label">
-          Name
-        </label>
-        <input class="form-control bg-dark-subtle" type="text" name="name" formControlName="name" autocomplete="off"
-          [ngClass]="setValid(name, true)" />
-        <invalid-feedback [control]="name" name="Name"
-          [messages]="{ pattern: 'Name only can have characters and numbers' }"></invalid-feedback>
+        <label class="form-label"> Name </label>
+        <input
+          class="form-control bg-dark-subtle"
+          type="text"
+          name="name"
+          formControlName="name"
+          autocomplete="off"
+          [ngClass]="setValid(name, true)"
+        />
+        <invalid-feedback
+          [control]="name"
+          name="Name"
+          [messages]="{ pattern: 'Name only can have characters and numbers' }"
+        ></invalid-feedback>
       </div>
       <div class="mb-3" *ngIf="!language.value()">
-        <label class="form-label">
-          Tag <span class="text-muted small">(it's used for url)</span>
-        </label>
+        <label class="form-label"> Tag <span class="text-muted small">(it's used for url)</span> </label>
         <div class="input-spinner">
-          <input class="form-control bg-dark-subtle" type="text" name="tag" formControlName="tag" autocomplete="off"
-            [ngClass]="setValid(tag, true)" />
+          <input
+            class="form-control bg-dark-subtle"
+            type="text"
+            name="tag"
+            formControlName="tag"
+            autocomplete="off"
+            [ngClass]="setValid(tag, true)"
+          />
           <fa-icon *ngIf="tag.pending" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
-          <invalid-feedback [control]="tag" name="Tag"
-            [messages]="{ pattern: 'Tag only can have lower case alphanumeric' }"></invalid-feedback>
+          <invalid-feedback
+            [control]="tag"
+            name="Tag"
+            [messages]="{ pattern: 'Tag only can have lower case alphanumeric' }"
+          ></invalid-feedback>
         </div>
       </div>
       <div class="mb-3">
-        <label class="form-label">
-          Description <span class="text-muted small">(optional)</span>
-        </label>
-        <textarea class="form-control bg-dark-subtle" name="description" formControlName="description"
-          autocomplete="off" rows="3" [ngClass]="setValid(description, true)" style="min-height: 110px;"></textarea>
+        <label class="form-label"> Description <span class="text-muted small">(optional)</span> </label>
+        <textarea
+          class="form-control bg-dark-subtle"
+          name="description"
+          formControlName="description"
+          autocomplete="off"
+          rows="3"
+          [ngClass]="setValid(description, true)"
+          style="min-height: 110px"
+        ></textarea>
         <span class="float-end textarea-count">{{ (description.value?.length || 0) + '/200' }}</span>
         <invalid-feedback [control]="description" name="Description"></invalid-feedback>
       </div>
       <div>
-        <label class="form-label">
-          Tags <span class="text-muted small">(separate with spaces)</span>
-        </label>
-        <div ngbTags formArrayName="tags" [tagsValidators]="tagsValidators" class="bg-dark-subtle"
-          [ngClass]="setValid(tags, true)">
+        <label class="form-label"> Tags <span class="text-muted small">(separate with spaces)</span> </label>
+        <div
+          ngbTags
+          formArrayName="tags"
+          [tagsValidators]="tagsValidators"
+          class="bg-dark-subtle"
+          [ngClass]="setValid(tags, true)"
+        >
           <ng-template ngbTag let-tag="tag" let-i="i">
-            <span class="badge d-flex align-items-center rounded-pill bg-secondary"
-              [ngClass]="setValid(tags.at(i), true)">
+            <span
+              class="badge d-flex align-items-center rounded-pill bg-secondary"
+              [ngClass]="setValid(tags.at(i), true)"
+            >
               {{ tag }}
               <button ngbTagRemove type="button" class="btn-close-white"></button>
             </span>
@@ -62,10 +98,21 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" ngbAutofocus class="btn btn-default" [disabled]="submitLoading"
-        (click)="activeModal.dismiss('Close click')">Close</button>
-      <button type="button" class="btn btn-success" [disabled]="!languageForm.valid || submitLoading"
-        (click)="language.value() ? updateLanguage() : createLanguage()">
+      <button
+        type="button"
+        ngbAutofocus
+        class="btn btn-default"
+        [disabled]="submitLoading"
+        (click)="activeModal.dismiss('Close click')"
+      >
+        Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-success"
+        [disabled]="!languageForm.valid || submitLoading"
+        (click)="language.value() ? updateLanguage() : createLanguage()"
+      >
         Save <fa-icon *ngIf="submitLoading" [icon]="'spinner'" [animation]="'spin-pulse'"></fa-icon>
       </button>
     </div>

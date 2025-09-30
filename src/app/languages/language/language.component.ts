@@ -43,13 +43,13 @@ export class LanguageComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.route.params.subscribe(async (params) => {
-      const fullTag = params['language']; // tag with version
+      const fullTag = params['language']; // tag@version
       if (fullTag?.split('@').length === 2) {
         this.tag = fullTag.split('@')[0];
         this.version = fullTag.split('@')[1];
       }
 
-      if (!this.tag || !this.version) this.router.navigate(['/']);
+      if (!this.tag || !this.version) this.router.navigate(['not-found']);
       try {
         await this.language.fetchLanguage(this.tag, this.version);
       } catch (error) {
@@ -60,6 +60,7 @@ export class LanguageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.language.reset();
+    this.titleService.resetParams();
   }
 
   editLanguage(): void {

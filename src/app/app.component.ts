@@ -21,7 +21,7 @@ export class AppComponent {
 
   isDevelopment: boolean = !environment.production;
 
-  stretchComponents: string[] = ['^/[^/]+/model/[^/]+$', '^/[^/]+/model/new', '^/[^/]+/model/new/[^/]+$'];
+  stretchComponents: string[] = ['^/[^/]+/model/[^/]+$', '^/[^/]+/lang/[^/]+/new$'];
   stretch = false;
 
   breadcrumb: { path: string; title: string }[] = [];

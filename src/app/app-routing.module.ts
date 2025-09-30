@@ -105,13 +105,44 @@ const routes: Routes = [
     // children: [{ path: 'editor', component: ModelEditorComponent, data: { title: 'Models > Editor' } }]
   },
   {
+    path: ':username/lang/:language/new',
+    component: ModelComponent,
+    canActivate: [AuthLoginGuard],
+    canDeactivate: [LeaveGuard],
+    data: {
+      title: (params: { [key: string]: string }) => {
+        if (!params['languagetag']) return loading;
+        return 'New Model · ' + params['username'] + '/' + params['languagetag'] + '@' + params['languageversion'];
+      },
+      breadcrumb: (params: { [key: string]: string }) => {
+        if (!params['username'] || !params['languagetag'] || !params['languageversion']) return loading;
+        return [
+          { path: params['username'] + '/languages', title: params['username'] },
+          {
+            path: params['username'] + '/lang/' + params['languagetag'] + '@' + params['languageversion'],
+            title: params['languagetag'] + '@' + params['languageversion']
+          },
+          { title: 'new-model' }
+        ];
+      }
+    }
+  },
+  {
     path: ':username/lang/:language',
     component: LanguageComponent,
     canMatch: [MetaModelExistsGuard],
     data: {
       title: (params: { [key: string]: string }) => {
         if (!params['languagetag']) return loading;
-        return params['languagetag'] + '@' + params['languageversion'] + ' · ' + params['languagename'];
+        return (
+          params['username'] +
+          '/' +
+          params['languagetag'] +
+          '@' +
+          params['languageversion'] +
+          ' · ' +
+          params['languagename']
+        );
       },
       breadcrumb: (params: { [key: string]: string }) => {
         if (!params['username'] || !params['languagetag'] || !params['languageversion']) return loading;
@@ -135,32 +166,6 @@ const routes: Routes = [
       },
       { path: '**', redirectTo: 'design' }
     ]
-  },
-  {
-    path: ':username/model/new',
-    component: ModelComponent,
-    canActivate: [AuthLoginGuard],
-    canDeactivate: [LeaveGuard],
-    data: {
-      title: 'New Model',
-      breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username']) return loading;
-        return [{ path: params['username'] + '/models', title: params['username'] }, { title: 'new-model' }];
-      }
-    }
-  },
-  {
-    path: ':username/model/new/:language',
-    component: ModelComponent,
-    canActivate: [AuthLoginGuard],
-    canDeactivate: [LeaveGuard],
-    data: {
-      title: 'New Model',
-      breadcrumb: (params: { [key: string]: string }) => {
-        if (!params['username']) return loading;
-        return [{ path: params['username'] + '/models', title: params['username'] }, { title: 'new-model' }];
-      }
-    }
   },
   {
     path: ':username/model/:model',

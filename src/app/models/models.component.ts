@@ -8,7 +8,7 @@ import { Global } from '../shared/global/global';
 import _ from 'lodash';
 import { Observable } from 'rxjs';
 
-import { ModelEditorComponent } from '../shared/components/model/editor/model-editor.component';
+import { NewModelComponent } from './new-model/new-model.component';
 
 import { AuthService } from '../services/auth.service';
 import { MessagesService } from '../services/messages.service';
@@ -77,5 +77,12 @@ export class ModelsComponent {
       .add(() => {
         this.modelsLoading = false;
       });
+  }
+
+  newModel(): void {
+    this.modalService.open(NewModelComponent, {
+      backdrop: 'static',
+      keyboard: false
+    });
   }
 }

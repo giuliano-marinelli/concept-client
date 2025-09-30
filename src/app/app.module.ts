@@ -96,6 +96,7 @@ import { LanguageSettingsComponent } from './languages/language/settings/languag
 import { LanguageSettingsGeneralComponent } from './languages/language/settings/general/language-settings-general.component';
 import { ModelsComponent } from './models/models.component';
 import { ModelComponent } from './models/model/model.component';
+import { NewModelComponent } from './models/new-model/new-model.component';
 
 @NgModule({
   declarations: [
@@ -152,7 +153,8 @@ import { ModelComponent } from './models/model/model.component';
     LanguageSettingsComponent,
     LanguageSettingsGeneralComponent,
     ModelsComponent,
-    ModelComponent
+    ModelComponent,
+    NewModelComponent
   ],
   bootstrap: [AppComponent],
   imports: [

@@ -1,35 +1,62 @@
 <div class="d-flex flex-row align-items-center py-3 border-bottom">
   <div class="flex-fill">
-    <search #search_input searchPlaceholder="Find languages..." [attributes]="[
-    { name: 'name', title: 'Name', type: 'string', simple: true },
-    { name: 'tag', title: 'Tag', type: 'string', simple: true },
-    { name: 'version', title: 'Version', type: 'string', simple: true },
-    { name: 'createdAt', title: 'Created at', type: 'Date' },
-    { name: 'metaElements.tag', title: 'Element', type: 'string', simple: true }
-  ]" [fixedAttributes]="[
-    { name: 'owner.username', criteria: 'eq', value: profile.user()?.username, enabled: profile.user() !== null },
-  ]" [(search)]="languagesSearch" (searchChange)="getLanguages()" [advanced]="false" [firstSearch]="true"></search>
+    <search
+      #search_input
+      searchPlaceholder="Find languages..."
+      [attributes]="[
+        { name: 'name', title: 'Name', type: 'string', simple: true },
+        { name: 'tag', title: 'Tag', type: 'string', simple: true },
+        { name: 'version', title: 'Version', type: 'string', simple: true },
+        { name: 'createdAt', title: 'Created at', type: 'Date' },
+        { name: 'metaElements.tag', title: 'Element', type: 'string', simple: true }
+      ]"
+      [fixedAttributes]="[
+        { name: 'owner.username', criteria: 'eq', value: profile.user()?.username, enabled: profile.user() !== null }
+      ]"
+      [(search)]="languagesSearch"
+      (searchChange)="getLanguages()"
+      [advanced]="false"
+      [firstSearch]="true"
+    ></search>
   </div>
   <div *ngIf="profile.user() && profile.user()?.id == auth.user?.id" class="flex-shrink-0 ms-3">
-    <button class="btn btn-sm btn-success" (click)="newLanguage()">
-      <fa-icon [icon]="'book'"></fa-icon> New
-    </button>
+    <button class="btn btn-sm btn-success" (click)="newLanguage()"><fa-icon [icon]="'book'"></fa-icon> New</button>
   </div>
 </div>
 <div class="text-center mt-3" *ngIf="!languagesLoading && languages.length <= 0">
   <fa-icon class="fa-fade" [icon]="'magnifying-glass'" size="3x"></fa-icon>
   <p class="mt-2">No languages found</p>
 </div>
-<ngx-masonry #masonry [options]="{ percentPosition: true, horizontalOrder: true }" [ordered]="true" class="row"
-  [class.loading]="languagesLoading" *ngIf="languages.length > 0">
+<ngx-masonry
+  #masonry
+  [options]="{ percentPosition: true, horizontalOrder: true }"
+  [ordered]="true"
+  class="row"
+  [class.loading]="languagesLoading"
+  *ngIf="languages.length > 0"
+>
   <div ngxMasonryItem class="col-12 masonry-item" *ngFor="let language of languages">
     <div class="p-3 border-bottom">
-      <language-card [language]="language" [masonry]="masonry" [loading]="submitLoading.includes(language.id!)"
-        (onDelete)="getLanguages()"></language-card>
+      <language-card
+        [language]="language"
+        [masonry]="masonry"
+        [loading]="submitLoading.includes(language.id!)"
+        (onDelete)="getLanguages()"
+      ></language-card>
     </div>
   </div>
 </ngx-masonry>
-<ngb-pagination *ngIf="languagesCount > 0" class="d-flex justify-content-center mt-3" [(page)]="languagesPage"
-  [pageSize]="languagesPageSize" [collectionSize]="languagesCount" (pageChange)="getLanguages()" size="sm" [maxSize]="3"
-  [rotate]="true" [ellipses]="true" [boundaryLinks]="true">
+<ngb-pagination
+  *ngIf="languagesCount > 0"
+  class="d-flex justify-content-center mt-3"
+  [(page)]="languagesPage"
+  [pageSize]="languagesPageSize"
+  [collectionSize]="languagesCount"
+  (pageChange)="getLanguages()"
+  size="sm"
+  [maxSize]="3"
+  [rotate]="true"
+  [ellipses]="true"
+  [boundaryLinks]="true"
+>
 </ngb-pagination>
