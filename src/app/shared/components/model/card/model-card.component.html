@@ -5,34 +5,43 @@
   <div class="card-body">
     <div class="card-text">
       <div class="d-flex flex-row gap-3">
-        <div class="flex-shrink-0">
-          <!-- <img class="img-thumbnail logo-img" [src]="model.preview"
-            onerror="this.src='assets/images/default-model.png'" /> -->
+        <div
+          class="rounded bg-body-tertiary d-flex flex-column align-items-center p-2 flex-shrink-0"
+          style="width: 120px"
+        >
+          <div
+            class="sprotty overflow-hidden"
+            [innerHTML]="sanitizeSVG(sanitizer, model.preview, 100)"
+            style="max-width: 100px; max-height: 100px"
+          ></div>
         </div>
         <div class="d-flex flex-column flex-fill gap-2">
           <div class="d-flex flex-row justify-content-between flex-wrap flex-sm-nowrap gap-2 flex-shrink-1">
             <div class="d-flex flex-column">
-              <a routerLink="/{{model.owner?.username}}/model/{{ model.tag }}@{{ model.version }}">
+              <a routerLink="/{{ model.owner?.username }}/model/{{ model.tag }}@{{ model.version }}">
                 <h3 class="m-0 text-break-word text-hyphens">
                   {{ model.name }}
                 </h3>
               </a>
-              <span [ngClass]="model.name ? 'text-muted small' : ''">
-                {{ model.tag }}&#64;{{ model.version}}
-              </span>
+              <span [ngClass]="model.name ? 'text-muted small' : ''"> {{ model.tag }}&#64;{{ model.version }} </span>
             </div>
             <div class="d-flex flex-row justify-content-end align-items-baseline gap-2 flex-shrink-0 ms-auto">
               <div>
-                <a routerLink="/{{model.owner?.username}}">
-                  <img class="img-thumbnail mini-profile-img rounded-circle" [src]="model.owner?.profile?.avatar"
+                <a routerLink="/{{ model.owner?.username }}">
+                  <img
+                    class="img-thumbnail mini-profile-img rounded-circle"
+                    [src]="model.owner?.profile?.avatar"
                     onerror="this.src='assets/images/default-user.png'"
-                    [tp]="model.owner?.profile?.name ?? model.owner?.username" tpPlacement="bottom" />
+                    [tp]="model.owner?.profile?.name ?? model.owner?.username"
+                    tpPlacement="bottom"
+                  />
                 </a>
               </div>
             </div>
           </div>
-          <div class="text-md-pre-wrap text-break-word text-hyphens" *ngIf="model.description">{{
-            model.description }}</div>
+          <div class="text-md-pre-wrap text-break-word text-hyphens" *ngIf="model.description">
+            {{ model.description }}
+          </div>
           <div class="d-flex flex-row flex-wrap justify-content-between gap-2">
             <div class="d-flex flex-row flex-wrap gap-1">
               <a class="btn btn-secondary badge rounded-pill" *ngFor="let tag of model.tags">

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { Model } from '../../../entities/model.entity';
+import { Global } from '../../../global/global';
 import { NgxMasonryComponent } from 'ngx-masonry';
 
 import { AuthService } from '../../../../services/auth.service';
@@ -18,8 +20,11 @@ export class ModelCardComponent {
 
   @Output() onDelete: EventEmitter<string> = new EventEmitter<string>();
 
+  sanitizeSVG: any = Global.sanitizeSVG;
+
   constructor(
     public auth: AuthService,
+    public sanitizer: DomSanitizer,
     public messages: MessagesService
   ) {}
 }

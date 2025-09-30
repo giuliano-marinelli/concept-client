@@ -38,8 +38,8 @@ import { AuthService } from '../../../../services/auth.service';
   styleUrl: './model-editor.component.scss'
 })
 export class ModelEditorComponent implements AfterViewInit {
-  @Input() sourceUri: string = '';
-  @Input() language?: string | Language | LanguageElement;
+  @Input() sourceUri?: string; // model id
+  @Input() language?: string | Language | LanguageElement; // language id or explicit language or language element objects
   @Input() editMode: 'readonly' | 'editable' = 'editable';
   @Input() showcaseMode: boolean = false; // only works with language element
 
